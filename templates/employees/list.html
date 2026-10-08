@@ -16,9 +16,12 @@
         type="search"
         name="q"
         value="{{ query }}"
-        placeholder="Search by ID, name, or email"
+        placeholder="Search by ID, name, email, or department"
       >
       <button class="btn btn-outline-secondary" type="submit">Search</button>
+      {% if query %}
+        <a class="btn btn-outline-secondary" href="{% url 'employees:list' %}">Clear</a>
+      {% endif %}
     </form>
     <a class="btn btn-primary" href="{% url 'employees:add' %}">
       <i class="bi bi-plus-lg"></i> Add employee

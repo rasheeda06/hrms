@@ -2,7 +2,8 @@
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Value
+from django.db.models.functions import Concat
 from django.shortcuts import get_object_or_404, redirect, render
 
 from accounts.decorators import admin_required
@@ -21,13 +22,26 @@ def _can_view_employee(user, employee):
 @admin_required
 def employee_list(request):
     query = request.GET.get("q", "").strip()
+    department_param = request.GET.get("department", "").strip()
     employees = Employee.objects.select_related("department", "user")
+
+    if department_param:
+        if department_param.isdigit():
+            employees = employees.filter(department_id=int(department_param))
+        else:
+            employees = employees.filter(department__name__iexact=department_param)
+
     if query:
-        employees = employees.filter(
+        employees = employees.annotate(
+            full_name_annotated=Concat("first_name", Value(" "), "last_name")
+        ).filter(
             Q(employee_id__icontains=query)
             | Q(first_name__icontains=query)
             | Q(last_name__icontains=query)
+            | Q(full_name_annotated__icontains=query)
             | Q(email__icontains=query)
+            | Q(department__name__icontains=query)
+            | Q(job_title__icontains=query)
         )
     return render(
         request,

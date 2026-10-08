@@ -197,3 +197,25 @@ class EmployeeManagementTests(TestCase):
         self.client.login(username="employee", password="EmployeePass123!")
         response = self.client.get(reverse("employees:me"))
         self.assertRedirects(response, reverse("employees:detail", args=[self.own_record.pk]))
+
+    def test_admin_can_search_by_department(self):
+        self.client.login(username="admin", password="AdminPass123!")
+        response = self.client.get(reverse("employees:list"), {"q": "Engineering"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "EMP001")
+        self.assertContains(response, "EMP002")
+
+    def test_admin_can_search_by_full_name(self):
+        self.client.login(username="admin", password="AdminPass123!")
+        response = self.client.get(reverse("employees:list"), {"q": "Demo Employee"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "EMP001")
+        self.assertNotContains(response, "EMP002")
+
+    def test_admin_can_filter_by_department_param(self):
+        self.client.login(username="admin", password="AdminPass123!")
+        response = self.client.get(reverse("employees:list"), {"department": self.department.pk})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "EMP001")
+        self.assertContains(response, "EMP002")
+
