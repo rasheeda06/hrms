@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}HRMS{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+</head>
+<body class="hrms-app">
+
+<div class="hrms-layout">
+
+  {% if user.is_authenticated %}
+    <aside class="hrms-sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="hrmsSidebar" aria-label="Main navigation">
+      {% include "partials/sidebar.html" %}
+    </aside>
+  {% endif %}
+
+  <div class="hrms-main d-flex flex-column">
+
+    {% if user.is_authenticated %}
+      <header class="hrms-topbar d-flex align-items-center gap-3">
+        <button class="btn btn-outline-secondary btn-sm d-lg-none" type="button"
+                data-bs-toggle="offcanvas" data-bs-target="#hrmsSidebar" aria-controls="hrmsSidebar">
+          <i class="bi bi-list"></i>
+          <span class="visually-hidden">Open menu</span>
+        </button>
+        <div class="me-auto">
+          <h1 class="hrms-page-title">{% block page_title %}HRMS{% endblock %}</h1>
+          {% block page_subtitle %}{% endblock %}
+        </div>
+        <span class="badge text-bg-light border d-none d-sm-inline">{{ user_role_label }}</span>
+      </header>
+    {% endif %}
+
+    <main class="hrms-content">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

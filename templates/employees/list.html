@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Employees · HRMS{% endblock %}
+{% block page_title %}Employees{% endblock %}
+{% block page_subtitle %}
+  <p class="hrms-page-subtitle">Add, edit, and remove employee records.</p>
+{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+    <form method="get" class="d-flex gap-2 flex-grow-1" style="max-width: 26rem;">
+      <label class="visually-hidden" for="employee-search">Search</label>
+      <input
+        id="employee-search"
+        class="form-control"
+        type="search"
+        name="q"
+        value="{{ query }}"
+        placeholder="Search by ID, name, or email"
+      >
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </form>
+    <a class="btn btn-primary" href="{% url 'employees:add' %}">
+      <i class="bi bi-plus-lg"></i> Add employee
+    </a>
+  </div>
+
+  <div class="hrms-card">
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Employee ID</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Job title</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for employee in employees %}
+            <tr>
+              <td>{{ employee.employee_id }}</td>
+              <td>{{ employee.full_name }}</td>
+              <td>{{ employee.department }}</td>
+              <td>{{ employee.job_title }}</td>
+              <td>
+                {% if employee.is_active_employee %}
+                  <span class="badge text-bg-success">Active</span>
+                {% else %}
+                  <span class="badge text-bg-secondary">Inactive</span>
+                {% endif %}
+              </td>
+              <td class="text-nowrap text-end">
+                <a href="{% url 'employees:detail' employee.pk %}">View</a>
+                ·
+                <a href="{% url 'employees:edit' employee.pk %}">Edit</a>
+                ·
+                <a class="text-danger" href="{% url 'employees:delete' employee.pk %}">Delete</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="6">
+                <div class="hrms-empty">No employees found.</div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

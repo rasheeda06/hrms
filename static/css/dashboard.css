@@ -1,0 +1,257 @@
+/* HRMS admin shell: sidebar, topbar, cards, tables. */
+
+:root {
+  --hrms-sidebar-bg: #f3f4f6;
+  --hrms-sidebar-hover: #e5e7eb;
+  --hrms-sidebar-text: #4b5563;
+  --hrms-accent: #2563eb;
+  --hrms-border: #e5e7eb;
+  --hrms-page-bg: #f5f6f8;
+}
+
+body.hrms-app {
+  background: var(--hrms-page-bg);
+  min-height: 100vh;
+}
+
+/* Layout ------------------------------------------------------------- */
+
+.hrms-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.hrms-sidebar {
+  background: var(--hrms-sidebar-bg);
+  width: 260px;
+  flex-shrink: 0;
+}
+
+.hrms-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+@media (min-width: 992px) {
+  .hrms-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+}
+
+/* Sidebar ------------------------------------------------------------ */
+
+.hrms-brand {
+  color: #1f2937;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+
+.hrms-brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--hrms-accent);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.hrms-nav-heading {
+  color: #6b7280;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.hrms-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 8px;
+  color: var(--hrms-sidebar-text);
+  text-decoration: none;
+  font-size: 0.925rem;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.hrms-nav-link:hover,
+.hrms-nav-link:focus-visible {
+  background: var(--hrms-sidebar-hover);
+  color: #1f2937;
+}
+
+.hrms-nav-link.active {
+  background: var(--hrms-accent);
+  color: #fff;
+  font-weight: 500;
+}
+
+.hrms-nav-link i {
+  font-size: 1.05rem;
+  width: 1.15rem;
+  text-align: center;
+}
+
+.hrms-nav-soon {
+  margin-left: auto;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #9ca3af;
+  border: 1px solid #374151;
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+}
+
+.hrms-logout {
+  width: 100%;
+  background: transparent;
+  border: 1px solid #374151;
+  color: var(--hrms-sidebar-text);
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.925rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.hrms-logout:hover {
+  background: var(--hrms-sidebar-hover);
+  color: #1f2937;
+}
+
+.hrms-user-chip {
+  background: #1f2937;
+  border-radius: 10px;
+  padding: 0.7rem 0.85rem;
+  color: #fff;
+}
+
+.hrms-user-chip .avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #374151;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Topbar ------------------------------------------------------------- */
+
+.hrms-topbar {
+  background: #fff;
+  border-bottom: 1px solid var(--hrms-border);
+  padding: 0.85rem 1.5rem;
+}
+
+.hrms-page-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.hrms-page-subtitle {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.hrms-content {
+  padding: 1.5rem;
+}
+
+/* Cards -------------------------------------------------------------- */
+
+.hrms-card {
+  background: #fff;
+  border: 1px solid var(--hrms-border);
+  border-radius: 12px;
+}
+
+.hrms-stat {
+  padding: 1.15rem 1.25rem;
+  height: 100%;
+}
+
+.hrms-stat-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-weight: 500;
+  margin: 0;
+}
+
+.hrms-stat-value {
+  font-size: 1.85rem;
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0.35rem 0 0;
+}
+
+.hrms-stat-value.muted {
+  color: #9ca3af;
+}
+
+.hrms-stat-note {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0.3rem 0 0;
+}
+
+.hrms-stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.hrms-icon-blue   { background: #e0ecff; color: #1d4ed8; }
+.hrms-icon-green  { background: #dcfce7; color: #15803d; }
+.hrms-icon-amber  { background: #fef3c7; color: #b45309; }
+.hrms-icon-purple { background: #ede9fe; color: #6d28d9; }
+
+/* Tables and misc ---------------------------------------------------- */
+
+.hrms-card .table {
+  margin-bottom: 0;
+}
+
+.hrms-card .table > thead th {
+  background: #f9fafb;
+  border-bottom: 1px solid var(--hrms-border);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.hrms-card .table > tbody td {
+  vertical-align: middle;
+  font-size: 0.92rem;
+}
+
+.hrms-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}

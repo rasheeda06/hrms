@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard · HRMS{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}
+  <p class="hrms-page-subtitle">Welcome back, {{ user.get_username }}.</p>
+{% endblock %}
+
+{% block content %}
+
+  <div class="row g-3 mb-4">
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="hrms-card hrms-stat d-flex align-items-start gap-3">
+        <span class="hrms-stat-icon hrms-icon-blue"><i class="bi bi-people"></i></span>
+        <div>
+          <p class="hrms-stat-label">Total Employees</p>
+          <p class="hrms-stat-value">{{ total_employees }}</p>
+          <p class="hrms-stat-note">
+            {% if inactive_employees %}{{ inactive_employees }} inactive{% else %}All active{% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="hrms-card hrms-stat d-flex align-items-start gap-3">
+        <span class="hrms-stat-icon hrms-icon-green"><i class="bi bi-calendar-check"></i></span>
+        <div>
+          <p class="hrms-stat-label">Present Today</p>
+          {% if present_today is None %}
+            <p class="hrms-stat-value muted">&mdash;</p>
+            <p class="hrms-stat-note">Attendance module coming in Week 4</p>
+          {% else %}
+            <p class="hrms-stat-value">{{ present_today }}</p>
+            <p class="hrms-stat-note">Checked in today</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="hrms-card hrms-stat d-flex align-items-start gap-3">
+        <span class="hrms-stat-icon hrms-icon-amber"><i class="bi bi-airplane"></i></span>
+        <div>
+          <p class="hrms-stat-label">On Leave</p>
+          {% if on_leave_today is None %}
+            <p class="hrms-stat-value muted">&mdash;</p>
+            <p class="hrms-stat-note">Leave module coming in Week 5</p>
+          {% else %}
+            <p class="hrms-stat-value">{{ on_leave_today }}</p>
+            <p class="hrms-stat-note">Approved leave today</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="hrms-card hrms-stat d-flex align-items-start gap-3">
+        <span class="hrms-stat-icon hrms-icon-purple"><i class="bi bi-diagram-3"></i></span>
+        <div>
+          <p class="hrms-stat-label">Departments</p>
+          <p class="hrms-stat-value">{{ department_count }}</p>
+          <p class="hrms-stat-note">
+            <a href="{% url 'employees:departments' %}">Manage departments</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row g-3">
+
+    <div class="col-12 col-xl-7">
+      <div class="hrms-card h-100">
+        <div class="d-flex align-items-center justify-content-between px-3 py-3 border-bottom">
+          <h2 class="h6 mb-0">Recent joiners</h2>
+          <a class="small" href="{% url 'employees:list' %}">View all</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Joined</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for employee in recent_employees %}
+                <tr>
+                  <td>
+                    <a href="{% url 'employees:detail' employee.pk %}">{{ employee.full_name }}</a>
+                    <span class="d-block text-secondary small">{{ employee.employee_id }}</span>
+                  </td>
+                  <td>{{ employee.department }}</td>
+                  <td>{{ employee.date_of_joining }}</td>
+                  <td>
+                    {% if employee.is_active_employee %}
+                      <span class="badge text-bg-success">Active</span>
+                    {% else %}
+                      <span class="badge text-bg-secondary">Inactive</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4">
+                    <div class="hrms-empty">
+                      No employees yet.
+                      <a href="{% url 'employees:add' %}">Add the first employee</a>.
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-5">
+      <div class="hrms-card h-100">
+        <div class="d-flex align-items-center justify-content-between px-3 py-3 border-bottom">
+          <h2 class="h6 mb-0">Headcount by department</h2>
+          <a class="small" href="{% url 'employees:departments' %}">Details</a>
+        </div>
+        <div class="p-3 d-flex flex-column gap-3">
+          {% for department in top_departments %}
+            <div>
+              <div class="d-flex justify-content-between small mb-1">
+                <span>{{ department.name }}</span>
+                <span class="text-secondary">{{ department.headcount }}</span>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar"
+                     role="progressbar"
+                     style="width: {% widthratio department.headcount total_employees 100 %}%;"
+                     aria-valuenow="{{ department.headcount }}"
+                     aria-valuemin="0"
+                     aria-valuemax="{{ total_employees }}"></div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="hrms-empty">
+              No departments yet.
+              <a href="{% url 'employees:departments' %}">Add one</a>.
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+{% endblock %}

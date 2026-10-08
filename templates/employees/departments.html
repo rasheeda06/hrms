@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Departments · HRMS{% endblock %}
+{% block page_title %}Departments{% endblock %}
+{% block page_subtitle %}
+  <p class="hrms-page-subtitle">Teams used when adding or editing an employee.</p>
+{% endblock %}
+
+{% block content %}
+  <div class="row g-3">
+
+    <div class="col-12 col-lg-7">
+      <div class="hrms-card">
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Department</th>
+                <th>Employees</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for department in departments %}
+                <tr>
+                  <td>{{ department.name }}</td>
+                  <td>{{ department.headcount }}</td>
+                  <td class="text-end">
+                    <a class="small" href="{% url 'employees:list' %}?q={{ department.name|urlencode }}">
+                      View employees
+                    </a>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="3">
+                    <div class="hrms-empty">No departments yet. Add one using the form.</div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-5">
+      <div class="hrms-card">
+        <div class="px-3 py-3 border-bottom">
+          <h2 class="h6 mb-0">Add department</h2>
+        </div>
+        <form method="post" class="p-3">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+            {{ form.name }}
+            {% for error in form.name.errors %}
+              <div class="text-danger small mt-1">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <button type="submit" class="btn btn-primary">Add department</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

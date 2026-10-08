@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} · HRMS{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}
+  <p class="hrms-page-subtitle">
+    {% if form.is_create %}
+      Saving creates a login account and an employee record.
+    {% else %}
+      Account username cannot be changed here.
+    {% endif %}
+  </p>
+{% endblock %}
+
+{% block content %}
+  <form method="post" class="hrms-card p-4" novalidate style="max-width: 40rem;">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    {% for field in form %}
+      <div class="mb-3">
+        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}
+          <div class="form-text">{{ field.help_text }}</div>
+        {% endif %}
+        {% for error in field.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary">{{ submit_label }}</button>
+      <a class="btn btn-outline-secondary" href="{% if employee %}{% url 'employees:detail' employee.pk %}{% else %}{% url 'employees:list' %}{% endif %}">Cancel</a>
+    </div>
+  </form>
+{% endblock %}

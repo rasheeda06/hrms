@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Home · HRMS{% endblock %}
+{% block page_title %}Home{% endblock %}
+{% block page_subtitle %}
+  <p class="hrms-page-subtitle">Signed in as {{ user.get_username }} ({{ user_role_label }}).</p>
+{% endblock %}
+
+{% block content %}
+  <div class="row g-3" style="max-width: 52rem;">
+
+    <div class="col-12 col-md-6">
+      <div class="hrms-card hrms-stat d-flex align-items-start gap-3 h-100">
+        <span class="hrms-stat-icon hrms-icon-blue"><i class="bi bi-person-badge"></i></span>
+        <div>
+          <p class="hrms-stat-label">My information</p>
+          <p class="text-secondary small mb-2">Your employee record and contact details.</p>
+          <a class="btn btn-sm btn-outline-primary" href="{% url 'employees:me' %}">Open</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+      <div class="hrms-card hrms-stat d-flex align-items-start gap-3 h-100">
+        <span class="hrms-stat-icon hrms-icon-green"><i class="bi bi-calendar-check"></i></span>
+        <div>
+          <p class="hrms-stat-label">Attendance and leave</p>
+          <p class="text-secondary small mb-0">
+            Punch in/out and leave requests arrive in Weeks 4 and 5.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

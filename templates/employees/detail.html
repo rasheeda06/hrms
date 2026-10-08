@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}{{ employee.employee_id }} · HRMS{% endblock %}
+{% block page_title %}{{ employee.full_name }}{% endblock %}
+{% block page_subtitle %}
+  <p class="hrms-page-subtitle">{{ employee.job_title }} · {{ employee.department }}</p>
+{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-column flex-md-row justify-content-end align-items-md-center gap-2 mb-3">
+    {% if user_is_admin %}
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" href="{% url 'employees:list' %}">Back to list</a>
+        <a class="btn btn-primary" href="{% url 'employees:edit' employee.pk %}">Edit</a>
+        <a class="btn btn-outline-danger" href="{% url 'employees:delete' employee.pk %}">Delete</a>
+      </div>
+    {% else %}
+      <a class="btn btn-outline-secondary" href="{% url 'accounts:profile' %}">Back to home</a>
+    {% endif %}
+  </div>
+
+  <div class="hrms-card">
+    <div class="card-body">
+      <dl class="row mb-0">
+        <dt class="col-sm-3">Employee ID</dt>
+        <dd class="col-sm-9">{{ employee.employee_id }}</dd>
+
+        <dt class="col-sm-3">Account</dt>
+        <dd class="col-sm-9">{{ employee.user.username }}</dd>
+
+        <dt class="col-sm-3">First name</dt>
+        <dd class="col-sm-9">{{ employee.first_name }}</dd>
+
+        <dt class="col-sm-3">Last name</dt>
+        <dd class="col-sm-9">{{ employee.last_name }}</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">{{ employee.email }}</dd>
+
+        <dt class="col-sm-3">Phone</dt>
+        <dd class="col-sm-9">{{ employee.phone|default:"—" }}</dd>
+
+        <dt class="col-sm-3">Department</dt>
+        <dd class="col-sm-9">{{ employee.department }}</dd>
+
+        <dt class="col-sm-3">Job title</dt>
+        <dd class="col-sm-9">{{ employee.job_title }}</dd>
+
+        <dt class="col-sm-3">Date of joining</dt>
+        <dd class="col-sm-9">{{ employee.date_of_joining }}</dd>
+
+        <dt class="col-sm-3">Address</dt>
+        <dd class="col-sm-9">{{ employee.address|linebreaksbr|default:"—" }}</dd>
+
+        <dt class="col-sm-3">Status</dt>
+        <dd class="col-sm-9">
+          {% if employee.is_active_employee %}
+            <span class="badge text-bg-success">Active</span>
+          {% else %}
+            <span class="badge text-bg-secondary">Inactive</span>
+          {% endif %}
+        </dd>
+      </dl>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Not allowed · HRMS{% endblock %}
+{% block page_title %}Access denied{% endblock %}
+
+{% block content %}
+  <div class="hrms-card p-4" style="max-width: 34rem;">
+    <p class="text-secondary">
+      This page is for Admin users only. Employees can use their profile instead.
+    </p>
+    <a class="btn btn-primary" href="{% url 'accounts:profile' %}">Go to profile</a>
+  </div>
+{% endblock %}

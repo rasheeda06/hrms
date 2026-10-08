@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Haven HR</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!--
+    Double-click this file to open the HRMS. No install, no server.
+    JavaScript files in /js act like a tiny backend using localStorage.
+  -->
+
+  <!-- ========== LOGIN ========== -->
+  <div id="screen-login" class="login-page hidden">
+    <section class="brand-panel">
+      <div>
+        <div class="logo-mark" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <path d="M4 18V8l8-4 8 4v10" stroke="#F6F1E8" stroke-width="1.8"/>
+            <path d="M9 18v-5h6v5" stroke="#F6F1E8" stroke-width="1.8"/>
+          </svg>
+        </div>
+        <div class="brand-kicker">Browser HRMS</div>
+        <h1>Haven HR</h1>
+        <p>A beginner-friendly people desk that runs entirely in your browser. Employee records, leave requests, and payroll live in localStorage.</p>
+        <div class="feature-list">
+          <span>Admin and employee logins</span>
+          <span>Employee, leave, and payroll tools</span>
+          <span>Responsive layout for phone and desktop</span>
+        </div>
+      </div>
+      <p class="muted">Data stays on this computer. Refreshing the page does not erase it.</p>
+    </section>
+
+    <section class="login-panel">
+      <form class="login-card" id="login-form">
+        <h2>Sign in</h2>
+        <p class="muted" id="login-copy">Use the admin account to manage the whole team.</p>
+        <div class="role-tabs" role="tablist">
+          <button type="button" class="active" data-role="admin">Admin</button>
+          <button type="button" data-role="employee">Employee</button>
+        </div>
+        <div class="field">
+          <label for="username">Username</label>
+          <input id="username" name="username" autocomplete="username" required />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required />
+        </div>
+        <p class="error-text" id="login-error"></p>
+        <button class="btn btn-primary btn-block" type="submit">Continue</button>
+        <div class="demo-box">
+          <strong>Demo accounts</strong>
+          Admin: admin / admin123<br />
+          Employee: emma / emma123 &nbsp;·&nbsp; raj / raj123 &nbsp;·&nbsp; sofia / sofia123
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- ========== ADMIN ========== -->
+  <div id="screen-admin" class="hidden">
+    <div class="overlay" id="admin-overlay"></div>
+    <div class="app">
+      <aside class="sidebar" id="admin-sidebar">
+        <div class="sidebar-brand">
+          <div class="logo-mark">HR</div>
+          <div>
+            <strong>Haven HR</strong>
+            <small>Admin workspace</small>
+          </div>
+        </div>
+        <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+        <button class="nav-btn" data-view="employees">Employees</button>
+        <button class="nav-btn" data-view="leaves">Leave management</button>
+        <button class="nav-btn" data-view="payroll">Payroll</button>
+        <div class="sidebar-foot">
+          <button class="nav-btn" id="reset-demo">Reset demo data</button>
+          <button class="nav-btn" id="admin-logout">Log out</button>
+        </div>
+      </aside>
+      <main class="main">
+        <div class="topbar">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <button class="menu-btn" id="admin-menu" aria-label="Open menu">☰</button>
+            <div>
+              <h2 id="admin-title">Dashboard</h2>
+              <p class="muted" id="admin-sub">Overview of people, leave, and pay.</p>
+            </div>
+          </div>
+          <div class="user-chip">
+            <div class="avatar" id="admin-avatar">A</div>
+            <div>
+              <strong id="admin-name">Admin</strong>
+              <div class="muted" style="font-size:0.78rem;">Administrator</div>
+            </div>
+          </div>
+        </div>
+        <section id="admin-view-dashboard">
+          <div class="stats" id="dash-stats"></div>
+          <div class="split">
+            <article class="panel">
+              <div class="panel-head"><h3>Pending leave</h3></div>
+              <div class="table-wrap" id="dash-leaves"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head"><h3>Team snapshot</h3></div>
+              <div id="dash-team"></div>
+            </article>
+          </div>
+        </section>
+        <section id="admin-view-employees" class="hidden">
+          <article class="panel">
+            <div class="panel-head">
+              <h3>Employee directory</h3>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <input class="search" id="employee-search" placeholder="Search name, role, or department" />
+                <button class="btn btn-primary" id="add-employee-btn">Add employee</button>
+              </div>
+            </div>
+            <div class="table-wrap" id="employee-table"></div>
+          </article>
+        </section>
+        <section id="admin-view-leaves" class="hidden">
+          <article class="panel">
+            <div class="panel-head">
+              <h3>Leave requests</h3>
+              <select id="leave-filter">
+                <option value="">All statuses</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+            <div class="table-wrap" id="leave-table"></div>
+          </article>
+        </section>
+        <section id="admin-view-payroll" class="hidden">
+          <article class="panel">
+            <div class="panel-head">
+              <h3>Monthly payroll</h3>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                <input type="month" id="payroll-month" />
+                <button class="btn btn-forest" id="generate-payroll">Generate payroll</button>
+              </div>
+            </div>
+            <p class="muted">Net pay = basic salary + allowances − fixed deductions − unpaid leave deduction (basic ÷ 30 × unpaid days).</p>
+            <div class="table-wrap" id="payroll-table"></div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <div class="modal-backdrop hidden" id="employee-modal">
+      <form class="modal" id="employee-form">
+        <h3 id="employee-modal-title">Add employee</h3>
+        <input type="hidden" id="emp-id" />
+        <div class="grid-2">
+          <div class="field"><label for="emp-name">Full name</label><input id="emp-name" required /></div>
+          <div class="field"><label for="emp-email">Email</label><input id="emp-email" type="email" required /></div>
+          <div class="field"><label for="emp-phone">Phone</label><input id="emp-phone" /></div>
+          <div class="field">
+            <label for="emp-dept">Department</label>
+            <select id="emp-dept">
+              <option>Engineering</option>
+              <option>Design</option>
+              <option>HR</option>
+              <option>Finance</option>
+              <option>Sales</option>
+              <option>Operations</option>
+            </select>
+          </div>
+          <div class="field"><label for="emp-position">Position</label><input id="emp-position" required /></div>
+          <div class="field"><label for="emp-join">Join date</label><input id="emp-join" type="date" required /></div>
+          <div class="field"><label for="emp-basic">Basic salary</label><input id="emp-basic" type="number" min="0" step="0.01" required /></div>
+          <div class="field"><label for="emp-allow">Allowances</label><input id="emp-allow" type="number" min="0" step="0.01" value="0" /></div>
+          <div class="field"><label for="emp-deduct">Monthly deductions</label><input id="emp-deduct" type="number" min="0" step="0.01" value="0" /></div>
+          <div class="field"><label for="emp-user">Login username</label><input id="emp-user" required /></div>
+          <div class="field"><label for="emp-pass">Login password</label><input id="emp-pass" required /></div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+          <button type="button" class="btn btn-ghost" id="cancel-employee">Cancel</button>
+          <button class="btn btn-primary" type="submit">Save employee</button>
+        </div>
+      </form>
+    </div>
+    <div class="modal-backdrop hidden" id="admin-payslip-modal"></div>
+  </div>
+
+  <!-- ========== EMPLOYEE ========== -->
+  <div id="screen-employee" class="hidden">
+    <div class="overlay" id="emp-overlay"></div>
+    <div class="app">
+      <aside class="sidebar" id="emp-sidebar">
+        <div class="sidebar-brand">
+          <div class="logo-mark">HR</div>
+          <div>
+            <strong>Haven HR</strong>
+            <small>Employee workspace</small>
+          </div>
+        </div>
+        <button class="nav-btn active" data-view="dashboard">My dashboard</button>
+        <button class="nav-btn" data-view="profile">My profile</button>
+        <button class="nav-btn" data-view="leave">Apply leave</button>
+        <button class="nav-btn" data-view="payslips">My payroll</button>
+        <div class="sidebar-foot">
+          <button class="nav-btn" id="emp-logout">Log out</button>
+        </div>
+      </aside>
+      <main class="main">
+        <div class="topbar">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <button class="menu-btn" id="emp-menu" aria-label="Open menu">☰</button>
+            <div>
+              <h2 id="emp-title">My dashboard</h2>
+              <p class="muted" id="welcome-line">Welcome back.</p>
+            </div>
+          </div>
+          <div class="user-chip">
+            <div class="avatar" id="emp-avatar">E</div>
+            <div>
+              <strong id="emp-chip-name">Employee</strong>
+              <div class="muted" style="font-size:0.78rem;" id="emp-chip-role">Team member</div>
+            </div>
+          </div>
+        </div>
+        <section id="emp-view-dashboard">
+          <div class="stats" id="emp-stats"></div>
+          <div class="split">
+            <article class="panel">
+              <div class="panel-head"><h3>My leave requests</h3></div>
+              <div class="table-wrap" id="my-leave-preview"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head"><h3>Latest payslip</h3></div>
+              <div id="latest-payslip"></div>
+            </article>
+          </div>
+        </section>
+        <section id="emp-view-profile" class="hidden">
+          <article class="panel" id="profile-card"></article>
+        </section>
+        <section id="emp-view-leave" class="hidden">
+          <div class="split">
+            <article class="panel">
+              <div class="panel-head"><h3>New leave request</h3></div>
+              <form id="leave-form">
+                <div class="field">
+                  <label for="leave-type">Leave type</label>
+                  <select id="leave-type">
+                    <option>Annual</option>
+                    <option>Sick</option>
+                    <option>Casual</option>
+                    <option>Unpaid</option>
+                  </select>
+                </div>
+                <div class="grid-2">
+                  <div class="field"><label for="leave-from">From</label><input id="leave-from" type="date" required /></div>
+                  <div class="field"><label for="leave-to">To</label><input id="leave-to" type="date" required /></div>
+                </div>
+                <div class="field"><label for="leave-reason">Reason</label><textarea id="leave-reason" required></textarea></div>
+                <p class="error-text" id="leave-error"></p>
+                <button class="btn btn-primary" type="submit">Submit request</button>
+              </form>
+            </article>
+            <article class="panel">
+              <div class="panel-head"><h3>Balances</h3></div>
+              <div id="leave-balances"></div>
+              <p class="muted">Unpaid leave is unlimited, but it reduces that month's payroll.</p>
+            </article>
+          </div>
+          <article class="panel" style="margin-top:16px;">
+            <div class="panel-head"><h3>Request history</h3></div>
+            <div class="table-wrap" id="my-leave-table"></div>
+          </article>
+        </section>
+        <section id="emp-view-payslips" class="hidden">
+          <article class="panel">
+            <div class="panel-head"><h3>Payslip history</h3></div>
+            <div class="table-wrap" id="my-payroll-table"></div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <div class="modal-backdrop hidden" id="emp-payslip-modal"></div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/login.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/employee.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

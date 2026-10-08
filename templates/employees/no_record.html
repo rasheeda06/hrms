@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}My information · HRMS{% endblock %}
+{% block page_title %}My information{% endblock %}
+
+{% block content %}
+  <div class="hrms-card p-4" style="max-width: 34rem;">
+    <p class="text-secondary">
+      No employee record is linked to your account yet. Ask an Admin to add you
+      in Employee Management.
+    </p>
+    <a class="btn btn-outline-secondary" href="{% url 'accounts:profile' %}">Back to home</a>
+  </div>
+{% endblock %}

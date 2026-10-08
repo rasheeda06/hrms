@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Leave · HRMS{% endblock %}
+{% block page_title %}Leave{% endblock %}
+{% block page_subtitle %}
+  <p class="hrms-page-subtitle">Leave requests, approvals, and balances.</p>
+{% endblock %}
+
+{% block content %}
+  <div class="hrms-card p-4 text-center" style="max-width: 34rem;">
+    <span class="hrms-stat-icon hrms-icon-amber mx-auto mb-3"><i class="bi bi-airplane"></i></span>
+    <h2 class="h5">Not built yet</h2>
+    <p class="text-secondary mb-3">
+      Leave management is Week 5 of the plan: apply for leave, admin approve or
+      reject, and track remaining days per leave type.
+    </p>
+    <a class="btn btn-outline-secondary" href="{% url 'home' %}">Back to home</a>
+  </div>
+{% endblock %}

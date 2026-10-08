@@ -1,0 +1,73 @@
+{% with app_name=request.resolver_match.app_name url_name=request.resolver_match.url_name %}
+<div class="d-flex flex-column h-100 p-3">
+
+  <a class="hrms-brand d-flex align-items-center gap-2 mb-4" href="{% url 'home' %}">
+    <span class="hrms-brand-mark">HR</span>
+    <span>HRMS</span>
+  </a>
+
+  <p class="hrms-nav-heading mb-2">Menu</p>
+  <nav class="d-flex flex-column gap-1">
+    {% if user_is_admin %}
+      <a class="hrms-nav-link {% if app_name == 'dashboard' %}active{% endif %}"
+         href="{% url 'dashboard:home' %}">
+        <i class="bi bi-grid-1x2"></i> Dashboard
+      </a>
+      <a class="hrms-nav-link {% if app_name == 'employees' and url_name != 'departments' %}active{% endif %}"
+         href="{% url 'employees:list' %}">
+        <i class="bi bi-people"></i> Employees
+      </a>
+      <a class="hrms-nav-link {% if app_name == 'attendance' %}active{% endif %}"
+         href="{% url 'attendance:home' %}">
+        <i class="bi bi-calendar-check"></i> Attendance
+        <span class="hrms-nav-soon">soon</span>
+      </a>
+      <a class="hrms-nav-link {% if app_name == 'leave' %}active{% endif %}"
+         href="{% url 'leave:home' %}">
+        <i class="bi bi-airplane"></i> Leave
+        <span class="hrms-nav-soon">soon</span>
+      </a>
+      <a class="hrms-nav-link {% if url_name == 'departments' %}active{% endif %}"
+         href="{% url 'employees:departments' %}">
+        <i class="bi bi-diagram-3"></i> Departments
+      </a>
+    {% else %}
+      <a class="hrms-nav-link {% if url_name == 'profile' %}active{% endif %}"
+         href="{% url 'accounts:profile' %}">
+        <i class="bi bi-house"></i> Home
+      </a>
+      <a class="hrms-nav-link {% if app_name == 'employees' %}active{% endif %}"
+         href="{% url 'employees:me' %}">
+        <i class="bi bi-person-badge"></i> My information
+      </a>
+      <a class="hrms-nav-link {% if app_name == 'attendance' %}active{% endif %}"
+         href="{% url 'attendance:home' %}">
+        <i class="bi bi-calendar-check"></i> Attendance
+        <span class="hrms-nav-soon">soon</span>
+      </a>
+      <a class="hrms-nav-link {% if app_name == 'leave' %}active{% endif %}"
+         href="{% url 'leave:home' %}">
+        <i class="bi bi-airplane"></i> Leave
+        <span class="hrms-nav-soon">soon</span>
+      </a>
+    {% endif %}
+  </nav>
+
+  <div class="mt-auto pt-4">
+    <div class="hrms-user-chip d-flex align-items-center gap-2 mb-2">
+      <span class="avatar">{{ user.get_username|slice:":2"|upper }}</span>
+      <span class="text-truncate">
+        <span class="d-block small text-truncate">{{ user.get_username }}</span>
+        <span class="d-block text-secondary" style="font-size: 0.75rem;">{{ user_role_label }}</span>
+      </span>
+    </div>
+    <form method="post" action="{% url 'accounts:logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="hrms-logout">
+        <i class="bi bi-box-arrow-right"></i> Logout
+      </button>
+    </form>
+  </div>
+
+</div>
+{% endwith %}

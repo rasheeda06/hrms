@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Delete {{ employee.employee_id }} · HRMS{% endblock %}
+{% block page_title %}Delete employee{% endblock %}
+
+{% block content %}
+  <div class="hrms-card p-4" style="max-width: 34rem;">
+  <p>
+    Delete <strong>{{ employee.full_name }}</strong> ({{ employee.employee_id }})?
+    Their login will be turned off. This cannot be undone.
+  </p>
+  <form method="post" class="d-flex gap-2">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a class="btn btn-outline-secondary" href="{% url 'employees:detail' employee.pk %}">Cancel</a>
+  </form>
+  </div>
+{% endblock %}
