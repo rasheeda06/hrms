@@ -7,60 +7,78 @@
 {% endblock %}
 
 {% block content %}
-  <div class="d-flex flex-column flex-md-row justify-content-end align-items-md-center gap-2 mb-3">
+  <div class="hrms-detail-actions">
     {% if user_is_admin %}
-      <div class="d-flex gap-2">
-        <a class="btn btn-outline-secondary" href="{% url 'employees:list' %}">Back to list</a>
-        <a class="btn btn-primary" href="{% url 'employees:edit' employee.pk %}">Edit</a>
-        <a class="btn btn-outline-danger" href="{% url 'employees:delete' employee.pk %}">Delete</a>
-      </div>
+      <a class="btn btn-outline-secondary" href="{% url 'employees:list' %}">Back to list</a>
+      <a class="btn btn-primary" href="{% url 'employees:edit' employee.pk %}">Edit</a>
+      <a class="btn btn-outline-danger" href="{% url 'employees:delete' employee.pk %}">Delete</a>
     {% else %}
       <a class="btn btn-outline-secondary" href="{% url 'accounts:profile' %}">Back to home</a>
     {% endif %}
   </div>
 
-  <div class="hrms-card">
-    <div class="card-body">
-      <dl class="row mb-0">
-        <dt class="col-sm-3">Employee ID</dt>
-        <dd class="col-sm-9">{{ employee.employee_id }}</dd>
+  <div class="hrms-card hrms-detail-card">
+    <dl class="hrms-detail">
+      <div class="hrms-detail-row">
+        <dt>Employee ID</dt>
+        <dd>{{ employee.employee_id }}</dd>
+      </div>
 
-        <dt class="col-sm-3">Account</dt>
-        <dd class="col-sm-9">{{ employee.user.username }}</dd>
+      <div class="hrms-detail-row">
+        <dt>Account</dt>
+        <dd>{{ employee.user.username }}</dd>
+      </div>
 
-        <dt class="col-sm-3">First name</dt>
-        <dd class="col-sm-9">{{ employee.first_name }}</dd>
+      <div class="hrms-detail-row">
+        <dt>First name</dt>
+        <dd>{{ employee.first_name }}</dd>
+      </div>
 
-        <dt class="col-sm-3">Last name</dt>
-        <dd class="col-sm-9">{{ employee.last_name }}</dd>
+      <div class="hrms-detail-row">
+        <dt>Last name</dt>
+        <dd>{{ employee.last_name }}</dd>
+      </div>
 
-        <dt class="col-sm-3">Email</dt>
-        <dd class="col-sm-9">{{ employee.email }}</dd>
+      <div class="hrms-detail-row">
+        <dt>Email</dt>
+        <dd>{{ employee.email }}</dd>
+      </div>
 
-        <dt class="col-sm-3">Phone</dt>
-        <dd class="col-sm-9">{{ employee.phone|default:"—" }}</dd>
+      <div class="hrms-detail-row">
+        <dt>Phone</dt>
+        <dd>{% if employee.phone %}{{ employee.phone }}{% else %}<span class="hrms-detail-empty">—</span>{% endif %}</dd>
+      </div>
 
-        <dt class="col-sm-3">Department</dt>
-        <dd class="col-sm-9">{{ employee.department }}</dd>
+      <div class="hrms-detail-row">
+        <dt>Department</dt>
+        <dd>{{ employee.department }}</dd>
+      </div>
 
-        <dt class="col-sm-3">Job title</dt>
-        <dd class="col-sm-9">{{ employee.job_title }}</dd>
+      <div class="hrms-detail-row">
+        <dt>Job title</dt>
+        <dd>{{ employee.job_title }}</dd>
+      </div>
 
-        <dt class="col-sm-3">Date of joining</dt>
-        <dd class="col-sm-9">{{ employee.date_of_joining }}</dd>
+      <div class="hrms-detail-row">
+        <dt>Date of joining</dt>
+        <dd>{{ employee.date_of_joining }}</dd>
+      </div>
 
-        <dt class="col-sm-3">Address</dt>
-        <dd class="col-sm-9">{{ employee.address|linebreaksbr|default:"—" }}</dd>
+      <div class="hrms-detail-row{% if employee.address %} hrms-detail-row--top{% endif %}">
+        <dt>Address</dt>
+        <dd>{% if employee.address %}{{ employee.address|linebreaksbr }}{% else %}<span class="hrms-detail-empty">—</span>{% endif %}</dd>
+      </div>
 
-        <dt class="col-sm-3">Status</dt>
-        <dd class="col-sm-9">
+      <div class="hrms-detail-row">
+        <dt>Status</dt>
+        <dd>
           {% if employee.is_active_employee %}
             <span class="badge text-bg-success">Active</span>
           {% else %}
             <span class="badge text-bg-secondary">Inactive</span>
           {% endif %}
         </dd>
-      </dl>
-    </div>
+      </div>
+    </dl>
   </div>
 {% endblock %}

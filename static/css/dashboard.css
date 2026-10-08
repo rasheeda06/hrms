@@ -255,3 +255,86 @@ body.hrms-app {
   color: #9ca3af;
   font-size: 0.9rem;
 }
+
+/* Employee detail ---------------------------------------------------- */
+
+.hrms-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.hrms-detail-card {
+  overflow: hidden;
+}
+
+.hrms-detail {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  margin: 0;
+  padding: 0.4rem 0;
+}
+
+.hrms-detail-row {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+  column-gap: 2.75rem;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--hrms-border);
+  min-height: 3.5rem;
+}
+
+.hrms-detail-row:last-child {
+  border-bottom: 0;
+}
+
+.hrms-detail dt {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.hrms-detail dd {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #374151;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.hrms-detail-empty {
+  color: #9ca3af;
+}
+
+.hrms-detail-row--top {
+  align-items: start;
+}
+
+.hrms-detail-row--top dt {
+  padding-top: 0.15rem;
+}
+
+@media (max-width: 575.98px) {
+  .hrms-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .hrms-detail-row {
+    grid-template-columns: 1fr;
+    row-gap: 0.3rem;
+    column-gap: 0;
+    padding: 0.9rem 1.25rem;
+    min-height: 0;
+  }
+
+  .hrms-detail dt {
+    white-space: normal;
+  }
+}
