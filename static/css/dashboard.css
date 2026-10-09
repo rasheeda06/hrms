@@ -46,6 +46,8 @@ body.hrms-app {
   background: var(--hrms-sidebar-bg);
   width: 260px;
   flex-shrink: 0;
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: width;
 }
 
 .hrms-main {
@@ -59,10 +61,21 @@ body.hrms-app {
     top: 0;
     height: 100vh;
     overflow-y: auto;
+    overflow-x: hidden;
   }
 }
 
 /* Sidebar ------------------------------------------------------------ */
+
+.hrms-sidebar-inner {
+  transition: padding 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.hrms-brand-row {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 .hrms-brand {
   color: #1f2937;
@@ -85,12 +98,53 @@ body.hrms-app {
   font-size: 0.85rem;
 }
 
+.hrms-brand-text {
+  display: inline-block;
+  white-space: nowrap;
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 150px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.hrms-sidebar-toggle-btn,
+.hrms-topbar-toggle-btn {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0.35rem !important;
+  border-radius: 6px;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--hrms-sidebar-text, #6b7280) !important;
+  cursor: pointer;
+  line-height: 1;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hrms-sidebar-toggle-btn:hover,
+.hrms-topbar-toggle-btn:hover {
+  background-color: var(--hrms-sidebar-hover, #e5e7eb) !important;
+  color: #111827 !important;
+  transform: scale(1.08);
+}
+
+.hrms-sidebar-toggle-btn .hrms-toggle-arrow {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: 12px 12px;
+}
+
 .hrms-nav-heading {
   color: #6b7280;
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 600;
+  white-space: nowrap;
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1), margin 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 24px;
 }
 
 .hrms-nav-link {
@@ -102,13 +156,15 @@ body.hrms-app {
   color: var(--hrms-sidebar-text);
   text-decoration: none;
   font-size: 0.925rem;
-  transition: background-color 0.12s ease, color 0.12s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
 .hrms-nav-link:hover,
 .hrms-nav-link:focus-visible {
   background: var(--hrms-sidebar-hover);
   color: #1f2937;
+  transform: translateX(2px);
 }
 
 .hrms-nav-link.active {
@@ -121,6 +177,17 @@ body.hrms-app {
   font-size: 1.05rem;
   width: 1.15rem;
   text-align: center;
+  flex-shrink: 0;
+  transition: font-size 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hrms-nav-text {
+  display: inline-block;
+  white-space: nowrap;
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 180px;
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .hrms-nav-soon {
@@ -132,12 +199,16 @@ body.hrms-app {
   border: 1px solid #374151;
   border-radius: 999px;
   padding: 0.05rem 0.45rem;
+  white-space: nowrap;
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hrms-logout {
   width: 100%;
-  background: transparent;
-  border: 1px solid #374151;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
   color: var(--hrms-sidebar-text);
   border-radius: 8px;
   padding: 0.55rem 0.85rem;
@@ -145,11 +216,118 @@ body.hrms-app {
   display: flex;
   align-items: center;
   gap: 0.7rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hrms-logout:hover {
-  background: var(--hrms-sidebar-hover);
-  color: #1f2937;
+  background: var(--hrms-sidebar-hover) !important;
+  color: #ef4444 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.hrms-logout:focus,
+.hrms-logout:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.hrms-logout i {
+  font-size: 1.05rem;
+  width: 1.15rem;
+  text-align: center;
+  flex-shrink: 0;
+  transition: font-size 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Collapsed Sidebar Styles (Framer Motion spring animation) */
+@media (min-width: 992px) {
+  html.sidebar-collapsed .hrms-sidebar {
+    width: 68px !important;
+  }
+
+  html.sidebar-collapsed .hrms-sidebar-inner {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+
+  html.sidebar-collapsed .hrms-brand-row {
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  html.sidebar-collapsed .hrms-brand {
+    justify-content: center !important;
+    gap: 0 !important;
+  }
+
+  html.sidebar-collapsed .hrms-brand-text {
+    opacity: 0 !important;
+    max-width: 0 !important;
+    transform: translateX(-10px) !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    display: none !important;
+  }
+
+  html.sidebar-collapsed .hrms-sidebar-toggle-btn .hrms-toggle-arrow {
+    transform: rotate(180deg);
+  }
+
+  html.sidebar-collapsed .hrms-nav-heading {
+    opacity: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
+  html.sidebar-collapsed .hrms-nav-text {
+    opacity: 0 !important;
+    max-width: 0 !important;
+    transform: translateX(-10px) !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    display: none !important;
+  }
+
+  html.sidebar-collapsed .hrms-nav-soon {
+    opacity: 0 !important;
+    transform: scale(0.5) !important;
+    display: none !important;
+  }
+
+  html.sidebar-collapsed .hrms-nav-link,
+  html.sidebar-collapsed .hrms-logout {
+    justify-content: center !important;
+    padding: 0.65rem 0 !important;
+    width: 44px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    gap: 0 !important;
+  }
+
+  html.sidebar-collapsed .hrms-nav-link i,
+  html.sidebar-collapsed .hrms-logout i {
+    font-size: 1.25rem !important;
+    width: 1.25rem !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  html.sidebar-collapsed .hrms-nav-link:hover,
+  html.sidebar-collapsed .hrms-logout:hover {
+    transform: translateY(-1px) scale(1.08) !important;
+  }
 }
 
 .hrms-user-chip {
@@ -515,12 +693,33 @@ html[data-bs-theme="dark"] .hrms-nav-link.active,
 
 html[data-bs-theme="dark"] .hrms-logout,
 [data-bs-theme="dark"] .hrms-logout {
-  border-color: #374151 !important;
+  border: none !important;
+  box-shadow: none !important;
   color: #9ca3af !important;
+  background-color: transparent !important;
 }
 
 html[data-bs-theme="dark"] .hrms-logout:hover,
+[data-bs-theme="dark"] .hrms-logout:hover,
+html[data-bs-theme="dark"] .hrms-logout:focus,
 [data-bs-theme="dark"] .hrms-logout:focus {
+  background-color: #1f2937 !important;
+  color: #f87171 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+html[data-bs-theme="dark"] .hrms-sidebar-toggle-btn,
+html[data-bs-theme="dark"] .hrms-topbar-toggle-btn,
+[data-bs-theme="dark"] .hrms-sidebar-toggle-btn,
+[data-bs-theme="dark"] .hrms-topbar-toggle-btn {
+  color: #9ca3af !important;
+}
+
+html[data-bs-theme="dark"] .hrms-sidebar-toggle-btn:hover,
+html[data-bs-theme="dark"] .hrms-topbar-toggle-btn:hover,
+[data-bs-theme="dark"] .hrms-sidebar-toggle-btn:hover,
+[data-bs-theme="dark"] .hrms-topbar-toggle-btn:hover {
   background-color: #1f2937 !important;
   color: #f9fafb !important;
 }

@@ -1,53 +1,84 @@
 {% with app_name=request.resolver_match.app_name url_name=request.resolver_match.url_name %}
-<div class="d-flex flex-column h-100 p-3">
+<div class="d-flex flex-column h-100 p-3 hrms-sidebar-inner">
 
-  <a class="hrms-brand d-flex align-items-center gap-2 mb-4" href="{% url 'home' %}">
-    <span class="hrms-brand-mark">HR</span>
-    <span>HRMS</span>
-  </a>
+  <div class="d-flex align-items-center justify-content-between mb-4 hrms-brand-row">
+    <a class="hrms-brand d-flex align-items-center gap-2 text-decoration-none" href="{% url 'home' %}">
+      <span class="hrms-brand-mark flex-shrink-0">HR</span>
+      <span class="hrms-brand-text">HRMS</span>
+    </a>
+    <button id="sidebarToggleBtn"
+            class="hrms-sidebar-toggle-btn"
+            type="button"
+            aria-label="Toggle sidebar"
+            title="Toggle sidebar">
+      <svg class="lucide lucide-panel-left hrms-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="18" height="18" x="3" y="3" rx="2" />
+        <path d="M9 3v18" />
+        <path class="hrms-toggle-arrow" d="m14 9-3 3 3 3" />
+      </svg>
+    </button>
+  </div>
 
   <p class="hrms-nav-heading mb-2">Menu</p>
   <nav class="d-flex flex-column gap-1">
     {% if user_is_admin %}
       <a class="hrms-nav-link {% if app_name == 'dashboard' %}active{% endif %}"
-         href="{% url 'dashboard:home' %}">
-        <i class="bi bi-grid-1x2"></i> Dashboard
+         href="{% url 'dashboard:home' %}"
+         title="Dashboard">
+        <i class="bi bi-grid-1x2"></i>
+        <span class="hrms-nav-text">Dashboard</span>
       </a>
       <a class="hrms-nav-link {% if app_name == 'employees' and url_name != 'departments' %}active{% endif %}"
-         href="{% url 'employees:list' %}">
-        <i class="bi bi-people"></i> Employees
+         href="{% url 'employees:list' %}"
+         title="Employees">
+        <i class="bi bi-people"></i>
+        <span class="hrms-nav-text">Employees</span>
       </a>
       <a class="hrms-nav-link {% if app_name == 'attendance' %}active{% endif %}"
-         href="{% url 'attendance:home' %}">
-        <i class="bi bi-calendar-check"></i> Attendance
+         href="{% url 'attendance:home' %}"
+         title="Attendance">
+        <i class="bi bi-calendar-check"></i>
+        <span class="hrms-nav-text">Attendance</span>
         <span class="hrms-nav-soon">soon</span>
       </a>
       <a class="hrms-nav-link {% if app_name == 'leave' %}active{% endif %}"
-         href="{% url 'leave:home' %}">
-        <i class="bi bi-airplane"></i> Leave
+         href="{% url 'leave:home' %}"
+         title="Leave">
+        <i class="bi bi-airplane"></i>
+        <span class="hrms-nav-text">Leave</span>
         <span class="hrms-nav-soon">soon</span>
       </a>
       <a class="hrms-nav-link {% if url_name == 'departments' %}active{% endif %}"
-         href="{% url 'employees:departments' %}">
-        <i class="bi bi-diagram-3"></i> Departments
+         href="{% url 'employees:departments' %}"
+         title="Departments">
+        <i class="bi bi-diagram-3"></i>
+        <span class="hrms-nav-text">Departments</span>
       </a>
     {% else %}
       <a class="hrms-nav-link {% if url_name == 'profile' %}active{% endif %}"
-         href="{% url 'accounts:profile' %}">
-        <i class="bi bi-house"></i> Home
+         href="{% url 'accounts:profile' %}"
+         title="Home">
+        <i class="bi bi-house"></i>
+        <span class="hrms-nav-text">Home</span>
       </a>
       <a class="hrms-nav-link {% if app_name == 'employees' %}active{% endif %}"
-         href="{% url 'employees:me' %}">
-        <i class="bi bi-person-badge"></i> My information
+         href="{% url 'employees:me' %}"
+         title="My information">
+        <i class="bi bi-person-badge"></i>
+        <span class="hrms-nav-text">My information</span>
       </a>
       <a class="hrms-nav-link {% if app_name == 'attendance' %}active{% endif %}"
-         href="{% url 'attendance:home' %}">
-        <i class="bi bi-calendar-check"></i> Attendance
+         href="{% url 'attendance:home' %}"
+         title="Attendance">
+        <i class="bi bi-calendar-check"></i>
+        <span class="hrms-nav-text">Attendance</span>
         <span class="hrms-nav-soon">soon</span>
       </a>
       <a class="hrms-nav-link {% if app_name == 'leave' %}active{% endif %}"
-         href="{% url 'leave:home' %}">
-        <i class="bi bi-airplane"></i> Leave
+         href="{% url 'leave:home' %}"
+         title="Leave">
+        <i class="bi bi-airplane"></i>
+        <span class="hrms-nav-text">Leave</span>
         <span class="hrms-nav-soon">soon</span>
       </a>
     {% endif %}
@@ -56,8 +87,9 @@
   <div class="mt-auto pt-4">
     <form method="post" action="{% url 'accounts:logout' %}">
       {% csrf_token %}
-      <button type="submit" class="hrms-logout">
-        <i class="bi bi-box-arrow-right"></i> Logout
+      <button type="submit" class="hrms-logout" title="Logout">
+        <i class="bi bi-box-arrow-right"></i>
+        <span class="hrms-nav-text">Logout</span>
       </button>
     </form>
   </div>
