@@ -7,6 +7,22 @@
   --hrms-accent: #2563eb;
   --hrms-border: #e5e7eb;
   --hrms-page-bg: #f5f6f8;
+  --hrms-card-bg: #ffffff;
+  --hrms-topbar-bg: #ffffff;
+  --hrms-table-header-bg: #f9fafb;
+}
+
+[data-bs-theme="dark"] {
+  --hrms-sidebar-bg: #111827;
+  --hrms-sidebar-hover: #1f2937;
+  --hrms-sidebar-text: #9ca3af;
+  --hrms-accent: #3b82f6;
+  --hrms-border: #374151;
+  --hrms-page-bg: #0b0f19;
+  --hrms-card-bg: #111827;
+  --hrms-topbar-bg: #111827;
+  --hrms-table-header-bg: #1f2937;
+  --bs-border-color: #374151;
 }
 
 body.hrms-app {
@@ -154,7 +170,7 @@ body.hrms-app {
 /* Topbar ------------------------------------------------------------- */
 
 .hrms-topbar {
-  background: #fff;
+  background: var(--hrms-topbar-bg);
   border-bottom: 1px solid var(--hrms-border);
   padding: 0.85rem 1.5rem;
 }
@@ -178,7 +194,7 @@ body.hrms-app {
 /* Cards -------------------------------------------------------------- */
 
 .hrms-card {
-  background: #fff;
+  background: var(--hrms-card-bg);
   border: 1px solid var(--hrms-border);
   border-radius: 12px;
 }
@@ -235,7 +251,7 @@ body.hrms-app {
 }
 
 .hrms-card .table > thead th {
-  background: #f9fafb;
+  background: var(--hrms-table-header-bg);
   border-bottom: 1px solid var(--hrms-border);
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -338,3 +354,133 @@ body.hrms-app {
     white-space: normal;
   }
 }
+
+/* Theme Toggle Button ------------------------------------------------- */
+
+.hrms-theme-toggle {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  color: #4b5563;
+  border: 1px solid var(--hrms-border);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.hrms-theme-toggle:hover {
+  background: var(--hrms-sidebar-hover);
+  color: #1f2937;
+}
+
+[data-bs-theme="dark"] .hrms-theme-toggle {
+  color: #facc15;
+  border-color: var(--hrms-border);
+}
+
+[data-bs-theme="dark"] .hrms-theme-toggle:hover {
+  background: var(--hrms-sidebar-hover);
+  color: #fde047;
+}
+
+/* Dark Theme Adjustments ---------------------------------------------- */
+
+[data-bs-theme="dark"] .hrms-brand {
+  color: #f3f4f6;
+}
+
+[data-bs-theme="dark"] .hrms-nav-link:hover,
+[data-bs-theme="dark"] .hrms-nav-link:focus-visible {
+  color: #f9fafb;
+}
+
+[data-bs-theme="dark"] .hrms-logout:hover {
+  color: #f9fafb;
+}
+
+[data-bs-theme="dark"] .hrms-page-title {
+  color: #f3f4f6;
+}
+
+[data-bs-theme="dark"] .hrms-page-subtitle {
+  color: #9ca3af;
+}
+
+[data-bs-theme="dark"] .hrms-stat-label {
+  color: #9ca3af;
+}
+
+[data-bs-theme="dark"] .hrms-stat-value {
+  color: #f9fafb;
+}
+
+[data-bs-theme="dark"] .hrms-stat-value.muted {
+  color: #6b7280;
+}
+
+[data-bs-theme="dark"] .hrms-stat-note {
+  color: #9ca3af;
+}
+
+[data-bs-theme="dark"] .hrms-icon-blue   { background: rgba(37, 99, 235, 0.22); color: #60a5fa; }
+[data-bs-theme="dark"] .hrms-icon-green  { background: rgba(22, 163, 74, 0.22); color: #4ade80; }
+[data-bs-theme="dark"] .hrms-icon-amber  { background: rgba(217, 119, 6, 0.22); color: #fbbf24; }
+[data-bs-theme="dark"] .hrms-icon-purple { background: rgba(147, 51, 234, 0.22); color: #c084fc; }
+
+[data-bs-theme="dark"] .hrms-card .table > thead th {
+  color: #9ca3af;
+}
+
+[data-bs-theme="dark"] .hrms-empty {
+  color: #9ca3af;
+}
+
+[data-bs-theme="dark"] .hrms-detail dt {
+  color: #f3f4f6;
+}
+
+[data-bs-theme="dark"] .hrms-detail dd {
+  color: #cbd5e1;
+}
+
+[data-bs-theme="dark"] .hrms-detail-empty {
+  color: #6b7280;
+}
+
+[data-bs-theme="dark"] .badge.text-bg-light {
+  background-color: #1f2937 !important;
+  color: #e5e7eb !important;
+  border-color: var(--hrms-border) !important;
+}
+
+[data-bs-theme="dark"] .form-control {
+  background-color: #0b0f19;
+  border-color: var(--hrms-border);
+  color: #f3f4f6;
+}
+
+[data-bs-theme="dark"] .form-control:focus {
+  background-color: #0b0f19;
+  border-color: var(--hrms-accent);
+  color: #f3f4f6;
+}
+
+[data-bs-theme="dark"] .form-control::placeholder {
+  color: #6b7280;
+}
+
+[data-bs-theme="dark"] .form-select {
+  background-color: #0b0f19;
+  border-color: var(--hrms-border);
+  color: #f3f4f6;
+}
+
+[data-bs-theme="dark"] .form-label {
+  color: #e5e7eb;
+}
+
