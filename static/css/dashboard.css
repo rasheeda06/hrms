@@ -405,6 +405,55 @@ body.hrms-app {
   transform: scale(1.1);
 }
 
+/* Profile Button ------------------------------------------------------ */
+
+.hrms-profile-btn {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0.25rem 0.5rem !important;
+  margin: 0 !important;
+  color: #374151 !important;
+  cursor: pointer;
+  font-size: 12px !important;
+  font-weight: 500;
+  display: inline-flex !important;
+  align-items: center !important;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.hrms-profile-btn:hover,
+.hrms-profile-btn:focus,
+.hrms-profile-btn:active,
+.show > .hrms-profile-btn {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #111827 !important;
+}
+
+[data-bs-theme="dark"] .hrms-profile-btn {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  color: #d1d5db !important;
+}
+
+[data-bs-theme="dark"] .hrms-profile-btn:hover,
+[data-bs-theme="dark"] .hrms-profile-btn:focus,
+[data-bs-theme="dark"] .hrms-profile-btn:active,
+[data-bs-theme="dark"] .show > .hrms-profile-btn {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+}
+
 /* Dark Theme Adjustments ---------------------------------------------- */
 
 html[data-bs-theme="dark"] body.hrms-app,

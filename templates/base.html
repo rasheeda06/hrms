@@ -214,6 +214,51 @@
       color: #fde047 !important;
       transform: scale(1.1);
     }
+
+    /* Profile button: no visible background, seamless in light & dark */
+    .hrms-profile-btn {
+      background: transparent !important;
+      background-color: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+      padding: 0.25rem 0.5rem !important;
+      margin: 0 !important;
+      color: #374151 !important;
+      cursor: pointer;
+      font-size: 12px !important;
+      font-weight: 500;
+      display: inline-flex !important;
+      align-items: center !important;
+      line-height: 1.2;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .hrms-profile-btn:hover,
+    .hrms-profile-btn:focus,
+    .hrms-profile-btn:active,
+    .show > .hrms-profile-btn {
+      background: transparent !important;
+      background-color: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      color: #111827 !important;
+    }
+    html[data-bs-theme="dark"] .hrms-profile-btn {
+      background: transparent !important;
+      background-color: transparent !important;
+      border: none !important;
+      color: #d1d5db !important;
+    }
+    html[data-bs-theme="dark"] .hrms-profile-btn:hover,
+    html[data-bs-theme="dark"] .hrms-profile-btn:focus,
+    html[data-bs-theme="dark"] .hrms-profile-btn:active,
+    html[data-bs-theme="dark"] .show > .hrms-profile-btn {
+      background: transparent !important;
+      background-color: transparent !important;
+      border: none !important;
+      color: #ffffff !important;
+    }
   </style>
 </head>
 <body class="hrms-app">
@@ -253,7 +298,67 @@
               </svg>
             </span>
           </button>
-          <span class="badge text-bg-light border d-none d-sm-inline">{{ user_role_label }}</span>
+          <div class="dropdown">
+            <button id="profileDropdownBtn"
+                    class="hrms-profile-btn"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    aria-label="Profile menu">
+              <span class="d-inline-flex align-items-center justify-content-center">
+                <svg class="lucide lucide-user" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </span>
+              <span>Profile</span>
+              <svg class="lucide lucide-chevron-down" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="profileDropdownBtn">
+              <li class="px-3 py-2 border-bottom">
+                <div class="fw-semibold text-truncate">{{ user.get_username }}</div>
+                <div class="text-secondary small text-truncate">
+                  {{ user_role_label }}{% if user.email %} · {{ user.email }}{% endif %}
+                </div>
+              </li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 mt-1" href="{% url 'accounts:profile' %}">
+                  <svg class="lucide lucide-user" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  Profile
+                </a>
+              </li>
+              {% if user.is_staff or user.is_superuser %}
+                <li>
+                  <a class="dropdown-item d-flex align-items-center gap-2" href="{% url 'admin:index' %}">
+                    <svg class="lucide lucide-settings" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    Django Admin
+                  </a>
+                </li>
+              {% endif %}
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form method="post" action="{% url 'accounts:logout' %}" class="m-0">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item text-danger d-flex align-items-center gap-2">
+                    <svg class="lucide lucide-log-out" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                      <polyline points="16 17 21 12 16 7"/>
+                      <line x1="21" x2="9" y1="12" y2="12"/>
+                    </svg>
+                    Logout
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </div>
         </div>
       </header>
     {% endif %}

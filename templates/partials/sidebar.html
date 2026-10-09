@@ -54,13 +54,6 @@
   </nav>
 
   <div class="mt-auto pt-4">
-    <div class="hrms-user-chip d-flex align-items-center gap-2 mb-2">
-      <span class="avatar">{{ user.get_username|slice:":2"|upper }}</span>
-      <span class="text-truncate">
-        <span class="d-block small text-truncate">{{ user.get_username }}</span>
-        <span class="d-block text-secondary" style="font-size: 0.75rem;">{{ user_role_label }}</span>
-      </span>
-    </div>
     <form method="post" action="{% url 'accounts:logout' %}">
       {% csrf_token %}
       <button type="submit" class="hrms-logout">
