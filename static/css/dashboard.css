@@ -358,34 +358,46 @@ body.hrms-app {
 /* Theme Toggle Button ------------------------------------------------- */
 
 .hrms-theme-toggle {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.95rem;
-  color: #4b5563;
-  border: 1px solid var(--hrms-border);
-  background: transparent;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0.25rem !important;
+  margin: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #4b5563 !important;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  line-height: 1;
+  transition: color 0.15s ease, transform 0.15s ease;
 }
 
 .hrms-theme-toggle:hover {
-  background: var(--hrms-sidebar-hover);
-  color: #1f2937;
+  background: transparent !important;
+  color: #111827 !important;
+  transform: scale(1.1);
+}
+
+.hrms-theme-toggle:focus,
+.hrms-theme-toggle:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
 }
 
 [data-bs-theme="dark"] .hrms-theme-toggle {
-  color: #facc15;
-  border-color: var(--hrms-border);
+  background: transparent !important;
+  border: none !important;
+  color: #facc15 !important;
 }
 
 [data-bs-theme="dark"] .hrms-theme-toggle:hover {
-  background: var(--hrms-sidebar-hover);
-  color: #fde047;
+  background: transparent !important;
+  color: #fde047 !important;
+  transform: scale(1.1);
 }
 
 /* Dark Theme Adjustments ---------------------------------------------- */
@@ -594,13 +606,14 @@ html[data-bs-theme="dark"] .form-label,
 html[data-bs-theme="dark"] .hrms-theme-toggle,
 [data-bs-theme="dark"] .hrms-theme-toggle {
   color: #facc15 !important;
-  border-color: #374151 !important;
-  background-color: #1f2937 !important;
+  border: none !important;
+  background: transparent !important;
 }
 
 html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
 [data-bs-theme="dark"] .hrms-theme-toggle:hover {
-  background-color: #374151 !important;
+  background: transparent !important;
   color: #fde047 !important;
+  transform: scale(1.1);
 }
 

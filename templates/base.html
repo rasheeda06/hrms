@@ -166,16 +166,45 @@
     [data-bs-theme="dark"] .form-label {
       color: #e5e7eb !important;
     }
+    .hrms-theme-toggle {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+      padding: 0.25rem !important;
+      margin: 0 !important;
+      width: auto !important;
+      height: auto !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: #4b5563 !important;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.15s ease, transform 0.15s ease;
+    }
+    .hrms-theme-toggle:hover {
+      background: transparent !important;
+      color: #111827 !important;
+      transform: scale(1.1);
+    }
+    .hrms-theme-toggle:focus,
+    .hrms-theme-toggle:focus-visible {
+      outline: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
     html[data-bs-theme="dark"] .hrms-theme-toggle,
     [data-bs-theme="dark"] .hrms-theme-toggle {
       color: #facc15 !important;
-      border-color: #374151 !important;
-      background-color: #1f2937 !important;
+      border: none !important;
+      background: transparent !important;
     }
     html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
     [data-bs-theme="dark"] .hrms-theme-toggle:hover {
-      background-color: #374151 !important;
+      background: transparent !important;
       color: #fde047 !important;
+      transform: scale(1.1);
     }
   </style>
 </head>
@@ -208,7 +237,13 @@
                   type="button"
                   aria-label="Toggle theme"
                   title="Switch to dark mode">
-            <i id="themeToggleIcon" class="bi bi-moon-stars"></i>
+            <span id="themeToggleIcon" class="d-inline-flex align-items-center justify-content-center">
+              <svg class="lucide lucide-moon-star" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 5h4" />
+                <path d="M20 3v4" />
+                <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
+              </svg>
+            </span>
           </button>
           <span class="badge text-bg-light border d-none d-sm-inline">{{ user_role_label }}</span>
         </div>
@@ -236,15 +271,19 @@
     const toggleBtn = document.getElementById('themeToggleBtn');
     const toggleIcon = document.getElementById('themeToggleIcon');
 
+    const moonIconSvg = `<svg class="lucide lucide-moon-star" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5h4" /><path d="M20 3v4" /><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></svg>`;
+
+    const sunIconSvg = `<svg class="lucide lucide-sun" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>`;
+
     function updateTheme(theme) {
       document.documentElement.setAttribute('data-bs-theme', theme);
       if (toggleBtn && toggleIcon) {
         if (theme === 'dark') {
-          toggleIcon.className = 'bi bi-sun';
+          toggleIcon.innerHTML = sunIconSvg;
           toggleBtn.setAttribute('title', 'Switch to light mode');
           toggleBtn.setAttribute('aria-label', 'Switch to light mode');
         } else {
-          toggleIcon.className = 'bi bi-moon-stars';
+          toggleIcon.innerHTML = moonIconSvg;
           toggleBtn.setAttribute('title', 'Switch to dark mode');
           toggleBtn.setAttribute('aria-label', 'Switch to dark mode');
         }
