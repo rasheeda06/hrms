@@ -25,9 +25,14 @@
   --bs-border-color: #374151;
 }
 
+html {
+  font-size: 12px;
+}
+
 body.hrms-app {
   background: var(--hrms-page-bg);
   min-height: 100vh;
+  font-size: 12px;
 }
 
 /* Layout ------------------------------------------------------------- */
