@@ -13,18 +13,27 @@
     {% if user_is_admin %}
       <a class="hrms-nav-link {% if app_name == 'dashboard' %}active{% endif %}"
          href="{% url 'dashboard:home' %}"
+         data-bs-toggle="tooltip"
+         data-bs-placement="right"
+         data-bs-custom-class="hrms-sidebar-tooltip"
          title="Dashboard">
         <i class="bi bi-grid-1x2"></i>
         <span class="hrms-nav-text">Dashboard</span>
       </a>
       <a class="hrms-nav-link {% if app_name == 'employees' and url_name != 'departments' %}active{% endif %}"
          href="{% url 'employees:list' %}"
+         data-bs-toggle="tooltip"
+         data-bs-placement="right"
+         data-bs-custom-class="hrms-sidebar-tooltip"
          title="Employees">
         <i class="bi bi-people"></i>
         <span class="hrms-nav-text">Employees</span>
       </a>
       <a class="hrms-nav-link {% if app_name == 'attendance' %}active{% endif %}"
          href="{% url 'attendance:home' %}"
+         data-bs-toggle="tooltip"
+         data-bs-placement="right"
+         data-bs-custom-class="hrms-sidebar-tooltip"
          title="Attendance">
         <i class="bi bi-calendar-check"></i>
         <span class="hrms-nav-text">Attendance</span>
@@ -32,6 +41,9 @@
       </a>
       <a class="hrms-nav-link {% if app_name == 'leave' %}active{% endif %}"
          href="{% url 'leave:home' %}"
+         data-bs-toggle="tooltip"
+         data-bs-placement="right"
+         data-bs-custom-class="hrms-sidebar-tooltip"
          title="Leave">
         <i class="bi bi-airplane"></i>
         <span class="hrms-nav-text">Leave</span>
@@ -39,6 +51,9 @@
       </a>
       <a class="hrms-nav-link {% if url_name == 'departments' %}active{% endif %}"
          href="{% url 'employees:departments' %}"
+         data-bs-toggle="tooltip"
+         data-bs-placement="right"
+         data-bs-custom-class="hrms-sidebar-tooltip"
          title="Departments">
         <i class="bi bi-diagram-3"></i>
         <span class="hrms-nav-text">Departments</span>
@@ -46,18 +61,27 @@
     {% else %}
       <a class="hrms-nav-link {% if url_name == 'profile' %}active{% endif %}"
          href="{% url 'accounts:profile' %}"
+         data-bs-toggle="tooltip"
+         data-bs-placement="right"
+         data-bs-custom-class="hrms-sidebar-tooltip"
          title="Home">
         <i class="bi bi-house"></i>
         <span class="hrms-nav-text">Home</span>
       </a>
       <a class="hrms-nav-link {% if app_name == 'employees' %}active{% endif %}"
          href="{% url 'employees:me' %}"
+         data-bs-toggle="tooltip"
+         data-bs-placement="right"
+         data-bs-custom-class="hrms-sidebar-tooltip"
          title="My information">
         <i class="bi bi-person-badge"></i>
         <span class="hrms-nav-text">My information</span>
       </a>
       <a class="hrms-nav-link {% if app_name == 'attendance' %}active{% endif %}"
          href="{% url 'attendance:home' %}"
+         data-bs-toggle="tooltip"
+         data-bs-placement="right"
+         data-bs-custom-class="hrms-sidebar-tooltip"
          title="Attendance">
         <i class="bi bi-calendar-check"></i>
         <span class="hrms-nav-text">Attendance</span>
@@ -65,6 +89,9 @@
       </a>
       <a class="hrms-nav-link {% if app_name == 'leave' %}active{% endif %}"
          href="{% url 'leave:home' %}"
+         data-bs-toggle="tooltip"
+         data-bs-placement="right"
+         data-bs-custom-class="hrms-sidebar-tooltip"
          title="Leave">
         <i class="bi bi-airplane"></i>
         <span class="hrms-nav-text">Leave</span>
@@ -76,7 +103,12 @@
   <div class="mt-auto pt-4">
     <form method="post" action="{% url 'accounts:logout' %}">
       {% csrf_token %}
-      <button type="submit" class="hrms-logout" title="Logout">
+      <button type="submit"
+              class="hrms-logout"
+              data-bs-toggle="tooltip"
+              data-bs-placement="right"
+              data-bs-custom-class="hrms-sidebar-tooltip"
+              title="Logout">
         <i class="bi bi-box-arrow-right"></i>
         <span class="hrms-nav-text">Logout</span>
       </button>

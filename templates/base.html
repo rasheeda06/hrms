@@ -17,7 +17,7 @@
   </script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link href="{% static 'css/dashboard.css' %}?v=20261009_v4" rel="stylesheet">
+  <link href="{% static 'css/dashboard.css' %}?v=20261013_v1" rel="stylesheet">
   <style>
     /* Application font-size: 12px */
     html {
@@ -282,152 +282,242 @@
       color: #ffffff !important;
     }
 
-    /* Sidebar spring animations and collapsible states (Framer Motion feel) */
+    /* Sidebar smooth transitions and collapsible states */
     .hrms-sidebar {
-      transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      width: 250px !important;
+      min-width: 250px !important;
+      max-width: 250px !important;
+      flex-shrink: 0 !important;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), min-width 0.3s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
       will-change: width;
     }
+    .hrms-main {
+      flex: 1 1 auto;
+      min-width: 0;
+      transition: margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
     .hrms-sidebar-inner {
-      transition: padding 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      transition: padding 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
       overflow-x: hidden !important;
       width: 100% !important;
     }
     .hrms-brand-row {
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .hrms-brand {
+      color: #1f2937;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: 0.02em;
     }
     .hrms-brand-text {
       display: inline-block;
       white-space: nowrap;
-      transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
       max-width: 150px;
     }
     .hrms-nav-heading {
       white-space: nowrap;
-      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1), margin 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1), margin 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     .hrms-nav-link {
-      transition: background-color 0.15s ease, color 0.15s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.6rem 0.85rem;
+      border-radius: 8px;
+      color: var(--hrms-sidebar-text, #4b5563);
+      text-decoration: none;
+      font-size: 0.925rem;
+      position: relative;
+      transition: background-color 0.15s ease, color 0.15s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s cubic-bezier(0.16, 1, 0.3, 1), width 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .hrms-nav-link i {
+      font-size: 1.05rem;
+      width: 1.15rem;
+      text-align: center;
+      flex-shrink: 0;
+      pointer-events: none;
+      transition: font-size 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .hrms-nav-text {
       display: inline-block;
       white-space: nowrap;
-      transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
       max-width: 180px;
     }
     .hrms-nav-soon {
       white-space: nowrap;
-      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
-    .hrms-sidebar-toggle-btn,
-    .hrms-topbar-toggle-btn {
+    .hrms-logout {
+      width: 100%;
       background: transparent !important;
       border: none !important;
       box-shadow: none !important;
       outline: none !important;
-      padding: 0.35rem !important;
-      border-radius: 6px;
+      color: var(--hrms-sidebar-text, #4b5563);
+      border-radius: 8px;
+      padding: 0.55rem 0.85rem;
+      font-size: 0.925rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.15s ease, color 0.15s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s cubic-bezier(0.16, 1, 0.3, 1), width 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .hrms-logout i {
+      font-size: 1.05rem;
+      width: 1.15rem;
+      text-align: center;
+      flex-shrink: 0;
+      pointer-events: none;
+      transition: font-size 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hrms-topbar-toggle-btn {
+      background: transparent !important;
+      border: 1px solid #e5e7eb !important;
+      box-shadow: none !important;
+      outline: none !important;
+      width: 32px !important;
+      height: 32px !important;
+      padding: 0 !important;
+      border-radius: 6px !important;
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
-      color: #6b7280 !important;
-      cursor: pointer;
-      line-height: 1;
-      transition: background-color 0.18s ease, color 0.18s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      color: #4b5563 !important;
+      cursor: pointer !important;
+      line-height: 1 !important;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
-    .hrms-sidebar-toggle-btn:hover,
     .hrms-topbar-toggle-btn:hover {
-      background-color: #e5e7eb !important;
+      background-color: #f3f4f6 !important;
       color: #111827 !important;
-      transform: scale(1.08);
+      border-color: #d1d5db !important;
+      transform: scale(1.05);
     }
-    html[data-bs-theme="dark"] .hrms-sidebar-toggle-btn,
     html[data-bs-theme="dark"] .hrms-topbar-toggle-btn {
+      border-color: #374151 !important;
       color: #9ca3af !important;
     }
-    html[data-bs-theme="dark"] .hrms-sidebar-toggle-btn:hover,
     html[data-bs-theme="dark"] .hrms-topbar-toggle-btn:hover {
       background-color: #1f2937 !important;
       color: #f9fafb !important;
-    }
-    .hrms-sidebar-toggle-btn .hrms-toggle-arrow {
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      transform-origin: 12px 12px;
+      border-color: #4b5563 !important;
     }
 
-    @media (min-width: 992px) {
-      html.sidebar-collapsed .hrms-sidebar {
-        width: 68px !important;
-      }
-      html.sidebar-collapsed .hrms-sidebar-inner {
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
-      }
-      html.sidebar-collapsed .hrms-brand-row {
-        flex-direction: column !important;
-        justify-content: center !important;
-        align-items: center !important;
-        gap: 0.75rem !important;
-        margin-bottom: 1.25rem !important;
-      }
-      html.sidebar-collapsed .hrms-brand {
-        justify-content: center !important;
-        gap: 0 !important;
-      }
-      html.sidebar-collapsed .hrms-brand-text {
-        opacity: 0 !important;
-        max-width: 0 !important;
-        transform: translateX(-10px) !important;
-        pointer-events: none !important;
-        overflow: hidden !important;
-        margin: 0 !important;
-        display: none !important;
-      }
-      html.sidebar-collapsed .hrms-sidebar-toggle-btn .hrms-toggle-arrow {
-        transform: rotate(180deg);
-      }
-      html.sidebar-collapsed .hrms-nav-heading {
-        opacity: 0 !important;
-        max-height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow: hidden !important;
-        pointer-events: none !important;
-      }
-      html.sidebar-collapsed .hrms-nav-text {
-        opacity: 0 !important;
-        max-width: 0 !important;
-        transform: translateX(-10px) !important;
-        pointer-events: none !important;
-        overflow: hidden !important;
-        display: none !important;
-      }
-      html.sidebar-collapsed .hrms-nav-soon {
-        opacity: 0 !important;
-        transform: scale(0.5) !important;
-        display: none !important;
-      }
-      html.sidebar-collapsed .hrms-nav-link,
-      html.sidebar-collapsed .hrms-logout {
-        justify-content: center !important;
-        padding: 0.65rem 0 !important;
-        width: 44px !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        gap: 0 !important;
-      }
-      html.sidebar-collapsed .hrms-nav-link i,
-      html.sidebar-collapsed .hrms-logout i {
-        font-size: 1.25rem !important;
-        width: 1.25rem !important;
-        margin: 0 !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-      }
-      html.sidebar-collapsed .hrms-nav-link:hover,
-      html.sidebar-collapsed .hrms-logout:hover {
-        transform: translateY(-1px) scale(1.08) !important;
-      }
+    /* Collapsed Sidebar Styles */
+    .sidebar-collapsed .hrms-sidebar,
+    html.sidebar-collapsed .hrms-sidebar,
+    body.sidebar-collapsed .hrms-sidebar {
+      width: 70px !important;
+      min-width: 70px !important;
+      max-width: 70px !important;
+    }
+    .sidebar-collapsed .hrms-sidebar-inner,
+    html.sidebar-collapsed .hrms-sidebar-inner,
+    body.sidebar-collapsed .hrms-sidebar-inner {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+    .sidebar-collapsed .hrms-brand-row,
+    html.sidebar-collapsed .hrms-brand-row,
+    body.sidebar-collapsed .hrms-brand-row {
+      justify-content: center !important;
+      align-items: center !important;
+      margin-bottom: 1.25rem !important;
+    }
+    .sidebar-collapsed .hrms-brand,
+    html.sidebar-collapsed .hrms-brand,
+    body.sidebar-collapsed .hrms-brand {
+      justify-content: center !important;
+      gap: 0 !important;
+      width: 100% !important;
+    }
+    .sidebar-collapsed .hrms-brand-text,
+    html.sidebar-collapsed .hrms-brand-text,
+    body.sidebar-collapsed .hrms-brand-text {
+      opacity: 0 !important;
+      max-width: 0 !important;
+      transform: translateX(-10px) !important;
+      pointer-events: none !important;
+      overflow: hidden !important;
+      display: none !important;
+    }
+    .sidebar-collapsed .hrms-nav-heading,
+    html.sidebar-collapsed .hrms-nav-heading,
+    body.sidebar-collapsed .hrms-nav-heading {
+      opacity: 0 !important;
+      max-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      pointer-events: none !important;
+    }
+    .sidebar-collapsed .hrms-nav-text,
+    html.sidebar-collapsed .hrms-nav-text,
+    body.sidebar-collapsed .hrms-nav-text {
+      opacity: 0 !important;
+      max-width: 0 !important;
+      transform: translateX(-10px) !important;
+      pointer-events: none !important;
+      overflow: hidden !important;
+      display: none !important;
+    }
+    .sidebar-collapsed .hrms-nav-soon,
+    html.sidebar-collapsed .hrms-nav-soon,
+    body.sidebar-collapsed .hrms-nav-soon {
+      opacity: 0 !important;
+      transform: scale(0.5) !important;
+      display: none !important;
+    }
+    .sidebar-collapsed .hrms-nav-link,
+    .sidebar-collapsed .hrms-logout,
+    html.sidebar-collapsed .hrms-nav-link,
+    html.sidebar-collapsed .hrms-logout,
+    body.sidebar-collapsed .hrms-nav-link,
+    body.sidebar-collapsed .hrms-logout {
+      justify-content: center !important;
+      padding: 0.65rem 0 !important;
+      width: 44px !important;
+      height: 40px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      gap: 0 !important;
+    }
+    .sidebar-collapsed .hrms-nav-link i,
+    .sidebar-collapsed .hrms-logout i,
+    html.sidebar-collapsed .hrms-nav-link i,
+    html.sidebar-collapsed .hrms-logout i,
+    body.sidebar-collapsed .hrms-nav-link i,
+    body.sidebar-collapsed .hrms-logout i {
+      font-size: 1.25rem !important;
+      width: 1.25rem !important;
+      margin: 0 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    .sidebar-collapsed .hrms-nav-link:hover,
+    .sidebar-collapsed .hrms-logout:hover,
+    html.sidebar-collapsed .hrms-nav-link:hover,
+    html.sidebar-collapsed .hrms-logout:hover,
+    body.sidebar-collapsed .hrms-nav-link:hover,
+    body.sidebar-collapsed .hrms-logout:hover {
+      transform: translateY(-1px) scale(1.08) !important;
+    }
+
+    /* Bootstrap custom tooltip for sidebar */
+    .hrms-sidebar-tooltip .tooltip-inner {
+      font-size: 11px !important;
+      padding: 5px 9px !important;
+      border-radius: 6px !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.02em !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
     }
   </style>
 </head>
@@ -445,20 +535,12 @@
 
     {% if user.is_authenticated %}
       <header class="hrms-topbar d-flex align-items-center gap-3">
-        <button class="btn btn-outline-secondary btn-sm d-lg-none" type="button"
-                data-bs-toggle="offcanvas" data-bs-target="#hrmsSidebar" aria-controls="hrmsSidebar">
-          <i class="bi bi-list"></i>
-          <span class="visually-hidden">Open menu</span>
-        </button>
-        <button id="topbarSidebarToggleBtn"
-                class="hrms-topbar-toggle-btn d-none d-lg-inline-flex"
+        <button id="sidebarToggleBtn"
+                class="hrms-topbar-toggle-btn"
                 type="button"
                 aria-label="Toggle sidebar"
                 title="Toggle sidebar">
-          <svg class="lucide lucide-panel-left" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect width="18" height="18" x="3" y="3" rx="2" />
-            <path d="M9 3v18" />
-          </svg>
+          <i class="bi bi-list fs-5"></i>
         </button>
         <div class="me-auto">
           <h1 class="hrms-page-title">{% block page_title %}HRMS{% endblock %}</h1>
@@ -595,19 +677,58 @@
       });
     }
 
-    // Sidebar collapse/expand with localStorage persistence
-    const sidebarToggleBtns = [
-      document.getElementById('sidebarToggleBtn'),
-      document.getElementById('topbarSidebarToggleBtn')
-    ].filter(Boolean);
+    // Sidebar Tooltips (active only in collapsed icon mode)
+    const sidebarTooltipEls = document.querySelectorAll('.hrms-sidebar [data-bs-toggle="tooltip"]');
+    const sidebarTooltips = [...sidebarTooltipEls].map(el => new bootstrap.Tooltip(el, {
+      boundary: 'window',
+      fallbackPlacements: ['right', 'top', 'bottom']
+    }));
 
-    sidebarToggleBtns.forEach(btn => {
-      btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        const isCollapsed = document.documentElement.classList.toggle('sidebar-collapsed');
-        localStorage.setItem('hrms-sidebar-collapsed', isCollapsed ? 'true' : 'false');
+    function setTooltipsState(isCollapsed) {
+      sidebarTooltips.forEach(t => {
+        if (isCollapsed) {
+          t.enable();
+        } else {
+          t.hide();
+          t.disable();
+        }
+      });
+    }
+
+    // Set initial tooltips state based on current sidebar state
+    const initialCollapsed = document.documentElement.classList.contains('sidebar-collapsed');
+    if (initialCollapsed) {
+      document.body.classList.add('sidebar-collapsed');
+    }
+    setTooltipsState(initialCollapsed);
+
+    // Hide tooltips on navigation click
+    sidebarTooltipEls.forEach(el => {
+      el.addEventListener('click', function () {
+        const instance = bootstrap.Tooltip.getInstance(el);
+        if (instance) instance.hide();
       });
     });
+
+    // Sidebar collapse/expand with localStorage persistence
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+    if (sidebarToggleBtn) {
+      sidebarToggleBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (window.innerWidth < 992) {
+          const offcanvasEl = document.getElementById('hrmsSidebar');
+          if (offcanvasEl) {
+            const bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+            bsOffcanvas.toggle();
+          }
+        } else {
+          const isCollapsed = document.documentElement.classList.toggle('sidebar-collapsed');
+          document.body.classList.toggle('sidebar-collapsed', isCollapsed);
+          localStorage.setItem('hrms-sidebar-collapsed', isCollapsed ? 'true' : 'false');
+          setTooltipsState(isCollapsed);
+        }
+      });
+    }
   })();
 </script>
 </body>
