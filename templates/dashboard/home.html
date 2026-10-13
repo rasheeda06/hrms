@@ -118,35 +118,40 @@
           </a>
         </div>
         <div class="table-responsive">
-          <table class="table align-middle">
+          <table class="table align-middle hrms-recent-table mb-0">
             <thead>
               <tr>
-                <th>Employee</th>
-                <th>Department</th>
-                <th>Joined</th>
-                <th>Status</th>
+                <th scope="col" class="ps-3 py-3">Employee</th>
+                <th scope="col" class="py-3">Department</th>
+                <th scope="col" class="py-3">Joined</th>
+                <th scope="col" class="pe-3 py-3 text-end">Status</th>
               </tr>
             </thead>
             <tbody>
               {% for employee in recent_employees %}
                 <tr>
-                  <td>
-                    <a href="{% url 'employees:detail' employee.pk %}" class="hrms-table-link">{{ employee.full_name }}</a>
-                    <span class="d-block text-secondary small">{{ employee.employee_id }}</span>
+                  <td class="ps-3 py-3">
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="hrms-avatar-sm">{{ employee.first_name|slice:":1" }}{{ employee.last_name|slice:":1" }}</span>
+                      <div>
+                        <a href="{% url 'employees:detail' employee.pk %}" class="hrms-table-link d-inline-block">{{ employee.full_name }}</a>
+                        <span class="d-block text-secondary small">{{ employee.employee_id }}</span>
+                      </div>
+                    </div>
                   </td>
-                  <td>{{ employee.department }}</td>
-                  <td>{{ employee.date_of_joining }}</td>
-                  <td>
+                  <td class="py-3">{{ employee.department }}</td>
+                  <td class="py-3 text-secondary">{{ employee.date_of_joining }}</td>
+                  <td class="pe-3 py-3 text-end">
                     {% if employee.is_active_employee %}
-                      <span class="badge text-bg-success">Active</span>
+                      <span class="badge hrms-badge-active"><span class="hrms-badge-dot"></span>Active</span>
                     {% else %}
-                      <span class="badge text-bg-secondary">Inactive</span>
+                      <span class="badge hrms-badge-inactive"><span class="hrms-badge-dot"></span>Inactive</span>
                     {% endif %}
                   </td>
                 </tr>
               {% empty %}
                 <tr>
-                  <td colspan="4">
+                  <td colspan="4" class="text-center py-4">
                     <div class="hrms-empty">
                       No employees yet.
                       <a href="{% url 'employees:add' %}" class="hrms-text-link">Add the first employee</a>.

@@ -605,6 +605,110 @@ body.sidebar-collapsed .hrms-logout:hover {
   background-color: rgba(37, 99, 235, 0.02);
 }
 
+/* Recent Joiners Table Enhanced Styling */
+.hrms-recent-table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+.hrms-recent-table thead th {
+  background-color: var(--hrms-table-header-bg) !important;
+  border-bottom: 1px solid var(--hrms-border) !important;
+  font-size: 0.73rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: var(--hrms-text-muted) !important;
+  padding: 0.85rem 1rem !important;
+  white-space: nowrap !important;
+}
+
+.hrms-recent-table tbody td {
+  vertical-align: middle !important;
+  font-size: 0.88rem !important;
+  padding: 0.85rem 1rem !important;
+  border-bottom: 1px solid var(--hrms-border) !important;
+  color: var(--hrms-text-body) !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.hrms-recent-table tbody tr:last-child td {
+  border-bottom: 0 !important;
+}
+
+.hrms-recent-table tbody tr {
+  transition: background-color 0.15s ease !important;
+}
+
+.hrms-recent-table tbody tr:hover td {
+  background-color: rgba(37, 99, 235, 0.04) !important;
+}
+
+.hrms-avatar-sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #dbeafe;
+  font-size: 0.72rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Modern Status Badges */
+.hrms-badge-active {
+  background-color: #ecfdf5 !important;
+  color: #047857 !important;
+  border: 1px solid #a7f3d0 !important;
+  border-radius: 20px !important;
+  padding: 0.22rem 0.55rem !important;
+  font-weight: 500 !important;
+  font-size: 0.72rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  letter-spacing: 0.02em !important;
+}
+
+.hrms-badge-active .hrms-badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #10b981;
+  display: inline-block;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+  flex-shrink: 0;
+}
+
+.hrms-badge-inactive {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 20px !important;
+  padding: 0.22rem 0.55rem !important;
+  font-weight: 500 !important;
+  font-size: 0.72rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  letter-spacing: 0.02em !important;
+}
+
+.hrms-badge-inactive .hrms-badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #94a3b8;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
 /* Universal Enterprise Button System --------------------------------- */
 
 .btn {
@@ -1270,6 +1374,57 @@ html[data-bs-theme="dark"] .hrms-card .table > tbody td,
   background-color: #111827 !important;
   color: #e5e7eb !important;
   border-bottom: 1px solid #374151 !important;
+}
+
+html[data-bs-theme="dark"] .hrms-recent-table thead th,
+[data-bs-theme="dark"] .hrms-recent-table thead th {
+  background-color: #1e293b !important;
+  border-bottom: 1px solid #334155 !important;
+  color: #94a3b8 !important;
+}
+
+html[data-bs-theme="dark"] .hrms-recent-table tbody td,
+[data-bs-theme="dark"] .hrms-recent-table tbody td {
+  background-color: #111827 !important;
+  color: #e5e7eb !important;
+  border-bottom: 1px solid #1f2937 !important;
+}
+
+html[data-bs-theme="dark"] .hrms-recent-table tbody tr:hover td,
+[data-bs-theme="dark"] .hrms-recent-table tbody tr:hover td {
+  background-color: #1a2234 !important;
+}
+
+html[data-bs-theme="dark"] .hrms-avatar-sm,
+[data-bs-theme="dark"] .hrms-avatar-sm {
+  background-color: rgba(37, 99, 235, 0.18) !important;
+  color: #60a5fa !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+html[data-bs-theme="dark"] .hrms-badge-active,
+[data-bs-theme="dark"] .hrms-badge-active {
+  background-color: rgba(16, 185, 129, 0.14) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(52, 211, 153, 0.28) !important;
+}
+
+html[data-bs-theme="dark"] .hrms-badge-active .hrms-badge-dot,
+[data-bs-theme="dark"] .hrms-badge-active .hrms-badge-dot {
+  background-color: #34d399 !important;
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.25) !important;
+}
+
+html[data-bs-theme="dark"] .hrms-badge-inactive,
+[data-bs-theme="dark"] .hrms-badge-inactive {
+  background-color: rgba(148, 163, 184, 0.12) !important;
+  color: #94a3b8 !important;
+  border: 1px solid rgba(148, 163, 184, 0.25) !important;
+}
+
+html[data-bs-theme="dark"] .hrms-badge-inactive .hrms-badge-dot,
+[data-bs-theme="dark"] .hrms-badge-inactive .hrms-badge-dot {
+  background-color: #64748b !important;
 }
 
 html[data-bs-theme="dark"] .hrms-btn-view-dept,
