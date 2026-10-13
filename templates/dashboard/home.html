@@ -24,7 +24,7 @@
           <p class="hrms-stat-label">Total Employees</p>
           <p class="hrms-stat-value">{{ total_employees }}</p>
           <p class="hrms-stat-note">
-            {% if inactive_employees %}{{ inactive_employees }} inactive{% else %}All active{% endif %}
+            {% if inactive_employees %}<span class="hrms-stat-dot hrms-dot-amber"></span>{{ inactive_employees }} inactive{% else %}<span class="hrms-stat-dot hrms-dot-green"></span>All active{% endif %}
           </p>
         </div>
       </div>
@@ -42,7 +42,7 @@
         <div class="flex-grow-1 min-w-0">
           <p class="hrms-stat-label">Present Today</p>
           <p class="hrms-stat-value">{{ present_today }}</p>
-          <p class="hrms-stat-note">Checked in today</p>
+          <p class="hrms-stat-note"><span class="hrms-stat-dot hrms-dot-green"></span>Checked in today</p>
         </div>
       </div>
     </div>
@@ -64,7 +64,7 @@
           <p class="hrms-stat-label">On Leave</p>
           <p class="hrms-stat-value">{{ on_leave_today }}</p>
           <p class="hrms-stat-note">
-            {% if on_leave_today %}{{ on_leave_today }} on leave{% else %}No leaves today{% endif %}
+            {% if on_leave_today %}<span class="hrms-stat-dot hrms-dot-amber"></span>{{ on_leave_today }} on leave{% else %}<span class="hrms-stat-dot hrms-dot-green"></span>No leaves today{% endif %}
           </p>
         </div>
       </div>
