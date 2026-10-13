@@ -219,3 +219,34 @@ class EmployeeManagementTests(TestCase):
         self.assertContains(response, "EMP001")
         self.assertContains(response, "EMP002")
 
+    def test_admin_departments_page_renders_view_employees_button(self):
+        self.client.login(username="admin", password="AdminPass123!")
+        response = self.client.get(reverse("employees:departments"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "View Employees")
+        self.assertContains(response, "hrms-btn-view-dept")
+        self.assertContains(response, "lucide-users")
+        expected_url = f"{reverse('employees:list')}?department={self.department.pk}"
+        self.assertContains(response, expected_url)
+
+    def test_departments_view_employees_filter_isolates_department(self):
+        empty_dept = Department.objects.create(name="Human Resources")
+        self.client.login(username="admin", password="AdminPass123!")
+
+        # Department with employees
+        eng_response = self.client.get(
+            reverse("employees:list"), {"department": self.department.pk}
+        )
+        self.assertEqual(eng_response.status_code, 200)
+        self.assertContains(eng_response, "EMP001")
+        self.assertContains(eng_response, "EMP002")
+
+        # Department without employees
+        hr_response = self.client.get(
+            reverse("employees:list"), {"department": empty_dept.pk}
+        )
+        self.assertEqual(hr_response.status_code, 200)
+        self.assertNotContains(hr_response, "EMP001")
+        self.assertNotContains(hr_response, "EMP002")
+
+
