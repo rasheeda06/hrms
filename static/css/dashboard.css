@@ -158,35 +158,45 @@ body.hrms-app {
   transform: translateX(0);
 }
 
-.hrms-topbar-toggle-btn {
+.hrms-sidebar-toggle-btn {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
   outline: none;
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   padding: 0;
-  border-radius: 8px;
+  border-radius: 6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: #4b5563;
   cursor: pointer;
   line-height: 1;
-  transition: all 0.15s ease;
+  flex-shrink: 0;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.hrms-topbar-toggle-btn:hover {
+.hrms-sidebar-toggle-btn:hover {
   background-color: #f8fafc;
   color: #2563eb;
   border-color: #cbd5e1;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
-.hrms-topbar-toggle-btn:active {
+.hrms-sidebar-toggle-btn:active {
   transform: translateY(0);
   box-shadow: none;
+}
+
+.hrms-sidebar-toggle-btn:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+}
+
+.hrms-sidebar-toggle-icon {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hrms-nav-heading {
@@ -317,9 +327,23 @@ body.sidebar-collapsed .hrms-sidebar-inner {
 .sidebar-collapsed .hrms-brand-row,
 html.sidebar-collapsed .hrms-brand-row,
 body.sidebar-collapsed .hrms-brand-row {
+  flex-direction: column !important;
   justify-content: center !important;
   align-items: center !important;
+  gap: 0.5rem !important;
   margin-bottom: 1.25rem !important;
+}
+
+.sidebar-collapsed .hrms-sidebar-toggle-btn,
+html.sidebar-collapsed .hrms-sidebar-toggle-btn,
+body.sidebar-collapsed .hrms-sidebar-toggle-btn {
+  margin: 0 auto !important;
+}
+
+.sidebar-collapsed .hrms-sidebar-toggle-icon,
+html.sidebar-collapsed .hrms-sidebar-toggle-icon,
+body.sidebar-collapsed .hrms-sidebar-toggle-icon {
+  transform: rotate(180deg) !important;
 }
 
 .sidebar-collapsed .hrms-brand,
@@ -877,10 +901,8 @@ body.sidebar-collapsed .hrms-logout:hover {
 
 /* Plain Blue Text Links (View All, View Details, View Employees) */
 .hrms-btn-view-dept,
-.hrms-btn-view-emp,
 .hrms-dash-view-link,
 .btn.btn-outline-primary.hrms-btn-view-dept,
-.btn.btn-outline-primary.hrms-btn-view-emp,
 .btn.btn-outline-primary.hrms-dash-view-link {
   display: inline-flex !important;
   align-items: center !important;
@@ -906,12 +928,9 @@ body.sidebar-collapsed .hrms-logout:hover {
 
 .hrms-btn-view-dept:hover,
 .hrms-btn-view-dept:focus-visible,
-.hrms-btn-view-emp:hover,
-.hrms-btn-view-emp:focus-visible,
 .hrms-dash-view-link:hover,
 .hrms-dash-view-link:focus-visible,
 .btn.btn-outline-primary.hrms-btn-view-dept:hover,
-.btn.btn-outline-primary.hrms-btn-view-emp:hover,
 .btn.btn-outline-primary.hrms-dash-view-link:hover {
   background: transparent !important;
   background-color: transparent !important;
@@ -924,11 +943,19 @@ body.sidebar-collapsed .hrms-logout:hover {
   transform: none !important;
 }
 
+.hrms-btn-view-dept:hover .lucide-arrow-right,
+.hrms-dash-view-link:hover .lucide-arrow-right {
+  transform: translateX(2px) !important;
+}
+
+.hrms-btn-view-dept .lucide-arrow-right,
+.hrms-dash-view-link .lucide-arrow-right {
+  transition: transform 0.15s ease !important;
+}
+
 .hrms-btn-view-dept:active,
-.hrms-btn-view-emp:active,
 .hrms-dash-view-link:active,
 .btn.btn-outline-primary.hrms-btn-view-dept:active,
-.btn.btn-outline-primary.hrms-btn-view-emp:active,
 .btn.btn-outline-primary.hrms-dash-view-link:active {
   background: transparent !important;
   background-color: transparent !important;
@@ -939,14 +966,94 @@ body.sidebar-collapsed .hrms-logout:hover {
 }
 
 .hrms-btn-view-dept svg,
-.hrms-btn-view-emp svg,
 .hrms-dash-view-link svg {
   color: inherit !important;
   stroke: currentColor !important;
   flex-shrink: 0 !important;
   vertical-align: middle !important;
   transition: color 0.15s ease !important;
-  transform: none !important;
+}
+
+/* Table Icon-Only Action Buttons (View, Edit, Delete) */
+.hrms-table-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.25rem !important;
+  justify-content: flex-end !important;
+}
+
+.hrms-action-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 6px !important;
+  border: 1px solid transparent !important;
+  background-color: transparent !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.12s ease !important;
+}
+
+.hrms-action-btn:focus-visible {
+  outline: 2px solid #2563eb !important;
+  outline-offset: 1px !important;
+}
+
+/* View Action Button: subtle neutral/blue */
+.hrms-action-btn--view {
+  color: #4b5563 !important;
+}
+
+.hrms-action-btn--view:hover,
+.hrms-action-btn--view:focus-visible {
+  color: #2563eb !important;
+  background-color: rgba(37, 99, 235, 0.08) !important;
+  border-color: rgba(37, 99, 235, 0.18) !important;
+  text-decoration: none !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Edit Action Button: subtle blue */
+.hrms-action-btn--edit {
+  color: #2563eb !important;
+}
+
+.hrms-action-btn--edit:hover,
+.hrms-action-btn--edit:focus-visible {
+  color: #1d4ed8 !important;
+  background-color: rgba(37, 99, 235, 0.1) !important;
+  border-color: rgba(37, 99, 235, 0.22) !important;
+  text-decoration: none !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Delete Action Button: subtle red */
+.hrms-action-btn--delete {
+  color: #dc2626 !important;
+}
+
+.hrms-action-btn--delete:hover,
+.hrms-action-btn--delete:focus-visible {
+  color: #b91c1c !important;
+  background-color: rgba(220, 38, 38, 0.1) !important;
+  border-color: rgba(220, 38, 38, 0.22) !important;
+  text-decoration: none !important;
+  transform: translateY(-1px) !important;
+}
+
+.hrms-action-btn--delete:focus-visible {
+  outline: 2px solid #dc2626 !important;
+  outline-offset: 1px !important;
+}
+
+.hrms-action-btn:active {
+  transform: translateY(0) !important;
 }
 
 .hrms-btn-view-dept:hover svg,
@@ -1792,16 +1899,12 @@ html[data-bs-theme="dark"] .hrms-chart-item:hover .hrms-chart-bar,
 }
 
 html[data-bs-theme="dark"] .hrms-btn-view-dept,
-html[data-bs-theme="dark"] .hrms-btn-view-emp,
 html[data-bs-theme="dark"] .hrms-dash-view-link,
 [data-bs-theme="dark"] .hrms-btn-view-dept,
-[data-bs-theme="dark"] .hrms-btn-view-emp,
 [data-bs-theme="dark"] .hrms-dash-view-link,
 html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept,
-html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp,
 html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-view-link,
 [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept,
-[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp,
 [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-view-link {
   color: #60a5fa !important;
   border: none !important;
@@ -1810,16 +1913,12 @@ html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-view-link,
 }
 
 html[data-bs-theme="dark"] .hrms-btn-view-dept:hover,
-html[data-bs-theme="dark"] .hrms-btn-view-emp:hover,
 html[data-bs-theme="dark"] .hrms-dash-view-link:hover,
 [data-bs-theme="dark"] .hrms-btn-view-dept:hover,
-[data-bs-theme="dark"] .hrms-btn-view-emp:hover,
 [data-bs-theme="dark"] .hrms-dash-view-link:hover,
 html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept:hover,
-html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp:hover,
 html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-view-link:hover,
 [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept:hover,
-[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp:hover,
 [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-view-link:hover {
   color: #93c5fd !important;
   background-color: transparent !important;
@@ -1830,13 +1929,51 @@ html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-view-link:hover,
 }
 
 html[data-bs-theme="dark"] .hrms-btn-view-dept:active,
-html[data-bs-theme="dark"] .hrms-btn-view-emp:active,
 html[data-bs-theme="dark"] .hrms-dash-view-link:active,
 [data-bs-theme="dark"] .hrms-btn-view-dept:active,
-[data-bs-theme="dark"] .hrms-btn-view-emp:active,
 [data-bs-theme="dark"] .hrms-dash-view-link:active {
   transform: none !important;
   box-shadow: none !important;
+}
+
+/* Dark mode action buttons */
+html[data-bs-theme="dark"] .hrms-action-btn--view,
+[data-bs-theme="dark"] .hrms-action-btn--view {
+  color: #9ca3af !important;
+}
+html[data-bs-theme="dark"] .hrms-action-btn--view:hover,
+html[data-bs-theme="dark"] .hrms-action-btn--view:focus-visible,
+[data-bs-theme="dark"] .hrms-action-btn--view:hover,
+[data-bs-theme="dark"] .hrms-action-btn--view:focus-visible {
+  color: #60a5fa !important;
+  background-color: rgba(96, 165, 250, 0.12) !important;
+  border-color: rgba(96, 165, 250, 0.25) !important;
+}
+
+html[data-bs-theme="dark"] .hrms-action-btn--edit,
+[data-bs-theme="dark"] .hrms-action-btn--edit {
+  color: #60a5fa !important;
+}
+html[data-bs-theme="dark"] .hrms-action-btn--edit:hover,
+html[data-bs-theme="dark"] .hrms-action-btn--edit:focus-visible,
+[data-bs-theme="dark"] .hrms-action-btn--edit:hover,
+[data-bs-theme="dark"] .hrms-action-btn--edit:focus-visible {
+  color: #93c5fd !important;
+  background-color: rgba(96, 165, 250, 0.15) !important;
+  border-color: rgba(96, 165, 250, 0.3) !important;
+}
+
+html[data-bs-theme="dark"] .hrms-action-btn--delete,
+[data-bs-theme="dark"] .hrms-action-btn--delete {
+  color: #f87171 !important;
+}
+html[data-bs-theme="dark"] .hrms-action-btn--delete:hover,
+html[data-bs-theme="dark"] .hrms-action-btn--delete:focus-visible,
+[data-bs-theme="dark"] .hrms-action-btn--delete:hover,
+[data-bs-theme="dark"] .hrms-action-btn--delete:focus-visible {
+  color: #fca5a5 !important;
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
 }
 
 html[data-bs-theme="dark"] .hrms-dash-btn,

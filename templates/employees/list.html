@@ -56,18 +56,47 @@
                 {% endif %}
               </td>
               <td class="text-nowrap text-end">
-                <a href="{% url 'employees:detail' employee.pk %}" class="hrms-btn-view-emp me-2" title="View details for {{ employee.full_name }}">
-                  <svg class="lucide lucide-users" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                  </svg>
-                  <span>View Employee</span>
-                </a>
-                <a class="small me-1" href="{% url 'employees:edit' employee.pk %}">Edit</a>
-                ·
-                <a class="small text-danger ms-1" href="{% url 'employees:delete' employee.pk %}">Delete</a>
+                <div class="hrms-table-actions d-inline-flex align-items-center gap-1 justify-content-end">
+                  <a href="{% url 'employees:detail' employee.pk %}"
+                     class="hrms-action-btn hrms-action-btn--view hrms-btn-view-emp"
+                     data-bs-toggle="tooltip"
+                     data-bs-placement="top"
+                     title="View employee"
+                     aria-label="View employee">
+                    <svg class="lucide lucide-eye lucide-users" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span class="visually-hidden">View Employee</span>
+                  </a>
+                  <a href="{% url 'employees:edit' employee.pk %}"
+                     class="hrms-action-btn hrms-action-btn--edit"
+                     data-bs-toggle="tooltip"
+                     data-bs-placement="top"
+                     title="Edit employee"
+                     aria-label="Edit employee">
+                    <svg class="lucide lucide-pencil" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                      <path d="m15 5 4 4"/>
+                    </svg>
+                    <span class="visually-hidden">Edit employee</span>
+                  </a>
+                  <a href="{% url 'employees:delete' employee.pk %}"
+                     class="hrms-action-btn hrms-action-btn--delete"
+                     data-bs-toggle="tooltip"
+                     data-bs-placement="top"
+                     title="Delete employee"
+                     aria-label="Delete employee">
+                    <svg class="lucide lucide-trash-2" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M3 6h18"/>
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                      <line x1="10" x2="10" y1="11" y2="17"/>
+                      <line x1="14" x2="14" y1="11" y2="17"/>
+                    </svg>
+                    <span class="visually-hidden">Delete employee</span>
+                  </a>
+                </div>
               </td>
             </tr>
           {% empty %}

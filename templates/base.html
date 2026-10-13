@@ -17,7 +17,7 @@
   </script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link href="{% static 'css/dashboard.css' %}?v=20261013_v11" rel="stylesheet">
+  <link href="{% static 'css/dashboard.css' %}?v=20261013_v12" rel="stylesheet">
   <style>
     /* Application font-size: 12px */
     html {
@@ -201,10 +201,8 @@
 
     /* Plain Blue Text Links (View All, View Details, View Employees) */
     .hrms-btn-view-dept,
-    .hrms-btn-view-emp,
     .hrms-dash-view-link,
     .btn.btn-outline-primary.hrms-btn-view-dept,
-    .btn.btn-outline-primary.hrms-btn-view-emp,
     .btn.btn-outline-primary.hrms-dash-view-link {
       display: inline-flex !important;
       align-items: center !important;
@@ -229,12 +227,9 @@
     }
     .hrms-btn-view-dept:hover,
     .hrms-btn-view-dept:focus-visible,
-    .hrms-btn-view-emp:hover,
-    .hrms-btn-view-emp:focus-visible,
     .hrms-dash-view-link:hover,
     .hrms-dash-view-link:focus-visible,
     .btn.btn-outline-primary.hrms-btn-view-dept:hover,
-    .btn.btn-outline-primary.hrms-btn-view-emp:hover,
     .btn.btn-outline-primary.hrms-dash-view-link:hover {
       background: transparent !important;
       background-color: transparent !important;
@@ -246,11 +241,17 @@
       text-underline-offset: 2px !important;
       transform: none !important;
     }
+    .hrms-btn-view-dept:hover .lucide-arrow-right,
+    .hrms-dash-view-link:hover .lucide-arrow-right {
+      transform: translateX(2px) !important;
+    }
+    .hrms-btn-view-dept .lucide-arrow-right,
+    .hrms-dash-view-link .lucide-arrow-right {
+      transition: transform 0.15s ease !important;
+    }
     .hrms-btn-view-dept:active,
-    .hrms-btn-view-emp:active,
     .hrms-dash-view-link:active,
     .btn.btn-outline-primary.hrms-btn-view-dept:active,
-    .btn.btn-outline-primary.hrms-btn-view-emp:active,
     .btn.btn-outline-primary.hrms-dash-view-link:active {
       background: transparent !important;
       background-color: transparent !important;
@@ -260,14 +261,84 @@
       transform: none !important;
     }
     .hrms-btn-view-dept svg,
-    .hrms-btn-view-emp svg,
     .hrms-dash-view-link svg {
       color: inherit !important;
       stroke: currentColor !important;
       flex-shrink: 0 !important;
       vertical-align: middle !important;
       transition: color 0.15s ease !important;
-      transform: none !important;
+    }
+
+    /* Table Icon-Only Action Buttons (View, Edit, Delete) */
+    .hrms-table-actions {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.25rem !important;
+      justify-content: flex-end !important;
+    }
+    .hrms-action-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 28px !important;
+      height: 28px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border-radius: 6px !important;
+      border: 1px solid transparent !important;
+      background-color: transparent !important;
+      text-decoration: none !important;
+      cursor: pointer !important;
+      line-height: 1 !important;
+      box-shadow: none !important;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.12s ease !important;
+    }
+    .hrms-action-btn:focus-visible {
+      outline: 2px solid #2563eb !important;
+      outline-offset: 1px !important;
+    }
+    /* View Action Button: subtle neutral/blue */
+    .hrms-action-btn--view {
+      color: #4b5563 !important;
+    }
+    .hrms-action-btn--view:hover,
+    .hrms-action-btn--view:focus-visible {
+      color: #2563eb !important;
+      background-color: rgba(37, 99, 235, 0.08) !important;
+      border-color: rgba(37, 99, 235, 0.18) !important;
+      text-decoration: none !important;
+      transform: translateY(-1px) !important;
+    }
+    /* Edit Action Button: subtle blue */
+    .hrms-action-btn--edit {
+      color: #2563eb !important;
+    }
+    .hrms-action-btn--edit:hover,
+    .hrms-action-btn--edit:focus-visible {
+      color: #1d4ed8 !important;
+      background-color: rgba(37, 99, 235, 0.1) !important;
+      border-color: rgba(37, 99, 235, 0.22) !important;
+      text-decoration: none !important;
+      transform: translateY(-1px) !important;
+    }
+    /* Delete Action Button: subtle red */
+    .hrms-action-btn--delete {
+      color: #dc2626 !important;
+    }
+    .hrms-action-btn--delete:hover,
+    .hrms-action-btn--delete:focus-visible {
+      color: #b91c1c !important;
+      background-color: rgba(220, 38, 38, 0.1) !important;
+      border-color: rgba(220, 38, 38, 0.22) !important;
+      text-decoration: none !important;
+      transform: translateY(-1px) !important;
+    }
+    .hrms-action-btn--delete:focus-visible {
+      outline: 2px solid #dc2626 !important;
+      outline-offset: 1px !important;
+    }
+    .hrms-action-btn:active {
+      transform: translateY(0) !important;
     }
     .hrms-btn-view-dept:hover svg,
     .hrms-btn-view-emp:hover svg,
@@ -731,16 +802,12 @@
       background-color: #64748b !important;
     }
     html[data-bs-theme="dark"] .hrms-btn-view-dept,
-    html[data-bs-theme="dark"] .hrms-btn-view-emp,
     html[data-bs-theme="dark"] .hrms-dash-view-link,
     [data-bs-theme="dark"] .hrms-btn-view-dept,
-    [data-bs-theme="dark"] .hrms-btn-view-emp,
     [data-bs-theme="dark"] .hrms-dash-view-link,
     html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept,
-    html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp,
     html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-view-link,
     [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept,
-    [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp,
     [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-view-link {
       color: #60a5fa !important;
       border: none !important;
@@ -748,16 +815,12 @@
       box-shadow: none !important;
     }
     html[data-bs-theme="dark"] .hrms-btn-view-dept:hover,
-    html[data-bs-theme="dark"] .hrms-btn-view-emp:hover,
     html[data-bs-theme="dark"] .hrms-dash-view-link:hover,
     [data-bs-theme="dark"] .hrms-btn-view-dept:hover,
-    [data-bs-theme="dark"] .hrms-btn-view-emp:hover,
     [data-bs-theme="dark"] .hrms-dash-view-link:hover,
     html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept:hover,
-    html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp:hover,
     html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-view-link:hover,
     [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept:hover,
-    [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp:hover,
     [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-view-link:hover {
       color: #93c5fd !important;
       background-color: transparent !important;
@@ -767,13 +830,51 @@
       transform: none !important;
     }
     html[data-bs-theme="dark"] .hrms-btn-view-dept:active,
-    html[data-bs-theme="dark"] .hrms-btn-view-emp:active,
     html[data-bs-theme="dark"] .hrms-dash-view-link:active,
     [data-bs-theme="dark"] .hrms-btn-view-dept:active,
-    [data-bs-theme="dark"] .hrms-btn-view-emp:active,
     [data-bs-theme="dark"] .hrms-dash-view-link:active {
       transform: none !important;
       box-shadow: none !important;
+    }
+
+    /* Dark mode action buttons */
+    html[data-bs-theme="dark"] .hrms-action-btn--view,
+    [data-bs-theme="dark"] .hrms-action-btn--view {
+      color: #9ca3af !important;
+    }
+    html[data-bs-theme="dark"] .hrms-action-btn--view:hover,
+    html[data-bs-theme="dark"] .hrms-action-btn--view:focus-visible,
+    [data-bs-theme="dark"] .hrms-action-btn--view:hover,
+    [data-bs-theme="dark"] .hrms-action-btn--view:focus-visible {
+      color: #60a5fa !important;
+      background-color: rgba(96, 165, 250, 0.12) !important;
+      border-color: rgba(96, 165, 250, 0.25) !important;
+    }
+
+    html[data-bs-theme="dark"] .hrms-action-btn--edit,
+    [data-bs-theme="dark"] .hrms-action-btn--edit {
+      color: #60a5fa !important;
+    }
+    html[data-bs-theme="dark"] .hrms-action-btn--edit:hover,
+    html[data-bs-theme="dark"] .hrms-action-btn--edit:focus-visible,
+    [data-bs-theme="dark"] .hrms-action-btn--edit:hover,
+    [data-bs-theme="dark"] .hrms-action-btn--edit:focus-visible {
+      color: #93c5fd !important;
+      background-color: rgba(96, 165, 250, 0.15) !important;
+      border-color: rgba(96, 165, 250, 0.3) !important;
+    }
+
+    html[data-bs-theme="dark"] .hrms-action-btn--delete,
+    [data-bs-theme="dark"] .hrms-action-btn--delete {
+      color: #f87171 !important;
+    }
+    html[data-bs-theme="dark"] .hrms-action-btn--delete:hover,
+    html[data-bs-theme="dark"] .hrms-action-btn--delete:focus-visible,
+    [data-bs-theme="dark"] .hrms-action-btn--delete:hover,
+    [data-bs-theme="dark"] .hrms-action-btn--delete:focus-visible {
+      color: #fca5a5 !important;
+      background-color: rgba(239, 68, 68, 0.15) !important;
+      border-color: rgba(239, 68, 68, 0.3) !important;
     }
     html[data-bs-theme="dark"] .hrms-dash-btn,
     [data-bs-theme="dark"] .hrms-dash-btn,
@@ -1267,42 +1368,50 @@
       pointer-events: none;
       transition: font-size 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .hrms-topbar-toggle-btn {
+    .hrms-sidebar-toggle-btn {
       background-color: #ffffff !important;
       border: 1px solid #e2e8f0 !important;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
       outline: none !important;
-      width: 36px !important;
-      height: 36px !important;
+      width: 30px !important;
+      height: 30px !important;
       padding: 0 !important;
-      border-radius: 8px !important;
+      border-radius: 6px !important;
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
       color: #4b5563 !important;
       cursor: pointer !important;
       line-height: 1 !important;
-      transition: all 0.15s ease !important;
+      flex-shrink: 0 !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
-    .hrms-topbar-toggle-btn:hover {
+    .hrms-sidebar-toggle-btn:hover {
       background-color: #f8fafc !important;
       border-color: #cbd5e1 !important;
       color: #2563eb !important;
       transform: translateY(-1px) !important;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06) !important;
     }
-    .hrms-topbar-toggle-btn:active {
+    .hrms-sidebar-toggle-btn:active {
       transform: translateY(0) !important;
       box-shadow: none !important;
     }
-    html[data-bs-theme="dark"] .hrms-topbar-toggle-btn {
-      background-color: #111827 !important;
+    .hrms-sidebar-toggle-btn:focus-visible {
+      outline: 2px solid #2563eb !important;
+      outline-offset: 1px !important;
+    }
+    .hrms-sidebar-toggle-icon {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    html[data-bs-theme="dark"] .hrms-sidebar-toggle-btn {
+      background-color: #1f2937 !important;
       border-color: #374151 !important;
       color: #9ca3af !important;
       box-shadow: none !important;
     }
-    html[data-bs-theme="dark"] .hrms-topbar-toggle-btn:hover {
-      background-color: #1f2937 !important;
+    html[data-bs-theme="dark"] .hrms-sidebar-toggle-btn:hover {
+      background-color: #374151 !important;
       border-color: #4b5563 !important;
       color: #60a5fa !important;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
@@ -1325,9 +1434,21 @@
     .sidebar-collapsed .hrms-brand-row,
     html.sidebar-collapsed .hrms-brand-row,
     body.sidebar-collapsed .hrms-brand-row {
+      flex-direction: column !important;
       justify-content: center !important;
       align-items: center !important;
+      gap: 0.5rem !important;
       margin-bottom: 1.25rem !important;
+    }
+    .sidebar-collapsed .hrms-sidebar-toggle-btn,
+    html.sidebar-collapsed .hrms-sidebar-toggle-btn,
+    body.sidebar-collapsed .hrms-sidebar-toggle-btn {
+      margin: 0 auto !important;
+    }
+    .sidebar-collapsed .hrms-sidebar-toggle-icon,
+    html.sidebar-collapsed .hrms-sidebar-toggle-icon,
+    body.sidebar-collapsed .hrms-sidebar-toggle-icon {
+      transform: rotate(180deg) !important;
     }
     .sidebar-collapsed .hrms-brand,
     html.sidebar-collapsed .hrms-brand,
@@ -1434,13 +1555,6 @@
 
     {% if user.is_authenticated %}
       <header class="hrms-topbar d-flex align-items-center gap-3">
-        <button id="sidebarToggleBtn"
-                class="hrms-topbar-toggle-btn"
-                type="button"
-                aria-label="Toggle sidebar"
-                title="Toggle sidebar">
-          <i class="bi bi-list fs-5"></i>
-        </button>
         <div class="me-auto min-w-0">
           <h1 class="hrms-page-title text-truncate">{% block page_title %}HRMS{% endblock %}</h1>
           {% block page_subtitle %}{% endblock %}
@@ -1616,15 +1730,39 @@
       });
     }
 
-    // Sidebar Tooltips (active only in collapsed icon mode)
+    // Sidebar Tooltips (active in collapsed mode, and toggle button tooltip)
     const sidebarTooltipEls = document.querySelectorAll('.hrms-sidebar [data-bs-toggle="tooltip"]');
     const sidebarTooltips = [...sidebarTooltipEls].map(el => new bootstrap.Tooltip(el, {
       boundary: 'window',
       fallbackPlacements: ['right', 'top', 'bottom']
     }));
 
+    // Action button tooltips (View, Edit, Delete)
+    const actionTooltipEls = document.querySelectorAll('.hrms-action-btn[data-bs-toggle="tooltip"]');
+    [...actionTooltipEls].forEach(el => new bootstrap.Tooltip(el, {
+      boundary: 'window',
+      fallbackPlacements: ['top', 'bottom']
+    }));
+
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+
+    function updateSidebarToggleTooltip(isCollapsed) {
+      if (!sidebarToggleBtn) return;
+      const newTitle = isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
+      sidebarToggleBtn.setAttribute('title', newTitle);
+      sidebarToggleBtn.setAttribute('aria-label', newTitle);
+      const instance = bootstrap.Tooltip.getInstance(sidebarToggleBtn);
+      if (instance) {
+        instance.setContent({ '.tooltip-inner': newTitle });
+      }
+    }
+
     function setTooltipsState(isCollapsed) {
       sidebarTooltips.forEach(t => {
+        if (t._element && t._element.id === 'sidebarToggleBtn') {
+          t.enable();
+          return;
+        }
         if (isCollapsed) {
           t.enable();
         } else {
@@ -1640,6 +1778,7 @@
       document.body.classList.add('sidebar-collapsed');
     }
     setTooltipsState(initialCollapsed);
+    updateSidebarToggleTooltip(initialCollapsed);
 
     // Hide tooltips on navigation click
     sidebarTooltipEls.forEach(el => {
@@ -1650,7 +1789,6 @@
     });
 
     // Sidebar collapse/expand with localStorage persistence
-    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
     if (sidebarToggleBtn) {
       sidebarToggleBtn.addEventListener('click', function (e) {
         e.preventDefault();
@@ -1665,6 +1803,7 @@
           document.body.classList.toggle('sidebar-collapsed', isCollapsed);
           localStorage.setItem('hrms-sidebar-collapsed', isCollapsed ? 'true' : 'false');
           setTooltipsState(isCollapsed);
+          updateSidebarToggleTooltip(isCollapsed);
         }
       });
     }
