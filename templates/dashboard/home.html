@@ -87,7 +87,13 @@
           <p class="hrms-stat-label">Departments</p>
           <p class="hrms-stat-value">{{ department_count }}</p>
           <p class="hrms-stat-note">
-            <a href="{% url 'employees:departments' %}" class="text-decoration-none">Manage departments</a>
+            <a href="{% url 'employees:departments' %}" class="hrms-dash-link text-decoration-none">
+              <span>Manage departments</span>
+              <svg class="lucide lucide-arrow-right" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14"/>
+                <path d="m12 5 7 7-7 7"/>
+              </svg>
+            </a>
           </p>
         </div>
       </div>
@@ -101,7 +107,15 @@
       <div class="hrms-card h-100">
         <div class="d-flex align-items-center justify-content-between px-3 py-3 border-bottom">
           <h2 class="h6 mb-0">Recent joiners</h2>
-          <a class="small" href="{% url 'employees:list' %}">View all</a>
+          <a href="{% url 'employees:list' %}" class="btn btn-sm btn-outline-primary hrms-dash-btn" title="View all employees">
+            <svg class="lucide lucide-users" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <span>View All</span>
+          </a>
         </div>
         <div class="table-responsive">
           <table class="table align-middle">
@@ -117,7 +131,7 @@
               {% for employee in recent_employees %}
                 <tr>
                   <td>
-                    <a href="{% url 'employees:detail' employee.pk %}">{{ employee.full_name }}</a>
+                    <a href="{% url 'employees:detail' employee.pk %}" class="hrms-table-link">{{ employee.full_name }}</a>
                     <span class="d-block text-secondary small">{{ employee.employee_id }}</span>
                   </td>
                   <td>{{ employee.department }}</td>
@@ -135,7 +149,7 @@
                   <td colspan="4">
                     <div class="hrms-empty">
                       No employees yet.
-                      <a href="{% url 'employees:add' %}">Add the first employee</a>.
+                      <a href="{% url 'employees:add' %}" class="hrms-text-link">Add the first employee</a>.
                     </div>
                   </td>
                 </tr>
@@ -150,7 +164,18 @@
       <div class="hrms-card h-100">
         <div class="d-flex align-items-center justify-content-between px-3 py-3 border-bottom">
           <h2 class="h6 mb-0">Headcount by department</h2>
-          <a class="small" href="{% url 'employees:departments' %}">Details</a>
+          <a href="{% url 'employees:departments' %}" class="btn btn-sm btn-outline-primary hrms-dash-btn" title="View department details">
+            <svg class="lucide lucide-building-2" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/>
+              <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>
+              <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>
+              <path d="M10 6h4"/>
+              <path d="M10 10h4"/>
+              <path d="M10 14h4"/>
+              <path d="M10 18h4"/>
+            </svg>
+            <span>View Details</span>
+          </a>
         </div>
         <div class="p-3 d-flex flex-column gap-3">
           {% for department in top_departments %}
@@ -171,7 +196,7 @@
           {% empty %}
             <div class="hrms-empty">
               No departments yet.
-              <a href="{% url 'employees:departments' %}">Add one</a>.
+              <a href="{% url 'employees:departments' %}" class="hrms-text-link">Add one</a>.
             </div>
           {% endfor %}
         </div>

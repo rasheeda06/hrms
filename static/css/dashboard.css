@@ -618,10 +618,11 @@ body.sidebar-collapsed .hrms-logout:hover {
   transform: translateY(-1px) !important;
 }
 
-/* Outline Primary Button (.btn-outline-primary, .hrms-btn-view-dept, .hrms-btn-view-emp) */
+/* Outline Primary Button (.btn-outline-primary, .hrms-btn-view-dept, .hrms-btn-view-emp, .hrms-dash-btn) */
 .btn-outline-primary,
 .hrms-btn-view-dept,
-.hrms-btn-view-emp {
+.hrms-btn-view-emp,
+.hrms-dash-btn {
   background-color: transparent !important;
   border: 1px solid var(--hrms-primary) !important;
   color: var(--hrms-primary) !important;
@@ -631,7 +632,9 @@ body.sidebar-collapsed .hrms-logout:hover {
 .btn-outline-primary:hover,
 .btn-outline-primary:focus-visible,
 .hrms-btn-view-dept:hover,
-.hrms-btn-view-emp:hover {
+.hrms-btn-view-emp:hover,
+.hrms-dash-btn:hover,
+.hrms-dash-btn:focus-visible {
   background-color: var(--hrms-primary) !important;
   border-color: var(--hrms-primary) !important;
   color: #ffffff !important;
@@ -640,26 +643,101 @@ body.sidebar-collapsed .hrms-logout:hover {
 }
 
 .hrms-btn-view-dept svg,
-.hrms-btn-view-emp svg {
+.hrms-btn-view-emp svg,
+.hrms-dash-btn svg {
   flex-shrink: 0 !important;
   transition: transform 0.18s ease !important;
 }
 
 .hrms-btn-view-dept:hover svg,
-.hrms-btn-view-emp:hover svg {
+.hrms-btn-view-emp:hover svg,
+.hrms-dash-btn:hover svg {
   transform: scale(1.08) !important;
 }
 
 .hrms-btn-view-dept:active,
-.hrms-btn-view-emp:active {
+.hrms-btn-view-emp:active,
+.hrms-dash-btn:active {
   transform: translateY(0) !important;
   box-shadow: none !important;
 }
 
 .hrms-btn-view-dept:focus-visible,
-.hrms-btn-view-emp:focus-visible {
+.hrms-btn-view-emp:focus-visible,
+.hrms-dash-btn:focus-visible {
   outline: 2px solid rgba(37, 99, 235, 0.4) !important;
   outline-offset: 2px !important;
+}
+
+/* Dashboard Action Buttons & Links */
+.hrms-dash-btn,
+.btn.btn-outline-primary.hrms-dash-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+  padding: 0.28rem 0.65rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+  color: var(--hrms-primary) !important;
+  background-color: transparent !important;
+  border: 1px solid var(--hrms-primary) !important;
+  border-radius: 6px !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease !important;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.08) !important;
+}
+
+.hrms-dash-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+  color: var(--hrms-primary) !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease, transform 0.15s ease !important;
+}
+
+.hrms-dash-link svg {
+  flex-shrink: 0 !important;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.hrms-dash-link:hover {
+  color: var(--hrms-primary-hover) !important;
+  text-decoration: none !important;
+}
+
+.hrms-dash-link:hover svg {
+  transform: translateX(3px) !important;
+}
+
+.hrms-table-link {
+  color: var(--hrms-text-heading) !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease !important;
+}
+
+.hrms-table-link:hover {
+  color: var(--hrms-primary) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px !important;
+}
+
+.hrms-text-link {
+  color: var(--hrms-primary) !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease, text-decoration 0.15s ease !important;
+}
+
+.hrms-text-link:hover {
+  color: var(--hrms-primary-hover) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px !important;
 }
 
 /* Outline Secondary Button (.btn-outline-secondary) */
@@ -1162,12 +1240,16 @@ html[data-bs-theme="dark"] .hrms-card .table > tbody td,
 
 html[data-bs-theme="dark"] .hrms-btn-view-dept,
 html[data-bs-theme="dark"] .hrms-btn-view-emp,
+html[data-bs-theme="dark"] .hrms-dash-btn,
 [data-bs-theme="dark"] .hrms-btn-view-dept,
 [data-bs-theme="dark"] .hrms-btn-view-emp,
+[data-bs-theme="dark"] .hrms-dash-btn,
 html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept,
 html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp,
+html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-btn,
 [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept,
-[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp {
+[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp,
+[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-btn {
   color: #60a5fa !important;
   border: 1px solid rgba(96, 165, 250, 0.5) !important;
   background-color: rgba(37, 99, 235, 0.12) !important;
@@ -1176,12 +1258,16 @@ html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp,
 
 html[data-bs-theme="dark"] .hrms-btn-view-dept:hover,
 html[data-bs-theme="dark"] .hrms-btn-view-emp:hover,
+html[data-bs-theme="dark"] .hrms-dash-btn:hover,
 [data-bs-theme="dark"] .hrms-btn-view-dept:hover,
 [data-bs-theme="dark"] .hrms-btn-view-emp:hover,
-html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept:hover,
+[data-bs-theme="dark"] .hrms-dash-btn:hover,
+html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept,
 html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp:hover,
+html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-btn:hover,
 [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept:hover,
-[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp:hover {
+[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp:hover,
+[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-dash-btn:hover {
   color: #ffffff !important;
   background-color: #2563eb !important;
   border-color: #3b82f6 !important;
@@ -1191,10 +1277,42 @@ html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp:hover,
 
 html[data-bs-theme="dark"] .hrms-btn-view-dept:active,
 html[data-bs-theme="dark"] .hrms-btn-view-emp:active,
+html[data-bs-theme="dark"] .hrms-dash-btn:active,
 [data-bs-theme="dark"] .hrms-btn-view-dept:active,
-[data-bs-theme="dark"] .hrms-btn-view-emp:active {
+[data-bs-theme="dark"] .hrms-btn-view-emp:active,
+[data-bs-theme="dark"] .hrms-dash-btn:active {
   transform: translateY(0) !important;
   box-shadow: none !important;
+}
+
+html[data-bs-theme="dark"] .hrms-dash-link,
+[data-bs-theme="dark"] .hrms-dash-link {
+  color: #60a5fa !important;
+}
+
+html[data-bs-theme="dark"] .hrms-dash-link:hover,
+[data-bs-theme="dark"] .hrms-dash-link:hover {
+  color: #93c5fd !important;
+}
+
+html[data-bs-theme="dark"] .hrms-table-link,
+[data-bs-theme="dark"] .hrms-table-link {
+  color: #f8fafc !important;
+}
+
+html[data-bs-theme="dark"] .hrms-table-link:hover,
+[data-bs-theme="dark"] .hrms-table-link:hover {
+  color: #60a5fa !important;
+}
+
+html[data-bs-theme="dark"] .hrms-text-link,
+[data-bs-theme="dark"] .hrms-text-link {
+  color: #60a5fa !important;
+}
+
+html[data-bs-theme="dark"] .hrms-text-link:hover,
+[data-bs-theme="dark"] .hrms-text-link:hover {
+  color: #93c5fd !important;
 }
 
 html[data-bs-theme="dark"] .btn-primary,
