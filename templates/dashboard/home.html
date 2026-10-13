@@ -12,8 +12,15 @@
 
     <div class="col-12 col-sm-6 col-xl-3">
       <div class="hrms-card hrms-stat d-flex align-items-start gap-3">
-        <span class="hrms-stat-icon hrms-icon-blue"><i class="bi bi-people"></i></span>
-        <div>
+        <span class="hrms-stat-icon hrms-icon-blue">
+          <svg class="lucide lucide-users" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </span>
+        <div class="flex-grow-1 min-w-0">
           <p class="hrms-stat-label">Total Employees</p>
           <p class="hrms-stat-value">{{ total_employees }}</p>
           <p class="hrms-stat-note">
@@ -25,44 +32,62 @@
 
     <div class="col-12 col-sm-6 col-xl-3">
       <div class="hrms-card hrms-stat d-flex align-items-start gap-3">
-        <span class="hrms-stat-icon hrms-icon-green"><i class="bi bi-calendar-check"></i></span>
-        <div>
+        <span class="hrms-stat-icon hrms-icon-green">
+          <svg class="lucide lucide-user-check" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <polyline points="16 11 18 13 22 9"/>
+          </svg>
+        </span>
+        <div class="flex-grow-1 min-w-0">
           <p class="hrms-stat-label">Present Today</p>
-          {% if present_today is None %}
-            <p class="hrms-stat-value muted">&mdash;</p>
-            <p class="hrms-stat-note">Attendance module coming in Week 4</p>
-          {% else %}
-            <p class="hrms-stat-value">{{ present_today }}</p>
-            <p class="hrms-stat-note">Checked in today</p>
-          {% endif %}
+          <p class="hrms-stat-value">{{ present_today }}</p>
+          <p class="hrms-stat-note">Checked in today</p>
         </div>
       </div>
     </div>
 
     <div class="col-12 col-sm-6 col-xl-3">
       <div class="hrms-card hrms-stat d-flex align-items-start gap-3">
-        <span class="hrms-stat-icon hrms-icon-amber"><i class="bi bi-airplane"></i></span>
-        <div>
+        <span class="hrms-stat-icon hrms-icon-amber">
+          <svg class="lucide lucide-calendar-off" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.18 4.18A2 2 0 0 0 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 1.82-1.18"/>
+            <path d="M21 15.5V6a2 2 0 0 0-2-2H9.5"/>
+            <path d="M16 2v4"/>
+            <path d="M8 2v1"/>
+            <path d="M3 10h7"/>
+            <path d="M21 10h-5.5"/>
+            <line x1="2" x2="22" y1="2" y2="22"/>
+          </svg>
+        </span>
+        <div class="flex-grow-1 min-w-0">
           <p class="hrms-stat-label">On Leave</p>
-          {% if on_leave_today is None %}
-            <p class="hrms-stat-value muted">&mdash;</p>
-            <p class="hrms-stat-note">Leave module coming in Week 5</p>
-          {% else %}
-            <p class="hrms-stat-value">{{ on_leave_today }}</p>
-            <p class="hrms-stat-note">Approved leave today</p>
-          {% endif %}
+          <p class="hrms-stat-value">{{ on_leave_today }}</p>
+          <p class="hrms-stat-note">
+            {% if on_leave_today %}{{ on_leave_today }} on leave{% else %}No leaves today{% endif %}
+          </p>
         </div>
       </div>
     </div>
 
     <div class="col-12 col-sm-6 col-xl-3">
       <div class="hrms-card hrms-stat d-flex align-items-start gap-3">
-        <span class="hrms-stat-icon hrms-icon-purple"><i class="bi bi-diagram-3"></i></span>
-        <div>
+        <span class="hrms-stat-icon hrms-icon-purple">
+          <svg class="lucide lucide-building-2" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/>
+            <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>
+            <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>
+            <path d="M10 6h4"/>
+            <path d="M10 10h4"/>
+            <path d="M10 14h4"/>
+            <path d="M10 18h4"/>
+          </svg>
+        </span>
+        <div class="flex-grow-1 min-w-0">
           <p class="hrms-stat-label">Departments</p>
           <p class="hrms-stat-value">{{ department_count }}</p>
           <p class="hrms-stat-note">
-            <a href="{% url 'employees:departments' %}">Manage departments</a>
+            <a href="{% url 'employees:departments' %}" class="text-decoration-none">Manage departments</a>
           </p>
         </div>
       </div>
