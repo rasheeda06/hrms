@@ -17,7 +17,7 @@
   </script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link href="{% static 'css/dashboard.css' %}?v=20261013_v9" rel="stylesheet">
+  <link href="{% static 'css/dashboard.css' %}?v=20261013_v10" rel="stylesheet">
   <style>
     /* Application font-size: 12px */
     html {
@@ -853,90 +853,237 @@
     [data-bs-theme="dark"] .form-label {
       color: #e5e7eb !important;
     }
-    .hrms-theme-toggle {
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
+    /* Header Action Buttons & Profile System */
+    .hrms-header-icon-btn {
+      background-color: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
       outline: none !important;
-      padding: 0.25rem !important;
-      margin: 0 !important;
-      width: auto !important;
-      height: auto !important;
+      width: 36px !important;
+      height: 36px !important;
+      padding: 0 !important;
+      border-radius: 8px !important;
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
       color: #4b5563 !important;
-      cursor: pointer;
-      line-height: 1;
-      transition: color 0.15s ease, transform 0.15s ease;
+      cursor: pointer !important;
+      line-height: 1 !important;
+      position: relative !important;
+      transition: all 0.15s ease !important;
     }
-    .hrms-theme-toggle:hover {
-      background: transparent !important;
-      color: #111827 !important;
-      transform: scale(1.1);
+    .hrms-header-icon-btn:hover,
+    .show > .hrms-header-icon-btn {
+      background-color: #f8fafc !important;
+      border-color: #cbd5e1 !important;
+      color: #2563eb !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06) !important;
     }
-    .hrms-theme-toggle:focus,
-    .hrms-theme-toggle:focus-visible {
-      outline: none !important;
+    .hrms-header-icon-btn:active {
+      transform: translateY(0) !important;
       box-shadow: none !important;
-      background: transparent !important;
     }
-    html[data-bs-theme="dark"] .hrms-theme-toggle,
-    [data-bs-theme="dark"] .hrms-theme-toggle {
-      color: #facc15 !important;
-      border: none !important;
-      background: transparent !important;
-    }
-    html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
-    [data-bs-theme="dark"] .hrms-theme-toggle:hover {
-      background: transparent !important;
-      color: #fde047 !important;
-      transform: scale(1.1);
+    .hrms-header-icon-btn:focus,
+    .hrms-header-icon-btn:focus-visible {
+      outline: none !important;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
     }
 
-    /* Profile button: no visible background, seamless in light & dark */
-    .hrms-profile-btn {
-      background: transparent !important;
-      background-color: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      outline: none !important;
-      padding: 0.25rem 0.5rem !important;
-      margin: 0 !important;
-      color: #374151 !important;
-      cursor: pointer;
-      font-size: 12px !important;
-      font-weight: 500;
+    .hrms-theme-toggle {
+      /* Inherits from .hrms-header-icon-btn */
+    }
+    #themeToggleIcon {
       display: inline-flex !important;
       align-items: center !important;
-      line-height: 1.2;
-      text-decoration: none;
-      transition: color 0.15s ease;
+      justify-content: center !important;
+      width: 18px !important;
+      height: 18px !important;
+    }
+    #themeToggleIcon svg {
+      width: 18px !important;
+      height: 18px !important;
+    }
+    html[data-bs-theme="dark"] .hrms-theme-toggle {
+      color: #facc15 !important;
+    }
+    html[data-bs-theme="dark"] .hrms-theme-toggle:hover {
+      color: #fde047 !important;
+    }
+
+    .hrms-notif-dot {
+      position: absolute !important;
+      top: 8px !important;
+      right: 8px !important;
+      width: 7px !important;
+      height: 7px !important;
+      background-color: #2563eb !important;
+      border-radius: 50% !important;
+      box-shadow: 0 0 0 2px #ffffff !important;
+      pointer-events: none !important;
+    }
+    .hrms-notif-menu {
+      min-width: 270px !important;
+      border-radius: 10px !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+      margin-top: 0.5rem !important;
+    }
+    .hrms-notif-empty-icon {
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50% !important;
+      background-color: #f1f5f9 !important;
+      color: #94a3b8 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .hrms-profile-btn {
+      background-color: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+      outline: none !important;
+      padding: 3px 10px 3px 4px !important;
+      height: 36px !important;
+      border-radius: 9999px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.55rem !important;
+      cursor: pointer !important;
+      color: #1e293b !important;
+      text-decoration: none !important;
+      transition: all 0.15s ease !important;
     }
     .hrms-profile-btn:hover,
     .hrms-profile-btn:focus,
-    .hrms-profile-btn:active,
     .show > .hrms-profile-btn {
-      background: transparent !important;
-      background-color: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      color: #111827 !important;
+      background-color: #f8fafc !important;
+      border-color: #cbd5e1 !important;
+      color: #1e293b !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06) !important;
     }
-    html[data-bs-theme="dark"] .hrms-profile-btn {
-      background: transparent !important;
-      background-color: transparent !important;
-      border: none !important;
-      color: #d1d5db !important;
+    .hrms-profile-btn:active {
+      transform: translateY(0) !important;
+      box-shadow: none !important;
+    }
+    .hrms-header-avatar {
+      width: 28px !important;
+      height: 28px !important;
+      border-radius: 50% !important;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+      border: 1.5px solid #bfdbfe !important;
+      color: #2563eb !important;
+      font-size: 0.72rem !important;
+      font-weight: 700 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
+      letter-spacing: 0.02em !important;
+    }
+    .hrms-profile-info {
+      line-height: 1.15 !important;
+    }
+    .hrms-profile-name {
+      font-size: 0.8rem !important;
+      font-weight: 600 !important;
+      color: #0f172a !important;
+      max-width: 120px !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    .hrms-profile-role {
+      font-size: 0.68rem !important;
+      color: #64748b !important;
+      font-weight: 400 !important;
+    }
+    .hrms-profile-chevron {
+      color: #94a3b8 !important;
+      transition: transform 0.2s ease !important;
+      flex-shrink: 0 !important;
+    }
+    .show > .hrms-profile-btn .hrms-profile-chevron {
+      transform: rotate(180deg) !important;
+    }
+    .hrms-profile-menu {
+      min-width: 220px !important;
+      border-radius: 10px !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+      margin-top: 0.5rem !important;
+    }
+
+    html[data-bs-theme="dark"] .hrms-header-icon-btn,
+    [data-bs-theme="dark"] .hrms-header-icon-btn {
+      background-color: #111827 !important;
+      border-color: #374151 !important;
+      color: #94a3b8 !important;
+      box-shadow: none !important;
+    }
+    html[data-bs-theme="dark"] .hrms-header-icon-btn:hover,
+    [data-bs-theme="dark"] .hrms-header-icon-btn:hover,
+    html[data-bs-theme="dark"] .show > .hrms-header-icon-btn,
+    [data-bs-theme="dark"] .show > .hrms-header-icon-btn {
+      background-color: #1f2937 !important;
+      border-color: #4b5563 !important;
+      color: #60a5fa !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+    }
+    html[data-bs-theme="dark"] .hrms-notif-dot,
+    [data-bs-theme="dark"] .hrms-notif-dot {
+      background-color: #3b82f6 !important;
+      box-shadow: 0 0 0 2px #111827 !important;
+    }
+    html[data-bs-theme="dark"] .hrms-notif-menu,
+    [data-bs-theme="dark"] .hrms-notif-menu {
+      background-color: #111827 !important;
+      border-color: #374151 !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+    }
+    html[data-bs-theme="dark"] .hrms-notif-empty-icon,
+    [data-bs-theme="dark"] .hrms-notif-empty-icon {
+      background-color: #1f2937 !important;
+      color: #64748b !important;
+    }
+    html[data-bs-theme="dark"] .hrms-profile-btn,
+    [data-bs-theme="dark"] .hrms-profile-btn {
+      background-color: #111827 !important;
+      border-color: #374151 !important;
+      color: #f8fafc !important;
+      box-shadow: none !important;
     }
     html[data-bs-theme="dark"] .hrms-profile-btn:hover,
-    html[data-bs-theme="dark"] .hrms-profile-btn:focus,
-    html[data-bs-theme="dark"] .hrms-profile-btn:active,
-    html[data-bs-theme="dark"] .show > .hrms-profile-btn {
-      background: transparent !important;
-      background-color: transparent !important;
-      border: none !important;
-      color: #ffffff !important;
+    [data-bs-theme="dark"] .hrms-profile-btn:hover,
+    html[data-bs-theme="dark"] .show > .hrms-profile-btn,
+    [data-bs-theme="dark"] .show > .hrms-profile-btn {
+      background-color: #1f2937 !important;
+      border-color: #4b5563 !important;
+      color: #f8fafc !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+    }
+    html[data-bs-theme="dark"] .hrms-header-avatar,
+    [data-bs-theme="dark"] .hrms-header-avatar {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(59, 130, 246, 0.2) 100%) !important;
+      border-color: rgba(59, 130, 246, 0.4) !important;
+      color: #93c5fd !important;
+    }
+    html[data-bs-theme="dark"] .hrms-profile-name,
+    [data-bs-theme="dark"] .hrms-profile-name {
+      color: #f8fafc !important;
+    }
+    html[data-bs-theme="dark"] .hrms-profile-role,
+    [data-bs-theme="dark"] .hrms-profile-role {
+      color: #94a3b8 !important;
+    }
+    html[data-bs-theme="dark"] .hrms-profile-menu,
+    [data-bs-theme="dark"] .hrms-profile-menu {
+      background-color: #111827 !important;
+      border-color: #374151 !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
     }
 
     /* Sidebar smooth transitions and collapsible states */
@@ -1034,36 +1181,44 @@
       transition: font-size 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .hrms-topbar-toggle-btn {
-      background: transparent !important;
-      border: 1px solid #e5e7eb !important;
-      box-shadow: none !important;
+      background-color: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
       outline: none !important;
-      width: 32px !important;
-      height: 32px !important;
+      width: 36px !important;
+      height: 36px !important;
       padding: 0 !important;
-      border-radius: 6px !important;
+      border-radius: 8px !important;
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
       color: #4b5563 !important;
       cursor: pointer !important;
       line-height: 1 !important;
-      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      transition: all 0.15s ease !important;
     }
     .hrms-topbar-toggle-btn:hover {
-      background-color: #f3f4f6 !important;
-      color: #111827 !important;
-      border-color: #d1d5db !important;
-      transform: scale(1.05);
+      background-color: #f8fafc !important;
+      border-color: #cbd5e1 !important;
+      color: #2563eb !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06) !important;
+    }
+    .hrms-topbar-toggle-btn:active {
+      transform: translateY(0) !important;
+      box-shadow: none !important;
     }
     html[data-bs-theme="dark"] .hrms-topbar-toggle-btn {
+      background-color: #111827 !important;
       border-color: #374151 !important;
       color: #9ca3af !important;
+      box-shadow: none !important;
     }
     html[data-bs-theme="dark"] .hrms-topbar-toggle-btn:hover {
       background-color: #1f2937 !important;
-      color: #f9fafb !important;
       border-color: #4b5563 !important;
+      color: #60a5fa !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
     }
 
     /* Collapsed Sidebar Styles */
@@ -1199,18 +1354,18 @@
                 title="Toggle sidebar">
           <i class="bi bi-list fs-5"></i>
         </button>
-        <div class="me-auto">
-          <h1 class="hrms-page-title">{% block page_title %}HRMS{% endblock %}</h1>
+        <div class="me-auto min-w-0">
+          <h1 class="hrms-page-title text-truncate">{% block page_title %}HRMS{% endblock %}</h1>
           {% block page_subtitle %}{% endblock %}
         </div>
         <div class="d-flex align-items-center gap-2">
           <button id="themeToggleBtn"
-                  class="hrms-theme-toggle"
+                  class="hrms-header-icon-btn hrms-theme-toggle"
                   type="button"
                   aria-label="Toggle theme"
                   title="Switch to dark mode">
             <span id="themeToggleIcon" class="d-inline-flex align-items-center justify-content-center">
-              <svg class="lucide lucide-moon-star" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="lucide lucide-moon-star" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 5h4" />
                 <path d="M20 3v4" />
                 <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
@@ -1218,28 +1373,68 @@
             </span>
           </button>
           <div class="dropdown">
+            <button id="notificationDropdownBtn"
+                    class="hrms-header-icon-btn"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    aria-label="Notifications"
+                    title="Notifications">
+              <svg class="lucide lucide-bell" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+              </svg>
+              <span class="hrms-notif-dot"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end shadow-sm hrms-notif-menu py-0" aria-labelledby="notificationDropdownBtn">
+              <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                <span class="fw-semibold small">Notifications</span>
+                <span class="badge text-bg-primary-subtle text-primary border border-primary-subtle" style="font-size: 0.7rem;">0 New</span>
+              </div>
+              <div class="p-3 text-center text-secondary small">
+                <div class="hrms-notif-empty-icon mx-auto mb-2">
+                  <svg class="lucide lucide-bell-off" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5"/>
+                    <path d="M17 17H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7"/>
+                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                    <path d="m2 2 20 20"/>
+                  </svg>
+                </div>
+                <p class="mb-0 fw-medium text-body">No notifications</p>
+                <p class="text-secondary small mb-0">You're all caught up!</p>
+              </div>
+            </div>
+          </div>
+          <div class="dropdown">
             <button id="profileDropdownBtn"
                     class="hrms-profile-btn"
                     type="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                     aria-label="Profile menu">
-              <span class="d-inline-flex align-items-center justify-content-center">
-                <svg class="lucide lucide-user" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
+              <span class="hrms-header-avatar">
+                {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper|default:user.get_username|slice:":1"|upper }}
               </span>
-              <span>Profile</span>
-              <svg class="lucide lucide-chevron-down" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <span class="hrms-profile-info d-none d-md-flex flex-column text-start">
+                <span class="hrms-profile-name">{{ user.get_username }}</span>
+                <span class="hrms-profile-role">{{ user_role_label|default:"Admin" }}</span>
+              </span>
+              <svg class="lucide lucide-chevron-down hrms-profile-chevron ms-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m6 9 6 6 6-6"/>
               </svg>
             </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="profileDropdownBtn">
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm hrms-profile-menu" aria-labelledby="profileDropdownBtn">
               <li class="px-3 py-2 border-bottom">
-                <div class="fw-semibold text-truncate">{{ user.get_username }}</div>
-                <div class="text-secondary small text-truncate">
-                  {{ user_role_label }}{% if user.email %} · {{ user.email }}{% endif %}
+                <div class="d-flex align-items-center gap-2">
+                  <span class="hrms-header-avatar">
+                    {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper|default:user.get_username|slice:":1"|upper }}
+                  </span>
+                  <div class="min-w-0">
+                    <div class="fw-semibold text-truncate">{{ user.get_username }}</div>
+                    <div class="text-secondary small text-truncate">
+                      {{ user_role_label }}{% if user.email %} · {{ user.email }}{% endif %}
+                    </div>
+                  </div>
                 </div>
               </li>
               <li>
@@ -1248,7 +1443,7 @@
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                   </svg>
-                  Profile
+                  <span>Profile</span>
                 </a>
               </li>
               {% if user.is_staff or user.is_superuser %}
@@ -1258,11 +1453,11 @@
                       <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
                       <circle cx="12" cy="12" r="3"/>
                     </svg>
-                    Django Admin
+                    <span>Django Admin</span>
                   </a>
                 </li>
               {% endif %}
-              <li><hr class="dropdown-divider"></li>
+              <li><hr class="dropdown-divider my-1"></li>
               <li>
                 <form method="post" action="{% url 'accounts:logout' %}" class="m-0">
                   {% csrf_token %}
@@ -1272,7 +1467,7 @@
                       <polyline points="16 17 21 12 16 7"/>
                       <line x1="21" x2="9" y1="12" y2="12"/>
                     </svg>
-                    Logout
+                    <span>Logout</span>
                   </button>
                 </form>
               </li>
@@ -1303,9 +1498,9 @@
     const toggleBtn = document.getElementById('themeToggleBtn');
     const toggleIcon = document.getElementById('themeToggleIcon');
 
-    const moonIconSvg = `<svg class="lucide lucide-moon-star" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5h4" /><path d="M20 3v4" /><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></svg>`;
+    const moonIconSvg = `<svg class="lucide lucide-moon-star" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5h4" /><path d="M20 3v4" /><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></svg>`;
 
-    const sunIconSvg = `<svg class="lucide lucide-sun" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>`;
+    const sunIconSvg = `<svg class="lucide lucide-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>`;
 
     function updateTheme(theme) {
       document.documentElement.setAttribute('data-bs-theme', theme);
