@@ -709,6 +709,81 @@ body.sidebar-collapsed .hrms-logout:hover {
   flex-shrink: 0;
 }
 
+/* Department Headcount Horizontal Bar Chart */
+.hrms-chart-item {
+  transition: transform 0.15s ease;
+}
+
+.hrms-chart-dept-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--hrms-text-heading);
+  letter-spacing: -0.01em;
+  transition: color 0.15s ease;
+}
+
+.hrms-chart-item:hover .hrms-chart-dept-name {
+  color: var(--hrms-primary);
+}
+
+.hrms-chart-metrics {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+}
+
+.hrms-chart-count {
+  font-weight: 700;
+  color: var(--hrms-text-heading);
+}
+
+.hrms-chart-unit {
+  color: var(--hrms-text-muted);
+  font-size: 0.74rem;
+}
+
+.hrms-chart-pct {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.12rem 0.42rem;
+  border-radius: 4px;
+  background-color: var(--hrms-primary-light, #eff6ff);
+  color: var(--hrms-primary);
+  border: 1px solid var(--hrms-primary-border, #bfdbfe);
+  letter-spacing: 0.02em;
+}
+
+.hrms-chart-track {
+  height: 7px;
+  background-color: var(--hrms-border-subtle, #f1f5f9);
+  border: 1px solid var(--hrms-border, #e2e8f0);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.hrms-chart-bar {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.25);
+  animation: hrmsChartGrow 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: width 0.4s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.hrms-chart-item:hover .hrms-chart-bar {
+  filter: brightness(1.1);
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.45);
+}
+
+@keyframes hrmsChartGrow {
+  from {
+    width: 0% !important;
+  }
+}
+
 /* Universal Enterprise Button System --------------------------------- */
 
 .btn {
@@ -1425,6 +1500,51 @@ html[data-bs-theme="dark"] .hrms-badge-inactive,
 html[data-bs-theme="dark"] .hrms-badge-inactive .hrms-badge-dot,
 [data-bs-theme="dark"] .hrms-badge-inactive .hrms-badge-dot {
   background-color: #64748b !important;
+}
+
+html[data-bs-theme="dark"] .hrms-chart-dept-name,
+[data-bs-theme="dark"] .hrms-chart-dept-name {
+  color: #f8fafc !important;
+}
+
+html[data-bs-theme="dark"] .hrms-chart-item:hover .hrms-chart-dept-name,
+[data-bs-theme="dark"] .hrms-chart-item:hover .hrms-chart-dept-name {
+  color: #60a5fa !important;
+}
+
+html[data-bs-theme="dark"] .hrms-chart-count,
+[data-bs-theme="dark"] .hrms-chart-count {
+  color: #f8fafc !important;
+}
+
+html[data-bs-theme="dark"] .hrms-chart-unit,
+[data-bs-theme="dark"] .hrms-chart-unit {
+  color: #94a3b8 !important;
+}
+
+html[data-bs-theme="dark"] .hrms-chart-pct,
+[data-bs-theme="dark"] .hrms-chart-pct {
+  background-color: rgba(37, 99, 235, 0.16) !important;
+  color: #60a5fa !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+html[data-bs-theme="dark"] .hrms-chart-track,
+[data-bs-theme="dark"] .hrms-chart-track {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+html[data-bs-theme="dark"] .hrms-chart-bar,
+[data-bs-theme="dark"] .hrms-chart-bar {
+  background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%) !important;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.4) !important;
+}
+
+html[data-bs-theme="dark"] .hrms-chart-item:hover .hrms-chart-bar,
+[data-bs-theme="dark"] .hrms-chart-item:hover .hrms-chart-bar {
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.6) !important;
 }
 
 html[data-bs-theme="dark"] .hrms-btn-view-dept,

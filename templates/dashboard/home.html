@@ -182,28 +182,57 @@
             <span>View Details</span>
           </a>
         </div>
-        <div class="p-3 d-flex flex-column gap-3">
-          {% for department in top_departments %}
-            <div>
-              <div class="d-flex justify-content-between small mb-1">
-                <span>{{ department.name }}</span>
-                <span class="text-secondary">{{ department.headcount }}</span>
-              </div>
-              <div class="progress" style="height: 6px;">
-                <div class="progress-bar"
-                     role="progressbar"
-                     style="width: {% widthratio department.headcount total_employees 100 %}%;"
-                     aria-valuenow="{{ department.headcount }}"
-                     aria-valuemin="0"
-                     aria-valuemax="{{ total_employees }}"></div>
-              </div>
+        <div class="p-3 flex-grow-1 d-flex flex-column justify-content-center">
+          {% if top_departments and total_employees > 0 %}
+            <div class="d-flex flex-column gap-3">
+              {% for department in top_departments %}
+                <div class="hrms-chart-item">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="hrms-chart-dept-name">{{ department.name }}</span>
+                    <div class="hrms-chart-metrics">
+                      <span class="hrms-chart-count">{{ department.headcount }}</span>
+                      <span class="hrms-chart-unit">{% if department.headcount == 1 %}emp{% else %}emps{% endif %}</span>
+                      <span class="hrms-chart-pct">{% widthratio department.headcount total_employees 100 %}%</span>
+                    </div>
+                  </div>
+                  <div class="hrms-chart-track" role="progressbar"
+                       aria-valuenow="{{ department.headcount }}"
+                       aria-valuemin="0"
+                       aria-valuemax="{{ total_employees }}"
+                       aria-label="{{ department.name }} headcount">
+                    <div class="hrms-chart-bar" style="--bar-width: {% widthratio department.headcount total_employees 100 %}%; width: {% widthratio department.headcount total_employees 100 %}%;"></div>
+                  </div>
+                </div>
+              {% endfor %}
             </div>
-          {% empty %}
-            <div class="hrms-empty">
-              No departments yet.
-              <a href="{% url 'employees:departments' %}" class="hrms-text-link">Add one</a>.
+          {% else %}
+            <div class="hrms-empty text-center py-4 my-auto">
+              <span class="hrms-stat-icon hrms-icon-purple mx-auto mb-2" style="width: 42px; height: 42px;">
+                <svg class="lucide lucide-building-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/>
+                  <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>
+                  <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>
+                  <path d="M10 6h4"/>
+                  <path d="M10 10h4"/>
+                  <path d="M10 14h4"/>
+                  <path d="M10 18h4"/>
+                </svg>
+              </span>
+              <p class="mb-1 fw-medium text-body">No headcount data available</p>
+              <p class="text-secondary small mb-3">Add departments and assign employees to see distribution.</p>
+              {% if not top_departments %}
+                <a href="{% url 'employees:departments' %}" class="btn btn-sm btn-outline-primary hrms-dash-btn">
+                  <i class="bi bi-plus-lg"></i>
+                  <span>Add department</span>
+                </a>
+              {% else %}
+                <a href="{% url 'employees:add' %}" class="btn btn-sm btn-outline-primary hrms-dash-btn">
+                  <i class="bi bi-plus-lg"></i>
+                  <span>Add employee</span>
+                </a>
+              {% endif %}
             </div>
-          {% endfor %}
+          {% endif %}
         </div>
       </div>
     </div>
