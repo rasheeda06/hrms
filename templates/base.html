@@ -17,7 +17,7 @@
   </script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link href="{% static 'css/dashboard.css' %}?v=20261013_v3" rel="stylesheet">
+  <link href="{% static 'css/dashboard.css' %}?v=20261013_v4" rel="stylesheet">
   <style>
     /* Application font-size: 12px */
     html {
@@ -39,46 +39,56 @@
       box-shadow: none !important;
     }
 
-    /* Department "View Employees" action button */
-    .hrms-btn-view-dept {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.35rem;
-      padding: 0.28rem 0.65rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-      line-height: 1.25;
-      color: #2563eb;
-      background-color: transparent;
-      border: 1px solid #2563eb;
-      border-radius: 6px;
+    /* Department & Employee action buttons */
+    .hrms-btn-view-dept,
+    .hrms-btn-view-emp,
+    .btn.btn-outline-primary.hrms-btn-view-dept,
+    .btn.btn-outline-primary.hrms-btn-view-emp {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 0.35rem !important;
+      padding: 0.28rem 0.65rem !important;
+      font-size: 0.85rem !important;
+      font-weight: 500 !important;
+      line-height: 1.25 !important;
+      color: #2563eb !important;
+      background-color: transparent !important;
+      border: 1px solid #2563eb !important;
+      border-radius: 6px !important;
       text-decoration: none !important;
-      white-space: nowrap;
-      transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
-      box-shadow: 0 1px 2px rgba(37, 99, 235, 0.05);
+      white-space: nowrap !important;
+      transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease !important;
+      box-shadow: 0 1px 2px rgba(37, 99, 235, 0.08) !important;
     }
-    .hrms-btn-view-dept svg {
-      flex-shrink: 0;
-      transition: transform 0.18s ease;
+    .hrms-btn-view-dept svg,
+    .hrms-btn-view-emp svg {
+      flex-shrink: 0 !important;
+      transition: transform 0.18s ease !important;
     }
-    .hrms-btn-view-dept:hover {
+    .hrms-btn-view-dept:hover,
+    .hrms-btn-view-emp:hover,
+    .btn.btn-outline-primary.hrms-btn-view-dept:hover,
+    .btn.btn-outline-primary.hrms-btn-view-emp:hover {
       color: #ffffff !important;
       background-color: #2563eb !important;
       border-color: #2563eb !important;
-      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
-      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28) !important;
+      transform: translateY(-1px) !important;
     }
-    .hrms-btn-view-dept:hover svg {
-      transform: scale(1.08);
+    .hrms-btn-view-dept:hover svg,
+    .hrms-btn-view-emp:hover svg {
+      transform: scale(1.08) !important;
     }
-    .hrms-btn-view-dept:active {
-      transform: translateY(0);
-      box-shadow: none;
+    .hrms-btn-view-dept:active,
+    .hrms-btn-view-emp:active {
+      transform: translateY(0) !important;
+      box-shadow: none !important;
     }
-    .hrms-btn-view-dept:focus-visible {
-      outline: 2px solid rgba(37, 99, 235, 0.4);
-      outline-offset: 2px;
+    .hrms-btn-view-dept:focus-visible,
+    .hrms-btn-view-emp:focus-visible {
+      outline: 2px solid rgba(37, 99, 235, 0.4) !important;
+      outline-offset: 2px !important;
     }
 
     /* Instant dark theme overrides */
@@ -207,23 +217,37 @@
       border-bottom: 1px solid #374151 !important;
     }
     html[data-bs-theme="dark"] .hrms-btn-view-dept,
-    [data-bs-theme="dark"] .hrms-btn-view-dept {
+    html[data-bs-theme="dark"] .hrms-btn-view-emp,
+    [data-bs-theme="dark"] .hrms-btn-view-dept,
+    [data-bs-theme="dark"] .hrms-btn-view-emp,
+    html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept,
+    html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp,
+    [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept,
+    [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp {
       color: #60a5fa !important;
-      border-color: rgba(96, 165, 250, 0.5) !important;
-      background-color: rgba(37, 99, 235, 0.1) !important;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(96, 165, 250, 0.5) !important;
+      background-color: rgba(37, 99, 235, 0.12) !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
     }
     html[data-bs-theme="dark"] .hrms-btn-view-dept:hover,
-    [data-bs-theme="dark"] .hrms-btn-view-dept:hover {
+    html[data-bs-theme="dark"] .hrms-btn-view-emp:hover,
+    [data-bs-theme="dark"] .hrms-btn-view-dept:hover,
+    [data-bs-theme="dark"] .hrms-btn-view-emp:hover,
+    html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept:hover,
+    html[data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp:hover,
+    [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-dept:hover,
+    [data-bs-theme="dark"] .btn.btn-outline-primary.hrms-btn-view-emp:hover {
       color: #ffffff !important;
       background-color: #2563eb !important;
       border-color: #3b82f6 !important;
       box-shadow: 0 2px 8px rgba(37, 99, 235, 0.45) !important;
-      transform: translateY(-1px);
+      transform: translateY(-1px) !important;
     }
     html[data-bs-theme="dark"] .hrms-btn-view-dept:active,
-    [data-bs-theme="dark"] .hrms-btn-view-dept:active {
-      transform: translateY(0);
+    html[data-bs-theme="dark"] .hrms-btn-view-emp:active,
+    [data-bs-theme="dark"] .hrms-btn-view-dept:active,
+    [data-bs-theme="dark"] .hrms-btn-view-emp:active {
+      transform: translateY(0) !important;
       box-shadow: none !important;
     }
     html[data-bs-theme="dark"] .hrms-empty,

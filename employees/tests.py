@@ -249,4 +249,15 @@ class EmployeeManagementTests(TestCase):
         self.assertNotContains(hr_response, "EMP001")
         self.assertNotContains(hr_response, "EMP002")
 
+    def test_admin_employees_page_renders_view_employee_button(self):
+        self.client.login(username="admin", password="AdminPass123!")
+        response = self.client.get(reverse("employees:list"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "View Employee")
+        self.assertContains(response, "hrms-btn-view-emp")
+        self.assertContains(response, "lucide-users")
+        detail_url = reverse("employees:detail", args=[self.own_record.pk])
+        self.assertContains(response, detail_url)
+
+
 
