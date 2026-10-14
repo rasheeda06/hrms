@@ -2213,15 +2213,15 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
 
 /* Unified Toolbar Buttons for Timesheet page */
 .hrms-time-btn {
-  height: 34px;
-  font-size: 12px;
+  height: 30px;
+  font-size: 11.5px;
   font-weight: 500;
   border-radius: 6px;
-  padding: 0 0.85rem;
+  padding: 0 0.65rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   line-height: 1;
   text-decoration: none;
   cursor: pointer;
@@ -2233,6 +2233,8 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
 
 .hrms-time-btn svg {
   flex-shrink: 0;
+  width: 12px;
+  height: 12px;
 }
 
 /* Subtle navigation buttons: Previous Day, Next Day, Prev Week, Next Week */
@@ -2279,7 +2281,7 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
 /* Reset button: Neutral background with minimal or no border */
 .hrms-time-btn-reset {
   background-color: #f1f5f9;
-  color: #475569;
+  color: #64748b;
   border: none;
 }
 .hrms-time-btn-reset:hover {
@@ -2323,38 +2325,39 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
 
 /* Date input in toolbar */
 .hrms-time-date-wrap {
-  height: 34px;
+  height: 30px;
 }
 .hrms-time-date-wrap .input-group-text {
-  height: 34px;
+  height: 30px;
   border-color: #cbd5e1;
   background-color: #f8fafc;
   color: #64748b;
-  font-size: 12px;
+  font-size: 11px;
   border-radius: 6px 0 0 6px;
+  padding: 0 0.55rem;
 }
 .hrms-time-date-wrap .form-control {
-  height: 34px;
-  font-size: 12px;
+  height: 30px;
+  font-size: 11.5px;
   border-color: #cbd5e1;
   border-radius: 0 6px 6px 0;
-  padding: 0 0.75rem;
+  padding: 0 0.65rem;
 }
 
 /* Timesheet Filter Dropdowns: Ample right padding to prevent text-arrow collision */
 .hrms-time-select {
-  height: 34px;
-  font-size: 12px;
+  height: 30px;
+  font-size: 11.5px;
   font-weight: 500;
   border-radius: 6px;
   border: 1px solid #cbd5e1;
-  padding-left: 0.85rem;
-  padding-right: 2.5rem;
+  padding-left: 0.75rem;
+  padding-right: 2.2rem;
   background-color: #ffffff;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E');
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 14px 14px;
+  background-position: right 0.65rem center;
+  background-size: 12px 12px;
   color: #1e293b;
   box-shadow: none;
   cursor: pointer;
@@ -2366,45 +2369,59 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
 .hrms-time-select:hover {
   border-color: #93c5fd;
   background-color: #f8fafc;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 .hrms-time-select:focus {
   border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
   outline: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 .hrms-time-select-dept {
-  min-width: 165px;
+  min-width: 160px;
 }
 .hrms-time-select-emp {
-  min-width: 220px;
+  min-width: 215px;
 }
 
 /* Week navigation strip */
 .hrms-week-pill {
-  color: var(--hrms-text-body, #1f2937);
+  color: #475569;
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  min-width: 62px;
+  min-width: 58px;
+  padding: 4px 6px;
+  border-radius: 6px;
   transition: all 0.15s ease;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1px;
   box-shadow: none;
 }
 .hrms-week-pill:hover {
-  background-color: #eff6ff;
-  border-color: #bfdbfe;
-  color: #2563eb;
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #1e293b;
   transform: translateY(-1px);
+}
+.hrms-week-pill.is-today {
+  background-color: #eff6ff;
+  border: 1.5px solid #2563eb;
+  color: #1d4ed8;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.12);
+}
+.hrms-week-pill.is-today .hrms-week-day,
+.hrms-week-pill.is-today .hrms-week-num {
+  color: #1d4ed8;
+  font-weight: 700;
 }
 .hrms-week-pill.active {
   background-color: #2563eb;
-  border: 1px solid #2563eb;
+  border: 1.5px solid #2563eb;
   color: #ffffff;
-  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
 }
 .hrms-week-pill.active:hover {
   background-color: #1d4ed8;
@@ -2415,16 +2432,77 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
 .hrms-week-pill.active .hrms-week-num {
   color: #ffffff;
 }
-.hrms-today-badge {
-  font-size: 0.6rem;
+.hrms-week-today-pill {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   padding: 1px 4px;
-  background-color: rgba(37, 99, 235, 0.12);
-  color: #2563eb;
-  border-radius: 4px;
+  border-radius: 3px;
+  line-height: 1;
+  display: inline-block;
+  margin-top: 1px;
 }
-.hrms-week-pill.active .hrms-today-badge {
-  background-color: rgba(255, 255, 255, 0.25);
+.hrms-week-pill.is-today .hrms-week-today-pill {
+  background-color: #2563eb;
   color: #ffffff;
+}
+.hrms-week-pill.active .hrms-week-today-pill {
+  background-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+}
+
+/* Light Green Badge for Complete Shift */
+.hrms-badge-complete-shift {
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0.22rem 0.65rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: none;
+  letter-spacing: 0.01em;
+}
+.hrms-badge-complete-shift svg,
+.hrms-badge-complete-shift i {
+  color: #059669;
+  flex-shrink: 0;
+}
+
+/* Incomplete shift badge (soft amber) */
+.hrms-badge-incomplete-shift {
+  background-color: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0.22rem 0.65rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: none;
+  letter-spacing: 0.01em;
+}
+.hrms-badge-incomplete-shift svg,
+.hrms-badge-incomplete-shift i {
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+/* Today micro-dot */
+.hrms-today-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #2563eb;
+  display: inline-block;
+}
+.hrms-time-btn-today.is-active .hrms-today-dot {
+  background-color: #ffffff;
 }
 
 /* Employee list in sidebar */
@@ -2652,5 +2730,38 @@ html[data-bs-theme="dark"] .hrms-time-date-wrap .form-control {
   background-color: #111827;
   border-color: #374151;
   color: #f3f4f6;
+}
+html[data-bs-theme="dark"] .hrms-week-pill.is-today {
+  background-color: rgba(37, 99, 235, 0.15);
+  border-color: #3b82f6;
+  color: #93c5fd;
+}
+html[data-bs-theme="dark"] .hrms-week-pill.is-today .hrms-week-day,
+html[data-bs-theme="dark"] .hrms-week-pill.is-today .hrms-week-num {
+  color: #93c5fd;
+}
+html[data-bs-theme="dark"] .hrms-badge-complete-shift {
+  background-color: rgba(16, 185, 129, 0.14);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+html[data-bs-theme="dark"] .hrms-badge-complete-shift svg,
+html[data-bs-theme="dark"] .hrms-badge-complete-shift i {
+  color: #34d399;
+}
+html[data-bs-theme="dark"] .hrms-badge-incomplete-shift {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fcd34d;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+html[data-bs-theme="dark"] .hrms-badge-incomplete-shift svg,
+html[data-bs-theme="dark"] .hrms-badge-incomplete-shift i {
+  color: #fcd34d;
+}
+html[data-bs-theme="dark"] .hrms-today-dot {
+  background-color: #60a5fa;
+}
+html[data-bs-theme="dark"] .hrms-time-btn-today.is-active .hrms-today-dot {
+  background-color: #ffffff;
 }
 
