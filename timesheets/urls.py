@@ -8,3 +8,4 @@ urlpatterns = [
     path("", views.admin_timeline, name="timeline"),
     path("timeline/", views.admin_timeline, name="admin_timeline"),
 ]
+

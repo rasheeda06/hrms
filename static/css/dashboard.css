@@ -2227,19 +2227,20 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
   border-color: rgba(37, 99, 235, 0.25);
 }
 
-/* Vertical Timeline */
+/* Vertical Connected Timeline */
 .hrms-timeline {
   position: relative;
-  padding-left: 2.25rem;
+  padding-left: 48px;
 }
 .hrms-timeline::before {
   content: "";
   position: absolute;
-  top: 18px;
-  bottom: 18px;
-  left: 17px;
+  top: 16px;
+  bottom: 16px;
+  left: 19px;
   width: 2px;
-  background-color: #e2e8f0;
+  background-color: #cbd5e1;
+  z-index: 1;
 }
 .hrms-timeline-item {
   position: relative;
@@ -2250,55 +2251,93 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
 }
 .hrms-timeline-node {
   position: absolute;
-  left: -2.25rem;
-  top: 4px;
-  width: 36px;
-  height: 36px;
+  left: -48px;
+  top: 2px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
   border: 2px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   z-index: 2;
   transition: all 0.18s ease;
 }
 .hrms-timeline-content {
   background-color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+  transition: all 0.18s ease;
 }
 .hrms-timeline-item:hover .hrms-timeline-content {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  border-color: #94a3b8 !important;
 }
 
-/* Timeline color classes */
+/* Timeline node color classes */
 .hrms-timeline-blue {
   background-color: rgba(37, 99, 235, 0.1) !important;
   color: #2563eb !important;
-  border-color: rgba(37, 99, 235, 0.3) !important;
+  border-color: rgba(37, 99, 235, 0.4) !important;
 }
 .hrms-timeline-indigo {
   background-color: rgba(99, 102, 241, 0.1) !important;
   color: #6366f1 !important;
-  border-color: rgba(99, 102, 241, 0.3) !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
 }
 .hrms-timeline-amber {
   background-color: rgba(245, 158, 11, 0.1) !important;
   color: #d97706 !important;
-  border-color: rgba(245, 158, 11, 0.3) !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
 }
 .hrms-timeline-teal {
   background-color: rgba(13, 148, 136, 0.1) !important;
   color: #0d9488 !important;
-  border-color: rgba(13, 148, 136, 0.3) !important;
+  border-color: rgba(13, 148, 136, 0.4) !important;
 }
 .hrms-timeline-purple {
   background-color: rgba(147, 51, 234, 0.1) !important;
   color: #9333ea !important;
-  border-color: rgba(147, 51, 234, 0.3) !important;
+  border-color: rgba(147, 51, 234, 0.4) !important;
+}
+.hrms-timeline-neutral {
+  background-color: #f8fafc !important;
+  color: #94a3b8 !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Missing event styling */
+.hrms-timeline-node.hrms-timeline-missing {
+  background-color: rgba(245, 158, 11, 0.12) !important;
+  color: #d97706 !important;
+  border: 2px dashed #f59e0b !important;
+}
+.hrms-timeline-item.is-missing .hrms-timeline-content {
+  border: 1px dashed rgba(245, 158, 11, 0.6) !important;
+  background-color: rgba(254, 243, 199, 0.15) !important;
+}
+
+/* Interval badge between connected steps */
+.hrms-interval-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #475569;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
+.hrms-stat-date-badge {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-top: 0.2rem;
 }
 
 /* Dark mode overrides for Timeline */
@@ -2331,11 +2370,27 @@ html[data-bs-theme="dark"] .hrms-timeline-node {
   background-color: #1f2937;
   border-color: #4b5563;
 }
+html[data-bs-theme="dark"] .hrms-timeline-node.hrms-timeline-missing {
+  background-color: rgba(245, 158, 11, 0.2) !important;
+  border-color: #d97706 !important;
+}
 html[data-bs-theme="dark"] .hrms-timeline-content {
   background-color: #111827;
   border-color: #374151 !important;
 }
 html[data-bs-theme="dark"] .hrms-timeline-item:hover .hrms-timeline-content {
   border-color: #4b5563 !important;
+}
+html[data-bs-theme="dark"] .hrms-timeline-item.is-missing .hrms-timeline-content {
+  background-color: rgba(245, 158, 11, 0.08) !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+html[data-bs-theme="dark"] .hrms-interval-pill {
+  background-color: #1f2937;
+  border-color: #374151;
+  color: #cbd5e1;
+}
+html[data-bs-theme="dark"] .hrms-stat-date-badge {
+  color: #9ca3af;
 }
 

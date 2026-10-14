@@ -21,3 +21,4 @@ class TimesheetAdmin(admin.ModelAdmin):
         "employee__last_name",
     )
     date_hierarchy = "date"
+

@@ -67,6 +67,7 @@ def admin_timeline(request):
 
     # Prepare summary card metrics for selected employee & date
     if timesheet_record:
+        is_incomplete = timesheet_record.is_incomplete
         total_working_hours = timesheet_record.net_working_hours_display
         gross_working_hours = timesheet_record.gross_working_hours_display
         break_duration = timesheet_record.break_duration_display
@@ -77,10 +78,25 @@ def admin_timeline(request):
         else:
             late_status = "On time"
             late_badge_class = "text-bg-success"
-        attendance_status = timesheet_record.get_status_display()
+
+        if is_incomplete:
+            attendance_status = "Incomplete"
+            attendance_badge_class = "text-bg-warning"
+        else:
+            attendance_status = timesheet_record.get_status_display()
+            if timesheet_record.status == Timesheet.Status.PRESENT:
+                attendance_badge_class = "text-bg-success"
+            elif timesheet_record.status == Timesheet.Status.LATE:
+                attendance_badge_class = "text-bg-warning"
+            elif timesheet_record.status == Timesheet.Status.ABSENT:
+                attendance_badge_class = "text-bg-danger"
+            else:
+                attendance_badge_class = "text-bg-info"
+
         timeline_events = timesheet_record.timeline_events
         has_record = True
     else:
+        is_incomplete = False
         total_working_hours = "0h 00m"
         gross_working_hours = "0h 00m"
         break_duration = "0m"
@@ -88,6 +104,7 @@ def admin_timeline(request):
         late_status = "—"
         late_badge_class = "text-bg-secondary"
         attendance_status = "No Record"
+        attendance_badge_class = "text-bg-secondary"
         timeline_events = []
         has_record = False
 
@@ -104,8 +121,8 @@ def admin_timeline(request):
             "is_selected": d == selected_date,
             "is_today": d == today,
         })
-    prev_week_date = start_of_week - timedelta(days=7)
-    next_week_date = start_of_week + timedelta(days=7)
+    prev_week_date = selected_date - timedelta(days=7)
+    next_week_date = selected_date + timedelta(days=7)
 
     # Attach selected_date status for each employee in the sidebar employee list
     employee_records_map = {}
@@ -120,11 +137,21 @@ def admin_timeline(request):
     employee_list_data = []
     for emp in employees:
         rec = employee_records_map.get(emp.employee_id)
+        emp_is_incomplete = rec.is_incomplete if rec else False
+        if rec:
+            if emp_is_incomplete:
+                emp_status = "Incomplete"
+            else:
+                emp_status = rec.get_status_display()
+        else:
+            emp_status = "No Record"
+
         employee_list_data.append({
             "employee": emp,
             "is_selected": selected_employee and emp.pk == selected_employee.pk,
             "record": rec,
-            "status": rec.get_status_display() if rec else "No Record",
+            "status": emp_status,
+            "is_incomplete": emp_is_incomplete,
             "net_hours": rec.net_working_hours_display if rec else "0h",
             "is_late": rec.is_late if rec else False,
         })
@@ -141,6 +168,7 @@ def admin_timeline(request):
         "selected_employee": selected_employee,
         "timesheet_record": timesheet_record,
         "has_record": has_record,
+        "is_incomplete": is_incomplete,
         "timeline_events": timeline_events,
         "total_working_hours": total_working_hours,
         "gross_working_hours": gross_working_hours,
@@ -149,6 +177,7 @@ def admin_timeline(request):
         "late_status": late_status,
         "late_badge_class": late_badge_class,
         "attendance_status": attendance_status,
+        "attendance_badge_class": attendance_badge_class,
         "week_days": week_days,
         "start_of_week": start_of_week,
         "prev_week_str": prev_week_date.strftime("%Y-%m-%d"),
@@ -156,3 +185,4 @@ def admin_timeline(request):
         "employee_list_data": employee_list_data,
     }
     return render(request, "timesheets/timeline.html", context)
+

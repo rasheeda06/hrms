@@ -261,3 +261,45 @@ class TimesheetTimelineDashboardTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Timesheet")
         self.assertContains(response, reverse("timesheets:timeline"))
+
+    def test_incomplete_timesheet_record_detection_and_rendering(self):
+        """Incomplete timesheet (missing clock-out) shows warning banner and missing badges."""
+        incomplete_ts = Timesheet.objects.create(
+            employee=self.employee,
+            date=date(2026, 10, 13),
+            clock_in=time(9, 0),
+            break_start=time(13, 0),
+            break_end=time(13, 45),
+            work_resume=time(13, 45),
+            clock_out=None,  # Missing clock-out!
+            status=Timesheet.Status.PRESENT,
+        )
+        self.assertTrue(incomplete_ts.is_incomplete)
+        self.assertIn("Clock-out", incomplete_ts.missing_events)
+
+        response = self.client.get(
+            reverse("timesheets:timeline"),
+            {"date": "2026-10-13", "employee": self.employee.pk},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Incomplete Attendance Record Detected")
+        self.assertContains(response, "Missing Clock-out")
+        self.assertContains(response, "Incomplete Shift")
+
+    def test_elapsed_time_and_date_consistency_across_page(self):
+        """Verify elapsed time between events and date consistency across summary cards and timeline."""
+        response = self.client.get(
+            reverse("timesheets:timeline"),
+            {"date": "2026-10-14", "employee": self.employee.pk},
+        )
+        self.assertEqual(response.status_code, 200)
+        # Elapsed times
+        self.assertContains(response, "Break duration: 45m")
+        self.assertContains(response, "Work duration: 4h 15m")
+        # Executive summary bar
+        self.assertContains(response, "Gross Shift:")
+        self.assertContains(response, "9h 00m")
+        self.assertContains(response, "Net Working Hours:")
+        self.assertContains(response, "8h 15m")
+        # Date consistency on summary cards
+        self.assertContains(response, "For Wed, Oct 14, 2026")

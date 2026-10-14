@@ -34,19 +34,19 @@
         </a>
       </div>
 
-      <!-- Date Input -->
+      <!-- Date Input with Auto-submit on change for complete sync -->
       <div class="col-12 col-sm-6 col-md-auto">
         <div class="input-group input-group-sm">
           <span class="input-group-text bg-body-tertiary">
             <svg class="lucide lucide-calendar" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
           </span>
-          <input type="date" name="date" value="{{ selected_date_str }}" class="form-control form-control-sm" aria-label="Select Date">
+          <input type="date" name="date" value="{{ selected_date_str }}" class="form-control form-control-sm" aria-label="Select Date" onchange="this.form.submit()">
         </div>
       </div>
 
-      <!-- Department Selector -->
+      <!-- Department Selector with Auto-submit on change -->
       <div class="col-12 col-sm-6 col-md-auto">
-        <select name="department" class="form-select form-select-sm" aria-label="Filter by department">
+        <select name="department" class="form-select form-select-sm" aria-label="Filter by department" onchange="this.form.submit()">
           <option value="">All Departments</option>
           {% for dept in departments %}
             <option value="{{ dept.pk }}" {% if selected_dept and selected_dept.pk == dept.pk %}selected{% endif %}>
@@ -56,9 +56,9 @@
         </select>
       </div>
 
-      <!-- Employee Selector -->
+      <!-- Employee Selector with Auto-submit on change -->
       <div class="col-12 col-sm-6 col-md-auto">
-        <select name="employee" class="form-select form-select-sm" aria-label="Select employee">
+        <select name="employee" class="form-select form-select-sm" aria-label="Select employee" onchange="this.form.submit()">
           {% for emp in employees %}
             <option value="{{ emp.pk }}" {% if selected_employee and selected_employee.pk == emp.pk %}selected{% endif %}>
               {{ emp.employee_id }} — {{ emp.full_name }}
@@ -88,7 +88,7 @@
     <div class="d-flex align-items-center justify-content-between gap-2 overflow-x-auto py-1">
       <a href="?date={{ prev_week_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
          class="btn btn-sm btn-outline-secondary flex-shrink-0 d-inline-flex align-items-center gap-1"
-         title="Previous Week">
+         title="Previous Week (7 days earlier)">
         <svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         <span class="d-none d-sm-inline">Prev Week</span>
       </a>
@@ -97,11 +97,14 @@
         {% for day in week_days %}
           <a href="?date={{ day.date_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
              class="hrms-week-pill text-decoration-none {% if day.is_selected %}active{% endif %} {% if day.is_today %}is-today{% endif %} text-center px-3 py-2 rounded-3"
-             title="{{ day.date|date:'l, F j' }}">
+             title="{{ day.date|date:'l, F j, Y' }}"
+             {% if day.is_selected %}aria-current="date"{% endif %}>
             <span class="d-block small fw-semibold text-uppercase hrms-week-day">{{ day.day_name }}</span>
             <span class="d-block fs-6 fw-bold hrms-week-num">{{ day.day_num }}</span>
-            {% if day.is_today %}
+            {% if day.is_today and not day.is_selected %}
               <span class="badge hrms-today-badge">Today</span>
+            {% elif day.is_selected %}
+              <span class="badge hrms-today-badge">Active</span>
             {% endif %}
           </a>
         {% endfor %}
@@ -109,7 +112,7 @@
 
       <a href="?date={{ next_week_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
          class="btn btn-sm btn-outline-secondary flex-shrink-0 d-inline-flex align-items-center gap-1"
-         title="Next Week">
+         title="Next Week (7 days later)">
         <span class="d-none d-sm-inline">Next Week</span>
         <svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </a>
@@ -135,6 +138,9 @@
               <span class="hrms-stat-dot hrms-dot-amber"></span>No hours recorded
             {% endif %}
           </p>
+          <p class="hrms-stat-date-badge text-truncate mb-0">
+            For {{ selected_date|date:"D, M j, Y" }}
+          </p>
         </div>
       </div>
     </div>
@@ -154,6 +160,9 @@
             {% else %}
               <span class="hrms-stat-dot hrms-dot-green"></span>No breaks taken
             {% endif %}
+          </p>
+          <p class="hrms-stat-date-badge text-truncate mb-0">
+            For {{ selected_date|date:"D, M j, Y" }}
           </p>
         </div>
       </div>
@@ -181,6 +190,9 @@
           <p class="hrms-stat-note text-truncate">
             <span class="hrms-stat-dot {% if timesheet_record.is_late %}hrms-dot-amber{% else %}hrms-dot-green{% endif %}"></span>Shift start: 09:00 AM
           </p>
+          <p class="hrms-stat-date-badge text-truncate mb-0">
+            For {{ selected_date|date:"D, M j, Y" }}
+          </p>
         </div>
       </div>
     </div>
@@ -195,7 +207,9 @@
           <p class="hrms-stat-label">Attendance Status</p>
           <p class="hrms-stat-value text-truncate">
             {% if has_record %}
-              {% if timesheet_record.status == 'present' %}
+              {% if is_incomplete %}
+                <span class="text-warning fs-5 fw-bold">Incomplete</span>
+              {% elif timesheet_record.status == 'present' %}
                 <span class="text-success fs-5 fw-bold">Present</span>
               {% elif timesheet_record.status == 'late' %}
                 <span class="text-warning fs-5 fw-bold">Late</span>
@@ -211,7 +225,11 @@
             {% endif %}
           </p>
           <p class="hrms-stat-note text-truncate">
-            <span class="hrms-stat-dot {% if has_record %}hrms-dot-green{% else %}hrms-dot-amber{% endif %}"></span>{{ selected_date|date:"M j, Y" }}
+            <span class="hrms-stat-dot {% if has_record and not is_incomplete %}hrms-dot-green{% elif is_incomplete %}hrms-dot-amber{% else %}hrms-dot-secondary{% endif %}"></span>
+            {% if is_incomplete %}Missing event{% elif has_record %}Logged{% else %}No entry{% endif %}
+          </p>
+          <p class="hrms-stat-date-badge text-truncate mb-0">
+            For {{ selected_date|date:"D, M j, Y" }}
           </p>
         </div>
       </div>
@@ -226,8 +244,11 @@
     <div class="col-12 col-lg-4 col-xl-3">
       <div class="hrms-card h-100 d-flex flex-column">
         <div class="px-3 py-3 border-bottom d-flex align-items-center justify-content-between">
-          <h2 class="h6 mb-0">Employees</h2>
-          <span class="badge text-bg-primary-subtle text-primary border border-primary-subtle">{{ employee_list_data|length }}</span>
+          <div class="d-flex align-items-center gap-2">
+            <h2 class="h6 mb-0">Employees</h2>
+            <span class="badge text-bg-primary-subtle text-primary border border-primary-subtle">{{ employee_list_data|length }}</span>
+          </div>
+          <span class="badge bg-body-secondary text-secondary border px-2 py-1 small">{{ selected_date|date:"M j" }}</span>
         </div>
         <div class="p-2 flex-grow-1 overflow-y-auto" style="max-height: 580px;">
           <div class="d-flex flex-column gap-1">
@@ -238,12 +259,18 @@
                   {{ item.employee.first_name|slice:":1" }}{{ item.employee.last_name|slice:":1" }}
                 </span>
                 <div class="min-w-0 flex-grow-1">
-                  <div class="d-flex align-items-center justify-content-between">
+                  <div class="d-flex align-items-center justify-content-between gap-1">
                     <span class="fw-semibold text-truncate small d-block">{{ item.employee.full_name }}</span>
                     {% if item.record %}
-                      <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.65rem;">
-                        {{ item.net_hours }}
-                      </span>
+                      {% if item.is_incomplete %}
+                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle" style="font-size: 0.65rem;">
+                          Incomplete
+                        </span>
+                      {% else %}
+                        <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.65rem;">
+                          {{ item.net_hours }}
+                        </span>
+                      {% endif %}
                     {% else %}
                       <span class="badge bg-secondary-subtle text-secondary" style="font-size: 0.65rem;">
                         No Log
@@ -274,7 +301,7 @@
         <div class="px-4 py-3 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
           {% if selected_employee %}
             <div class="d-flex align-items-center gap-3">
-              <span class="hrms-header-avatar flex-shrink-0" style="width: 38px; height: 38px; font-size: 0.95rem;">
+              <span class="hrms-header-avatar flex-shrink-0" style="width: 40px; height: 40px; font-size: 0.95rem;">
                 {{ selected_employee.first_name|slice:":1" }}{{ selected_employee.last_name|slice:":1" }}
               </span>
               <div>
@@ -293,21 +320,65 @@
               </span>
             </div>
           {% else %}
-            <h2 class="h6 mb-0">Daily Timeline</h2>
+            <h2 class="h6 mb-0">Daily Timeline · {{ selected_date|date:"l, F j, Y" }}</h2>
           {% endif %}
         </div>
 
         <!-- Timeline Body -->
         <div class="p-4">
           {% if has_record %}
-            <!-- Vertical Timeline Structure -->
+
+            <!-- Incomplete Attendance Alert Banner (if missing required milestones) -->
+            {% if is_incomplete %}
+              <div class="alert alert-warning border border-warning-subtle rounded-3 d-flex align-items-start gap-2 mb-4 p-3 bg-warning-subtle bg-opacity-25" role="alert">
+                <svg class="lucide lucide-alert-triangle flex-shrink-0 text-warning mt-0.5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+                <div class="small flex-grow-1">
+                  <div class="fw-semibold text-warning-emphasis">Incomplete Attendance Record Detected</div>
+                  <div class="text-secondary mt-0.5">
+                    This shift has unrecorded mandatory timestamps: <span class="badge text-bg-warning">{{ timesheet_record.missing_events_summary }}</span>.
+                    {% if selected_date == today %}
+                      Shift may currently be active or employee may not yet have logged clock-out.
+                    {% else %}
+                      Supervisor review or manual clock-out logging is required to finalize net working hours.
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+
+            <!-- Executive Shift Summary Bar -->
+            <div class="p-3 mb-4 rounded-3 border bg-body-tertiary d-flex flex-wrap align-items-center justify-content-between gap-3">
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-secondary small">Gross Shift:</span>
+                <span class="fw-semibold font-monospace">{{ gross_working_hours }}</span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-secondary small">Break Duration:</span>
+                <span class="fw-semibold font-monospace text-warning-emphasis">{{ break_duration }}</span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-secondary small">Net Working Hours:</span>
+                <span class="fw-bold fs-6 font-monospace text-primary">{{ total_working_hours }}</span>
+              </div>
+              <div class="d-flex align-items-center gap-2 ms-auto">
+                {% if is_incomplete %}
+                  <span class="badge bg-warning text-dark px-2 py-1"><i class="bi bi-exclamation-triangle-fill me-1"></i>Incomplete Shift</span>
+                {% else %}
+                  <span class="badge bg-success text-white px-2 py-1"><i class="bi bi-check-circle-fill me-1"></i>Complete Shift</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Connected Vertical Timeline Structure -->
             <div class="hrms-timeline">
               {% for event in timeline_events %}
-                <div class="hrms-timeline-item {% if event.is_completed %}is-completed{% else %}is-pending{% endif %}">
+                <div class="hrms-timeline-item {% if event.is_missing %}is-missing{% elif event.is_completed %}is-completed{% else %}is-pending{% endif %}">
                   
                   <!-- Timeline Node / Icon -->
                   <div class="hrms-timeline-node {{ event.badge_class }}">
-                    {% if event.icon == "log-in" %}
+                    {% if event.is_missing %}
+                      <svg class="lucide lucide-alert-circle text-warning" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                    {% elif event.icon == "log-in" %}
                       <svg class="lucide lucide-log-in" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
                     {% elif event.icon == "play" %}
                       <svg class="lucide lucide-play" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -325,9 +396,17 @@
                   </div>
 
                   <!-- Timeline Content Card -->
-                  <div class="hrms-timeline-content p-3 rounded-3 border">
+                  <div class="hrms-timeline-content p-3 rounded-3 {% if event.is_missing %}border-warning-subtle bg-warning-subtle bg-opacity-10{% endif %}">
                     <div class="d-flex align-items-center justify-content-between mb-1">
-                      <span class="fw-semibold text-body fs-6">{{ event.title }}</span>
+                      <div class="d-flex align-items-center gap-2">
+                        <span class="fw-semibold text-body fs-6">{{ event.title }}</span>
+                        {% if event.is_missing %}
+                          <span class="badge bg-warning-subtle text-warning border border-warning-subtle small fw-medium">
+                            {{ event.missing_label|default:"Missing Event" }}
+                          </span>
+                        {% endif %}
+                      </div>
+
                       {% if event.time %}
                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-6 font-monospace">
                           {{ event.time }}
@@ -338,7 +417,16 @@
                         </span>
                       {% endif %}
                     </div>
+
                     <p class="text-secondary small mb-0">{{ event.description }}</p>
+
+                    <!-- Interval Elapsed Time Indicator between Milestones -->
+                    {% if event.elapsed_text %}
+                      <div class="mt-2 pt-2 border-top d-flex align-items-center gap-2 small text-secondary">
+                        <svg class="lucide lucide-timer text-primary" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
+                        <span class="fw-medium text-body">{{ event.elapsed_text }}</span>
+                      </div>
+                    {% endif %}
                   </div>
 
                 </div>
