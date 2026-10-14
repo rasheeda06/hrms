@@ -23,79 +23,7 @@ from timesheets.models import (
 )
 
 
-def seed_default_weekly_timesheet(weekly_ts):
-    """Seed initial project tasks matching the reference timesheet."""
-    cardy, _ = Project.objects.get_or_create(name="Cardy Product Demo")
-    m_nd, _ = ProjectMilestone.objects.get_or_create(project=cardy, name="North Dakota CCWIS")
-    m_lssi, _ = ProjectMilestone.objects.get_or_create(project=cardy, name="LSSI")
-    m_wi, _ = ProjectMilestone.objects.get_or_create(project=cardy, name="Wisconsin Educator")
-    m_vac, _ = ProjectMilestone.objects.get_or_create(project=cardy, name="Vaccine Management System")
 
-    ProjectTask.objects.get_or_create(project=cardy, milestone=m_nd, name="compt mobile app")
-    ProjectTask.objects.get_or_create(project=cardy, milestone=m_nd, name="Flow check and update")
-    ProjectTask.objects.get_or_create(project=cardy, milestone=m_lssi, name="Appeal Flow")
-    ProjectTask.objects.get_or_create(project=cardy, milestone=m_wi, name="business-operations flow")
-    ProjectTask.objects.get_or_create(project=cardy, milestone=m_nd, name="AI Chat bot - Bug and admin configuration")
-
-    default_rows_spec = [
-        (
-            "Cardy Product Demo",
-            "North Dakota CCWIS",
-            "compt mobile app",
-            ["05:00", "09:00", "0:00", "0:00", "0:00", "0:00", "0:00"],
-            ["Sprint development on mobile views and offline sync", "UI refinement and testing with QA", "", "", "", "", ""]
-        ),
-        (
-            "Cardy Product Demo",
-            "North Dakota CCWIS",
-            "Flow check and update",
-            ["04:00", "0:00", "0:00", "0:00", "0:00", "0:00", "0:00"],
-            ["End-to-end flow validation and PR review", "", "", "", "", "", ""]
-        ),
-        (
-            "Cardy Product Demo",
-            "LSSI",
-            "Appeal Flow",
-            ["0:00", "0:00", "0:00", "0:00", "0:00", "0:00", "0:00"],
-            ["", "", "", "", "", "", ""]
-        ),
-        (
-            "Cardy Product Demo",
-            "Wisconsin Educator",
-            "business-operations flow",
-            ["0:00", "0:00", "10:00", "10:00", "10:00", "09:00", "0:00"],
-            [
-                "",
-                "",
-                "Resolved recurring Bitbucket Git Credential Manager popup; configured silent repo auth for local WI development.\nDocumented Demographic Details APIs (get / save / dropdowns) for backend handoff.",
-                "Updated address auto-suggest from NC -> WI (stateFilter / prefer) across demographics, registration, profile, and related screens.",
-                "Mapped Credential Application API calls for backend (fee types, masters, License Tier, Preparation Level, Subject Area).",
-                "Weekend sprint verification and test automation coverage.",
-                ""
-            ]
-        ),
-    ]
-
-    for order, (proj_name, mile, t_name, hrs_list, notes_list) in enumerate(default_rows_spec):
-        row = TimesheetTaskRow.objects.create(
-            weekly_timesheet=weekly_ts,
-            project_name=proj_name,
-            milestone_name=mile,
-            task_name=t_name,
-            entry_type="task",
-            order=order,
-        )
-        for day_idx in range(7):
-            d = weekly_ts.week_start_date + timedelta(days=day_idx)
-            cell = TimesheetDailyCell(
-                row=row,
-                date=d,
-                day_index=day_idx,
-            )
-            h_str = hrs_list[day_idx]
-            n_str = notes_list[day_idx]
-            cell.set_time(h_str, n_str)
-            cell.save()
 
 
 @admin_required
@@ -160,21 +88,12 @@ def admin_timeline(request):
     grand_total_minutes = 0
     grand_total_display = "0:00"
 
-    # Default leave hours (Tuesday 9:00 as per image reference)
-    leave_day_index = 1
-    leave_hours_per_day = [""] * 7
-    leave_hours_per_day[leave_day_index] = "9:00"
-    total_leave_minutes = 540
-    total_leave_display = "9:00"
-
     if selected_employee:
         weekly_timesheet, created = WeeklyTimesheet.objects.get_or_create(
             employee=selected_employee,
             week_start_date=start_of_week,
-            defaults={"status": "approved" if selected_employee.employee_id in ["EMP001", "PIE437"] else "draft"}
+            defaults={"status": "draft"}
         )
-        if created or weekly_timesheet.rows.count() == 0:
-            seed_default_weekly_timesheet(weekly_timesheet)
 
         # Prefetch task rows and daily cells
         task_rows = list(weekly_timesheet.rows.prefetch_related("cells").all())
@@ -211,9 +130,8 @@ def admin_timeline(request):
     for i in range(7):
         d = start_of_week + timedelta(days=i)
         is_today = (d == today)
-        has_leave = (i == leave_day_index)
 
-        target_minutes = 540 # 9 hours standard working day
+        target_minutes = 540  # 9 hours standard working day
         actual_minutes = day_totals[i]
         percentage = min(100, int((actual_minutes / target_minutes) * 100)) if target_minutes else 0
         is_target_met = actual_minutes >= target_minutes
@@ -240,7 +158,7 @@ def admin_timeline(request):
             "day_index": i,
             "is_selected": d == selected_date,
             "is_today": is_today,
-            "has_leave": has_leave,
+            "has_leave": False,
             "total_hours": day_totals_display[i],
             "total_minutes": actual_minutes,
             "target_minutes": target_minutes,
@@ -274,12 +192,8 @@ def admin_timeline(request):
             "is_late": rec.is_late if rec else False,
         })
 
-    # Available projects for modal dropdowns
+    # Available projects for modal dropdowns (clean, user projects)
     projects = Project.objects.filter(is_active=True).prefetch_related("milestones", "tasks")
-    if not projects.exists():
-        cardy, _ = Project.objects.get_or_create(name="Cardy Product Demo")
-        Project.objects.get_or_create(name="HRMS Core Platform")
-        projects = Project.objects.filter(is_active=True).prefetch_related("milestones", "tasks")
 
     # Fetch daily record if present for backward compatibility
     timesheet_record = None
@@ -306,19 +220,17 @@ def admin_timeline(request):
         "prev_week_str": prev_week_date.strftime("%Y-%m-%d"),
         "next_week_str": next_week_date.strftime("%Y-%m-%d"),
         "employee_list_data": employee_list_data,
+        "projects": projects,
         # Weekly project table context
         "weekly_timesheet": weekly_timesheet,
         "task_rows": task_rows,
         "day_totals_display": day_totals_display,
         "grand_total_display": grand_total_display,
         "grand_total_minutes": grand_total_minutes,
-        "leave_hours_per_day": leave_hours_per_day,
-        "total_leave_display": total_leave_display,
         "summary_working_hours": grand_total_display,
-        "summary_billable": "0:00",
-        "summary_non_billable": grand_total_display,
-        "summary_time_off": total_leave_display,
-        "projects": projects,
+        "summary_billable": grand_total_display,
+        "summary_non_billable": "0:00",
+        "summary_time_off": "0:00",
         # Compatibility fields
         "timesheet_record": timesheet_record,
         "has_record": bool(timesheet_record) or bool(weekly_timesheet),
@@ -451,7 +363,13 @@ def add_task_entry(request):
     if not weekly_ts:
         raise Http404("Weekly timesheet not found")
 
-    project_name = request.POST.get("project_name", "").strip() or "General Project"
+    custom_proj = request.POST.get("custom_project_name", "").strip()
+    project_name = request.POST.get("project_name", "").strip()
+    if (not project_name or project_name == "__NEW__") and custom_proj:
+        project_name = custom_proj
+    if not project_name:
+        project_name = "General Project"
+
     milestone_name = request.POST.get("milestone_name", "").strip()
     task_name = request.POST.get("task_name", "").strip() or "Standard Task"
     entry_type = request.POST.get("entry_type", "task").strip()
@@ -474,7 +392,12 @@ def add_task_entry(request):
     hours_param = request.POST.get("hours", "").strip()
     entry_date_param = request.POST.get("entry_date", "").strip()
     target_day_index = None
-    if entry_date_param:
+    if "day_index" in request.POST and request.POST.get("day_index") != "":
+        try:
+            target_day_index = int(request.POST.get("day_index"))
+        except ValueError:
+            target_day_index = None
+    elif entry_date_param:
         try:
             ed = datetime.strptime(entry_date_param, "%Y-%m-%d").date()
             target_day_index = (ed - weekly_ts.week_start_date).days

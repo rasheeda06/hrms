@@ -212,7 +212,7 @@ class TimesheetTimelineDashboardTests(TestCase):
         self.client.login(username="admin_timeline", password="AdminPassword123!")
 
     def test_weekly_project_timesheet_table_renders(self):
-        """Weekly project table displays projects, tasks, day columns, and totals."""
+        """Fresh weekly project table displays projects, day columns, empty state, and totals."""
         response = self.client.get(
             reverse("timesheets:timeline"),
             {"date": "2026-10-14", "employee": self.employee.pk},
@@ -223,8 +223,7 @@ class TimesheetTimelineDashboardTests(TestCase):
         self.assertContains(response, "timesheet-table")
         self.assertContains(response, "PROJECTS")
         self.assertContains(response, "TOTAL")
-        self.assertContains(response, "Cardy Product Demo")
-        self.assertContains(response, "Time Off: Paid Leave")
+        self.assertContains(response, "Fresh Weekly Timesheet")
         self.assertContains(response, "Add Time Entry")
         self.assertContains(response, "Save as Draft")
         self.assertContains(response, "Submit Timesheet")
