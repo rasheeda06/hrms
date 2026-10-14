@@ -257,3 +257,163 @@ class Timesheet(models.Model):
         ]
         return events
 
+
+class Project(models.Model):
+    name = models.CharField(max_length=150, unique=True)
+    code = models.CharField(max_length=50, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+class ProjectMilestone(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="milestones")
+    name = models.CharField(max_length=150)
+
+    class Meta:
+        ordering = ["project__name", "name"]
+        unique_together = ("project", "name")
+
+    def __str__(self):
+        return f"{self.project.name} — {self.name}"
+
+
+class ProjectTask(models.Model):
+    ENTRY_TYPE_CHOICES = [
+        ("task", "Task"),
+        ("meeting", "Meeting"),
+    ]
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="tasks")
+    milestone = models.ForeignKey(ProjectMilestone, on_delete=models.SET_NULL, null=True, blank=True, related_name="tasks")
+    name = models.CharField(max_length=200)
+    entry_type = models.CharField(max_length=20, choices=ENTRY_TYPE_CHOICES, default="task")
+
+    class Meta:
+        ordering = ["project__name", "name"]
+
+    def __str__(self):
+        return f"{self.project.name} / {self.name}"
+
+
+class WeeklyTimesheet(models.Model):
+    STATUS_CHOICES = [
+        ("draft", "Not Submitted"),
+        ("submitted", "Submitted"),
+        ("approved", "PM Approved"),
+        ("rejected", "Rejected"),
+    ]
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="weekly_timesheets")
+    week_start_date = models.DateField(help_text="Monday of the timesheet week")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft")
+    is_billable = models.BooleanField(default=False)
+    certified = models.BooleanField(default=False)
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-week_start_date"]
+        unique_together = ("employee", "week_start_date")
+
+    def __str__(self):
+        return f"{self.employee.employee_id} — Week {self.week_start_date} ({self.get_status_display()})"
+
+    @property
+    def week_end_date(self):
+        return self.week_start_date + timedelta(days=6)
+
+    @property
+    def total_minutes(self):
+        mins = 0
+        for r in self.rows.all():
+            mins += r.total_minutes
+        return mins
+
+    @property
+    def total_hours_display(self):
+        hrs, m = divmod(self.total_minutes, 60)
+        return f"{hrs:02d}:{m:02d}" if hrs > 0 or m > 0 else "0:00"
+
+    def get_day_minutes(self, day_index):
+        return sum(
+            c.hours_minutes
+            for r in self.rows.all()
+            for c in r.cells.all()
+            if c.day_index == day_index
+        )
+
+    def get_day_display(self, day_index):
+        mins = self.get_day_minutes(day_index)
+        hrs, m = divmod(mins, 60)
+        return f"{hrs:d}:{m:02d}" if mins > 0 else "0:00"
+
+
+class TimesheetTaskRow(models.Model):
+    weekly_timesheet = models.ForeignKey(WeeklyTimesheet, on_delete=models.CASCADE, related_name="rows")
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    project_name = models.CharField(max_length=150)
+    milestone_name = models.CharField(max_length=150, blank=True)
+    task_name = models.CharField(max_length=200)
+    entry_type = models.CharField(max_length=20, default="task")
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return f"{self.project_name} / {self.task_name}"
+
+    @property
+    def total_minutes(self):
+        return sum(c.hours_minutes for c in self.cells.all())
+
+    @property
+    def total_hours_display(self):
+        mins = self.total_minutes
+        hrs, m = divmod(mins, 60)
+        return f"{hrs:02d}:{m:02d}" if mins > 0 else "0:00"
+
+
+class TimesheetDailyCell(models.Model):
+    row = models.ForeignKey(TimesheetTaskRow, on_delete=models.CASCADE, related_name="cells")
+    date = models.DateField()
+    day_index = models.PositiveSmallIntegerField(help_text="0=Mon, ..., 6=Sun")
+    hours_minutes = models.PositiveIntegerField(default=0)
+    hours_str = models.CharField(max_length=10, default="0:00")
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["day_index"]
+        unique_together = ("row", "day_index")
+
+    def __str__(self):
+        return f"{self.row.task_name} [Day {self.day_index}]: {self.hours_str}"
+
+    def set_time(self, s, notes=None):
+        s = (s or "").strip()
+        mins = 0
+        if ":" in s:
+            parts = s.split(":")
+            try:
+                hrs = int(parts[0])
+                m = int(parts[1]) if len(parts) > 1 else 0
+                mins = hrs * 60 + m
+            except ValueError:
+                mins = 0
+        elif s:
+            try:
+                mins = int(float(s) * 60)
+            except ValueError:
+                mins = 0
+        self.hours_minutes = mins
+        h, m = divmod(mins, 60)
+        self.hours_str = f"{h:02d}:{m:02d}" if mins > 0 else "0:00"
+        if notes is not None:
+            self.notes = notes
+
+

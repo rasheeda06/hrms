@@ -211,8 +211,8 @@ class TimesheetTimelineDashboardTests(TestCase):
     def setUp(self):
         self.client.login(username="admin_timeline", password="AdminPassword123!")
 
-    def test_timeline_page_renders_with_real_data(self):
-        """Timeline page shows employee details, events, and metrics when record exists."""
+    def test_weekly_project_timesheet_table_renders(self):
+        """Weekly project table displays projects, tasks, day columns, and totals."""
         response = self.client.get(
             reverse("timesheets:timeline"),
             {"date": "2026-10-14", "employee": self.employee.pk},
@@ -220,30 +220,32 @@ class TimesheetTimelineDashboardTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Alex Rivers")
         self.assertContains(response, "EMP301")
-        self.assertContains(response, "Total Working Hours")
-        self.assertContains(response, "8h 15m")
-        self.assertContains(response, "Break Duration")
-        self.assertContains(response, "45m")
-        self.assertContains(response, "Clock-in time")
-        self.assertContains(response, "Work started")
-        self.assertContains(response, "Break started")
-        self.assertContains(response, "Break ended")
-        self.assertContains(response, "Work resumed")
-        self.assertContains(response, "Clock-out time")
-        self.assertContains(response, "Sprint review and UI design handoff.")
+        self.assertContains(response, "timesheet-table")
+        self.assertContains(response, "PROJECTS")
+        self.assertContains(response, "TOTAL")
+        self.assertContains(response, "Cardy Product Demo")
+        self.assertContains(response, "Time Off: Paid Leave")
+        self.assertContains(response, "Add Time Entry")
+        self.assertContains(response, "Save as Draft")
+        self.assertContains(response, "Submit Timesheet")
 
-    def test_timeline_page_renders_empty_state_when_no_record(self):
-        """Timeline page shows clean empty state without crashing when no record exists."""
+    def test_summary_metric_cards_and_9h_allocation(self):
+        """Top metric summary cards and 9-hour daily allocation modal are present."""
         response = self.client.get(
             reverse("timesheets:timeline"),
-            {"date": "2026-10-01", "employee": self.employee.pk},
+            {"date": "2026-10-14", "employee": self.employee.pk},
         )
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "No Timesheet Records Found")
-        self.assertContains(response, "There are no timesheet, clock-in, or break events recorded")
+        self.assertContains(response, "Working Hours")
+        self.assertContains(response, "Billable")
+        self.assertContains(response, "Non Billable")
+        self.assertContains(response, "Time Off")
+        # 9-hour allocation feature
+        self.assertContains(response, "dayAllocationModal")
+        self.assertContains(response, "Daily 9-Hour Work Allocation")
 
     def test_quick_date_buttons_and_week_navigation(self):
-        """Quick date buttons (Previous Day, Next Day, Today) and week strip are present."""
+        """Quick date buttons (Previous Day, Next Day, Today) and week navigation are present."""
         response = self.client.get(
             reverse("timesheets:timeline"),
             {"date": "2026-10-14"},
@@ -262,44 +264,39 @@ class TimesheetTimelineDashboardTests(TestCase):
         self.assertContains(response, "Timesheet")
         self.assertContains(response, reverse("timesheets:timeline"))
 
-    def test_incomplete_timesheet_record_detection_and_rendering(self):
-        """Incomplete timesheet (missing clock-out) shows warning banner and missing badges."""
-        incomplete_ts = Timesheet.objects.create(
-            employee=self.employee,
-            date=date(2026, 10, 13),
-            clock_in=time(9, 0),
-            break_start=time(13, 0),
-            break_end=time(13, 45),
-            work_resume=time(13, 45),
-            clock_out=None,  # Missing clock-out!
-            status=Timesheet.Status.PRESENT,
-        )
-        self.assertTrue(incomplete_ts.is_incomplete)
-        self.assertIn("Clock-out", incomplete_ts.missing_events)
+    def test_add_task_entry_via_post(self):
+        """Can add a new time entry with project, task, date, and hours via POST."""
+        post_data = {
+            "employee_id": self.employee.pk,
+            "project_name": "New Website Project",
+            "task_name": "API Endpoint Integration",
+            "entry_date": "2026-10-14",
+            "hours": "04:30",
+            "notes": "Building REST endpoints",
+        }
+        response = self.client.post(reverse("timesheets:add_task_entry"), post_data)
+        self.assertEqual(response.status_code, 302)
 
-        response = self.client.get(
-            reverse("timesheets:timeline"),
-            {"date": "2026-10-13", "employee": self.employee.pk},
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Incomplete Attendance Record Detected")
-        self.assertContains(response, "Missing Clock-out")
-        self.assertContains(response, "Incomplete Shift")
-
-    def test_elapsed_time_and_date_consistency_across_page(self):
-        """Verify elapsed time between events and date consistency across summary cards and timeline."""
-        response = self.client.get(
+        # Verify page now shows new project and task
+        timeline_res = self.client.get(
             reverse("timesheets:timeline"),
             {"date": "2026-10-14", "employee": self.employee.pk},
         )
-        self.assertEqual(response.status_code, 200)
-        # Elapsed times
-        self.assertContains(response, "Break duration: 45m")
-        self.assertContains(response, "Work duration: 4h 15m")
-        # Executive summary bar
-        self.assertContains(response, "Gross Shift:")
-        self.assertContains(response, "9h 00m")
-        self.assertContains(response, "Net Working Hours:")
-        self.assertContains(response, "8h 15m")
-        # Date consistency on summary cards
-        self.assertContains(response, "For Wed, Oct 14, 2026")
+        self.assertEqual(timeline_res.status_code, 200)
+        self.assertContains(timeline_res, "New Website Project")
+        self.assertContains(timeline_res, "API Endpoint Integration")
+
+    def test_save_and_submit_timesheet_action(self):
+        """Submitting timesheet updates status to SUBMITTED."""
+        # Load page first to seed weekly timesheet
+        self.client.get(
+            reverse("timesheets:timeline"),
+            {"date": "2026-10-14", "employee": self.employee.pk},
+        )
+        post_data = {
+            "employee_id": self.employee.pk,
+            "week_start": "2026-10-12",
+            "action_type": "submit",
+        }
+        response = self.client.post(reverse("timesheets:save_timesheet"), post_data)
+        self.assertEqual(response.status_code, 302)

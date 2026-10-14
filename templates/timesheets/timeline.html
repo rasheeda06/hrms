@@ -1,14 +1,26 @@
 {% extends "base.html" %}
 
-{% block title %}Timesheet Timeline · HRMS{% endblock %}
-{% block page_title %}Timesheet Timeline{% endblock %}
+{% block title %}Timesheet Management · HRMS{% endblock %}
+{% block page_title %}Timesheet Management{% endblock %}
 {% block page_subtitle %}
-  <p class="hrms-page-subtitle">Daily clock-in, breaks, working hours, and activity timeline for employees.</p>
+  <p class="hrms-page-subtitle">Weekly project timesheet, hourly task allocation, and time entries.</p>
 {% endblock %}
 
 {% block content %}
 <style>
-  /* Compact & Clean Timesheet Toolbar Buttons */
+  /* =========================================================================
+     Timesheet Table & Project Management Styles
+  ========================================================================= */
+  :root {
+    --primary: #006098;
+    --primary-light: #F2F8FF;
+    --primary-dark: #E7EDF8;
+    --table-border: #e2e8f0;
+    --table-header: #f8fafc;
+    --table-body: #1e293b;
+  }
+
+  /* Compact Toolbar Buttons */
   .hrms-time-btn {
     height: 30px !important;
     font-size: 11.5px !important;
@@ -32,129 +44,49 @@
     width: 12px !important;
     height: 12px !important;
   }
-
-  /* Navigation buttons (Previous Day, Next Day, Prev Week, Next Week) */
   .hrms-time-btn-nav {
     background-color: #f1f5f9 !important;
     color: #475569 !important;
-    border: none !important;
   }
   .hrms-time-btn-nav:hover {
     background-color: #e2e8f0 !important;
     color: #0f172a !important;
   }
-  .hrms-time-btn-nav:active {
-    background-color: #cbd5e1 !important;
-    color: #0f172a !important;
-    transform: translateY(0) !important;
-  }
-
-  /* Apply button: Smaller, clean, solid blue, white text, no visible border */
   .hrms-time-btn-apply {
     background-color: #2563eb !important;
     color: #ffffff !important;
-    border: none !important;
-    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.12) !important;
   }
   .hrms-time-btn-apply:hover {
     background-color: #1d4ed8 !important;
-    color: #ffffff !important;
   }
-  .hrms-time-btn-apply:active {
-    background-color: #1e40af !important;
-    color: #ffffff !important;
-    transform: translateY(0) !important;
-  }
-
-  /* Reset button: Smaller, clean, neutral background, minimal or no border */
   .hrms-time-btn-reset {
     background-color: #f1f5f9 !important;
     color: #64748b !important;
-    border: none !important;
   }
   .hrms-time-btn-reset:hover {
     background-color: #e2e8f0 !important;
     color: #0f172a !important;
   }
-  .hrms-time-btn-reset:active {
-    background-color: #cbd5e1 !important;
-    color: #0f172a !important;
-    transform: translateY(0) !important;
-  }
-
-  /* Today button */
   .hrms-time-btn-today {
     background-color: #f1f5f9 !important;
     color: #475569 !important;
-    border: none !important;
-  }
-  .hrms-time-btn-today:hover {
-    background-color: #e2e8f0 !important;
-    color: #0f172a !important;
   }
   .hrms-time-btn-today.is-active {
     background-color: #2563eb !important;
     color: #ffffff !important;
-    border: none !important;
-    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.15) !important;
   }
-  .hrms-time-btn-today.is-active:hover {
-    background-color: #1d4ed8 !important;
-    color: #ffffff !important;
+  .hrms-today-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #2563eb;
+    display: inline-block;
   }
-
-  /* Compact Date Input & Dropdowns (30px height) */
-  .hrms-time-date-wrap {
-    height: 30px !important;
-  }
-  .hrms-time-date-wrap .input-group-text {
-    height: 30px !important;
-    padding: 0 0.55rem !important;
-    border-color: #cbd5e1 !important;
-    background-color: #f8fafc !important;
-    color: #64748b !important;
-    font-size: 11px !important;
-    border-radius: 6px 0 0 6px !important;
-  }
-  .hrms-time-date-wrap .form-control {
-    height: 30px !important;
-    font-size: 11.5px !important;
-    border-color: #cbd5e1 !important;
-    border-radius: 0 6px 6px 0 !important;
-    padding: 0 0.65rem !important;
-  }
-  .hrms-time-select {
-    height: 30px !important;
-    font-size: 11.5px !important;
-    font-weight: 500 !important;
-    border-radius: 6px !important;
-    border: 1px solid #cbd5e1 !important;
-    padding-left: 0.75rem !important;
-    padding-right: 2.2rem !important;
-    background-color: #ffffff !important;
-    color: #1e293b !important;
-    box-shadow: none !important;
-    cursor: pointer !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
-    background-repeat: no-repeat !important;
-    background-position: right 0.65rem center !important;
-    background-size: 12px 12px !important;
-  }
-  .hrms-time-select:hover {
-    border-color: #93c5fd !important;
-    background-color: #f8fafc !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
-  }
-  .hrms-time-select:focus {
-    border-color: #2563eb !important;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
-    outline: none !important;
+  .hrms-time-btn-today.is-active .hrms-today-dot {
+    background-color: #ffffff;
   }
 
-  /* Week navigation strip & Highlight Today */
+  /* Week navigation strip */
   .hrms-week-pill {
     color: #475569 !important;
     background-color: #ffffff !important;
@@ -168,40 +100,19 @@
     align-items: center !important;
     justify-content: center !important;
     gap: 1px !important;
-    box-shadow: none !important;
   }
   .hrms-week-pill:hover {
     background-color: #f8fafc !important;
     border-color: #cbd5e1 !important;
-    color: #1e293b !important;
-    transform: translateY(-1px) !important;
   }
-  /* Highlight Today: Prominently framed */
   .hrms-week-pill.is-today {
     background-color: #eff6ff !important;
     border: 1.5px solid #2563eb !important;
     color: #1d4ed8 !important;
-    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.12) !important;
   }
-  .hrms-week-pill.is-today .hrms-week-day,
-  .hrms-week-pill.is-today .hrms-week-num {
-    color: #1d4ed8 !important;
-    font-weight: 700 !important;
-  }
-  /* When Today is also the active selected day */
   .hrms-week-pill.active {
     background-color: #2563eb !important;
     border: 1.5px solid #2563eb !important;
-    color: #ffffff !important;
-    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2) !important;
-  }
-  .hrms-week-pill.active:hover {
-    background-color: #1d4ed8 !important;
-    border-color: #1d4ed8 !important;
-    color: #ffffff !important;
-  }
-  .hrms-week-pill.active .hrms-week-day,
-  .hrms-week-pill.active .hrms-week-num {
     color: #ffffff !important;
   }
   .hrms-week-today-pill {
@@ -211,8 +122,8 @@
     padding: 1px 4px !important;
     border-radius: 3px !important;
     line-height: 1 !important;
-    display: inline-block !important;
-    margin-top: 1px !important;
+    display: inline-block;
+    margin-top: 1px;
   }
   .hrms-week-pill.is-today .hrms-week-today-pill {
     background-color: #2563eb !important;
@@ -223,146 +134,493 @@
     color: #ffffff !important;
   }
 
-  /* Light Green Badge for Complete Shift */
-  .hrms-badge-complete-shift {
-    background-color: #ecfdf5 !important;
-    color: #047857 !important;
-    border: 1px solid #a7f3d0 !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    padding: 0.22rem 0.65rem !important;
-    border-radius: 6px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 0.35rem !important;
-    box-shadow: none !important;
-    letter-spacing: 0.01em !important;
+  /* Top 4 Summary Cards (from Image 1) */
+  .ts-summary-card {
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid transparent;
+    transition: transform 0.18s ease;
   }
-  .hrms-badge-complete-shift svg,
-  .hrms-badge-complete-shift i {
-    color: #059669 !important;
-    flex-shrink: 0 !important;
+  .ts-summary-card:hover {
+    transform: translateY(-2px);
+  }
+  .ts-summary-blue { background-color: #eef4fc; border-color: #dbe7fa; }
+  .ts-summary-green { background-color: #eafaf1; border-color: #d1f3df; }
+  .ts-summary-red { background-color: #fdf0ee; border-color: #fadcd7; }
+  .ts-summary-yellow { background-color: #fef9e8; border-color: #fceec5; }
+
+  .ts-summary-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .ts-summary-blue .ts-summary-icon { background: #dbeafe; color: #006098; }
+  .ts-summary-green .ts-summary-icon { background: #dcfce7; color: #16a34a; }
+  .ts-summary-red .ts-summary-icon { background: #fee2e2; color: #dc2626; }
+  .ts-summary-yellow .ts-summary-icon { background: #fef3c7; color: #d97706; }
+
+  .ts-summary-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .ts-summary-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 2px 0 0;
+    line-height: 1.1;
   }
 
-  /* Incomplete shift badge (soft amber) */
-  .hrms-badge-incomplete-shift {
-    background-color: #fffbeb !important;
-    color: #b45309 !important;
-    border: 1px solid #fde68a !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    padding: 0.22rem 0.65rem !important;
-    border-radius: 6px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 0.35rem !important;
-    box-shadow: none !important;
-    letter-spacing: 0.01em !important;
+  /* Timesheet Card & Table */
+  .timesheet-card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e2e8f0;
   }
-  .hrms-badge-incomplete-shift svg,
-  .hrms-badge-incomplete-shift i {
-    color: #d97706 !important;
-    flex-shrink: 0 !important;
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+  .timesheet-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+    font-size: 13px;
+    color: #1e293b;
+  }
+  .timesheet-table th,
+  .timesheet-table td {
+    border: 1px solid #e2e8f0;
+    vertical-align: middle;
+  }
+  .timesheet-table thead th {
+    background-color: #f8fafc;
+    color: #334155;
+    font-weight: 700;
+    padding: 10px 8px;
+  }
+  .timesheet-table .project-col {
+    min-width: 260px;
+    width: 28%;
+    padding-left: 14px;
+    padding-right: 14px;
+    text-align: left;
+  }
+  .timesheet-table .day-col {
+    width: 82px;
+    min-width: 78px;
+    text-align: center;
+    padding: 6px 4px;
+  }
+  .timesheet-table .total-col {
+    width: 82px;
+    min-width: 78px;
+    text-align: center;
+    font-weight: 700;
+    color: #006098;
+    padding: 8px 6px;
+  }
+  .day-header {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #334155;
+    letter-spacing: 0.04em;
+  }
+  .day-header-date {
+    font-size: 10px;
+    font-weight: 500;
+    color: #64748b;
+    margin-top: 4px;
+    padding-bottom: 3px;
+    border-bottom: 3px solid #006098;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
   }
 
-  /* Today micro-dot */
-  .hrms-today-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: #2563eb;
+  /* Attendance Row (Paid Leave) */
+  .attendance-row td {
+    background-color: #f0f8ff !important;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .attendance-row .project-col {
+    border-bottom: 2px solid #006098 !important;
+  }
+  .timesheetleave-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #006098;
+    font-weight: 600;
+    padding: 6px 0;
+  }
+  .time-off-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #006098;
+  }
+
+  /* Task Rows */
+  .task-row {
+    transition: background-color 0.12s ease;
+  }
+  .task-row:hover {
+    background-color: #fbfcfe;
+  }
+  .project-task-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 0;
+  }
+  .project-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.25;
+  }
+  .milestone-name {
+    font-size: 11px;
+    color: #475569;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+  .task-name {
+    font-size: 12px;
+    color: #006098;
+    font-weight: 500;
     display: inline-block;
+    margin-top: 3px;
   }
-  .hrms-time-btn-today.is-active .hrms-today-dot {
+  .task-row-delete-btn {
+    border: 1px solid #fecaca;
+    color: #ef4444;
+    background: #fef2f2;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .task-row-delete-btn:hover {
+    background: #fee2e2;
+    border-color: #f87171;
+    color: #dc2626;
+    transform: scale(1.08);
+  }
+
+  /* Cell Time Entry Input */
+  .time-entry-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .time-entry-input {
+    width: 62px;
+    height: 30px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
     background-color: #ffffff;
+    padding: 2px 4px;
+    transition: all 0.15s ease;
+  }
+  .time-entry-input:focus {
+    border-color: #006098;
+    box-shadow: 0 0 0 2px rgba(0, 96, 152, 0.2);
+    outline: none;
+  }
+  .time-entry-input.has-notes {
+    border-left: 3px solid #006098;
+  }
+
+  /* Cell Notes Popover (Image 2 & 3) */
+  .cell-notes-popover {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 6px;
+    width: 250px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    z-index: 1050;
+    display: none;
+    text-align: left;
+  }
+  .cell-notes-popover.active {
+    display: block;
+  }
+  .cell-notes-popover textarea {
+    width: 100%;
+    font-size: 11.5px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 6px;
+    resize: vertical;
+    min-height: 60px;
+  }
+  .cell-notes-popover textarea:focus {
+    outline: none;
+    border-color: #006098;
+  }
+
+  /* Totals Row */
+  .totals-row td {
+    background-color: #f8fafc;
+    font-weight: 700;
+    border-top: 2px solid #cbd5e1;
+    padding: 10px 8px;
+  }
+  .total-label {
+    font-weight: 700;
+    font-size: 13px;
+    color: #0f172a;
+  }
+  .time-total {
+    font-weight: 700;
+    font-size: 13px;
+    color: #0f172a;
+    text-align: center;
+  }
+  .total-col .time-total {
+    color: #006098;
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  /* 9-Hour Daily Work Allocation Badge */
+  .day-9h-pill {
+    font-size: 9.5px;
+    font-weight: 600;
+    padding: 2px 5px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 2px;
+    cursor: pointer;
+  }
+  .day-9h-met {
+    background-color: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+  }
+  .day-9h-sub {
+    background-color: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+  }
+  .day-9h-ot {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+  }
+
+  /* Add Time Entry Button */
+  .btn-add-time-entry {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #006098;
+    border: 1.5px solid #006098;
+    border-radius: 4px;
+    padding: 6px 14px;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-top: 10px;
+  }
+  .btn-add-time-entry:hover {
+    background-color: #f0f8ff;
+    color: #00456d;
+    border-color: #00456d;
+  }
+
+  /* Certify Bar */
+  .certify-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 16px;
+  }
+  .certify-icon {
+    color: #006098;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .certifly-text {
+    font-size: 12px;
+    color: #1e3a8a;
+    line-height: 1.4;
+  }
+
+  /* Timesheet Footer Actions */
+  .timesheet-action-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .btn-ts-draft {
+    border: 1px solid #2563eb;
+    color: #2563eb;
+    background-color: #ffffff;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+  }
+  .btn-ts-draft:hover {
+    background-color: #eff6ff;
+  }
+  .btn-ts-submit {
+    background-color: #006098;
+    border: 1px solid #006098;
+    color: #ffffff;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 6px 20px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+  }
+  .btn-ts-submit:hover {
+    background-color: #004a75;
+    border-color: #004a75;
+  }
+
+  /* Cell Hover Tooltip (Image 2) */
+  .timesheet-cell-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 8px;
+    background-color: #1e3a8a;
+    color: #ffffff;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    line-height: 1.45;
+    width: 250px;
+    text-align: left;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    z-index: 1060;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease;
+    white-space: normal;
+  }
+  .time-entry-container:hover .timesheet-cell-tooltip {
+    opacity: 1;
+    visibility: visible;
   }
 
   /* Dark mode overrides */
-  html[data-bs-theme="dark"] .hrms-time-btn-nav,
-  html[data-bs-theme="dark"] .hrms-time-btn-reset {
-    background-color: #1f2937 !important;
-    color: #cbd5e1 !important;
-  }
-  html[data-bs-theme="dark"] .hrms-time-btn-nav:hover,
-  html[data-bs-theme="dark"] .hrms-time-btn-reset:hover {
-    background-color: #374151 !important;
+  html[data-bs-theme="dark"] .timesheet-card {
+    background: #111827 !important;
+    border-color: #374151 !important;
     color: #f3f4f6 !important;
   }
-  html[data-bs-theme="dark"] .hrms-time-btn-today {
+  html[data-bs-theme="dark"] .timesheet-table th,
+  html[data-bs-theme="dark"] .timesheet-table td {
+    border-color: #374151 !important;
+  }
+  html[data-bs-theme="dark"] .timesheet-table thead th {
     background-color: #1f2937 !important;
+    color: #f3f4f6 !important;
+  }
+  html[data-bs-theme="dark"] .attendance-row td {
+    background-color: #172554 !important;
+  }
+  html[data-bs-theme="dark"] .task-row:hover {
+    background-color: #1f2937 !important;
+  }
+  html[data-bs-theme="dark"] .project-name {
+    color: #f3f4f6 !important;
+  }
+  html[data-bs-theme="dark"] .milestone-name {
+    color: #94a3b8 !important;
+  }
+  html[data-bs-theme="dark"] .task-name {
     color: #60a5fa !important;
   }
-  html[data-bs-theme="dark"] .hrms-time-btn-today.is-active {
-    background-color: #2563eb !important;
-    color: #ffffff !important;
-  }
-  html[data-bs-theme="dark"] .hrms-today-dot {
-    background-color: #60a5fa;
-  }
-  html[data-bs-theme="dark"] .hrms-time-btn-today.is-active .hrms-today-dot {
-    background-color: #ffffff;
-  }
-  html[data-bs-theme="dark"] .hrms-time-select {
-    background-color: #111827 !important;
-    border-color: #374151 !important;
-    color: #f3f4f6 !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
-  }
-  html[data-bs-theme="dark"] .hrms-time-select:hover {
-    border-color: #60a5fa !important;
-    background-color: #1f2937 !important;
-  }
-  html[data-bs-theme="dark"] .hrms-time-date-wrap .input-group-text {
-    background-color: #1f2937 !important;
-    border-color: #374151 !important;
-    color: #9ca3af !important;
-  }
-  html[data-bs-theme="dark"] .hrms-time-date-wrap .form-control {
-    background-color: #111827 !important;
-    border-color: #374151 !important;
-    color: #f3f4f6 !important;
-  }
-  html[data-bs-theme="dark"] .hrms-week-pill {
-    background-color: #111827 !important;
-    border-color: #374151 !important;
-    color: #9ca3af !important;
-  }
-  html[data-bs-theme="dark"] .hrms-week-pill:hover {
+  html[data-bs-theme="dark"] .time-entry-input {
     background-color: #1f2937 !important;
     border-color: #4b5563 !important;
-    color: #e5e7eb !important;
+    color: #f3f4f6 !important;
   }
-  html[data-bs-theme="dark"] .hrms-week-pill.is-today {
-    background-color: rgba(37, 99, 235, 0.15) !important;
-    border-color: #3b82f6 !important;
-    color: #93c5fd !important;
+  html[data-bs-theme="dark"] .totals-row td {
+    background-color: #1f2937 !important;
+    color: #f3f4f6 !important;
   }
-  html[data-bs-theme="dark"] .hrms-week-pill.is-today .hrms-week-day,
-  html[data-bs-theme="dark"] .hrms-week-pill.is-today .hrms-week-num {
-    color: #93c5fd !important;
+  html[data-bs-theme="dark"] .total-label,
+  html[data-bs-theme="dark"] .time-total {
+    color: #f3f4f6 !important;
   }
-  html[data-bs-theme="dark"] .hrms-week-pill.active {
-    background-color: #2563eb !important;
-    border-color: #2563eb !important;
-    color: #ffffff !important;
+  html[data-bs-theme="dark"] .total-col .time-total {
+    color: #60a5fa !important;
   }
-  html[data-bs-theme="dark"] .hrms-badge-complete-shift {
-    background-color: rgba(16, 185, 129, 0.14) !important;
-    color: #34d399 !important;
-    border-color: rgba(16, 185, 129, 0.3) !important;
+  html[data-bs-theme="dark"] .ts-summary-card {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
   }
-  html[data-bs-theme="dark"] .hrms-badge-complete-shift svg,
-  html[data-bs-theme="dark"] .hrms-badge-complete-shift i {
-    color: #34d399 !important;
+  html[data-bs-theme="dark"] .ts-summary-value {
+    color: #f3f4f6 !important;
   }
-  html[data-bs-theme="dark"] .hrms-badge-incomplete-shift {
-    background-color: rgba(245, 158, 11, 0.15) !important;
-    color: #fcd34d !important;
-    border-color: rgba(245, 158, 11, 0.3) !important;
+  html[data-bs-theme="dark"] .ts-summary-title {
+    color: #94a3b8 !important;
   }
-  html[data-bs-theme="dark"] .hrms-badge-incomplete-shift svg,
-  html[data-bs-theme="dark"] .hrms-badge-incomplete-shift i {
-    color: #fcd34d !important;
+  html[data-bs-theme="dark"] .cell-notes-popover {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #f3f4f6 !important;
+  }
+  html[data-bs-theme="dark"] .cell-notes-popover textarea {
+    background-color: #111827 !important;
+    border-color: #374151 !important;
+    color: #f3f4f6 !important;
   }
 </style>
 
@@ -478,129 +736,59 @@
     </div>
   </div>
 
-  <!-- Summary Cards Row (4 cards) -->
+  <!-- Top 4 Summary Cards (from Image 1: Working Hours, Billable, Non Billable, Time Off) -->
   <div class="row g-3">
-    
-    <!-- Total Working Hours -->
     <div class="col-12 col-sm-6 col-xl-3">
-      <div class="hrms-card hrms-stat d-flex align-items-start gap-3 h-100">
-        <span class="hrms-stat-icon hrms-icon-blue flex-shrink-0">
-          <svg class="lucide lucide-clock" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </span>
-        <div class="flex-grow-1 min-w-0">
-          <p class="hrms-stat-label">Total Working Hours</p>
-          <p class="hrms-stat-value text-truncate">{{ total_working_hours }}</p>
-          <p class="hrms-stat-note text-truncate">
-            {% if has_record %}
-              <span class="hrms-stat-dot hrms-dot-green"></span>Gross: {{ gross_working_hours }}
-            {% else %}
-              <span class="hrms-stat-dot hrms-dot-amber"></span>No hours recorded
-            {% endif %}
-          </p>
-          <p class="hrms-stat-date-badge text-truncate mb-0">
-            For {{ selected_date|date:"D, M j, Y" }}
-          </p>
+      <div class="ts-summary-card ts-summary-blue">
+        <div class="ts-summary-icon">
+          <i class="bi bi-clock-history"></i>
+        </div>
+        <div>
+          <div class="ts-summary-title">Working Hours</div>
+          <div class="ts-summary-value" id="cardWorkingHours">{{ summary_working_hours }}</div>
         </div>
       </div>
     </div>
-
-    <!-- Break Duration -->
     <div class="col-12 col-sm-6 col-xl-3">
-      <div class="hrms-card hrms-stat d-flex align-items-start gap-3 h-100">
-        <span class="hrms-stat-icon hrms-icon-amber flex-shrink-0">
-          <svg class="lucide lucide-coffee" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h12Zm0 0h2a3 3 0 0 1 3 3v1a3 3 0 0 1-3 3h-2"/><path d="M6 2v2"/></svg>
-        </span>
-        <div class="flex-grow-1 min-w-0">
-          <p class="hrms-stat-label">Break Duration</p>
-          <p class="hrms-stat-value text-truncate">{{ break_duration }}</p>
-          <p class="hrms-stat-note text-truncate">
-            {% if break_minutes > 0 %}
-              <span class="hrms-stat-dot hrms-dot-amber"></span>Subtracted from gross
-            {% else %}
-              <span class="hrms-stat-dot hrms-dot-green"></span>No breaks taken
-            {% endif %}
-          </p>
-          <p class="hrms-stat-date-badge text-truncate mb-0">
-            For {{ selected_date|date:"D, M j, Y" }}
-          </p>
+      <div class="ts-summary-card ts-summary-green">
+        <div class="ts-summary-icon">
+          <i class="bi bi-currency-dollar"></i>
+        </div>
+        <div>
+          <div class="ts-summary-title">Billable</div>
+          <div class="ts-summary-value" id="cardBillable">{{ summary_billable }}</div>
         </div>
       </div>
     </div>
-
-    <!-- Late Arrivals Status -->
     <div class="col-12 col-sm-6 col-xl-3">
-      <div class="hrms-card hrms-stat d-flex align-items-start gap-3 h-100">
-        <span class="hrms-stat-icon hrms-icon-purple flex-shrink-0">
-          <svg class="lucide lucide-timer" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
-        </span>
-        <div class="flex-grow-1 min-w-0">
-          <p class="hrms-stat-label">Late Arrivals</p>
-          <p class="hrms-stat-value text-truncate">
-            {% if has_record %}
-              {% if timesheet_record.is_late %}
-                <span class="text-danger fs-5 fw-bold">Late Arrival</span>
-              {% else %}
-                <span class="text-success fs-5 fw-bold">On Time</span>
-              {% endif %}
-            {% else %}
-              <span class="text-secondary fs-5 fw-bold">—</span>
-            {% endif %}
-          </p>
-          <p class="hrms-stat-note text-truncate">
-            <span class="hrms-stat-dot {% if timesheet_record.is_late %}hrms-dot-amber{% else %}hrms-dot-green{% endif %}"></span>Shift start: 09:00 AM
-          </p>
-          <p class="hrms-stat-date-badge text-truncate mb-0">
-            For {{ selected_date|date:"D, M j, Y" }}
-          </p>
+      <div class="ts-summary-card ts-summary-red">
+        <div class="ts-summary-icon">
+          <i class="bi bi-slash-circle"></i>
+        </div>
+        <div>
+          <div class="ts-summary-title">Non Billable</div>
+          <div class="ts-summary-value" id="cardNonBillable">{{ summary_non_billable }}</div>
         </div>
       </div>
     </div>
-
-    <!-- Attendance Status -->
     <div class="col-12 col-sm-6 col-xl-3">
-      <div class="hrms-card hrms-stat d-flex align-items-start gap-3 h-100">
-        <span class="hrms-stat-icon hrms-icon-green flex-shrink-0">
-          <svg class="lucide lucide-check-circle-2" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
-        </span>
-        <div class="flex-grow-1 min-w-0">
-          <p class="hrms-stat-label">Attendance Status</p>
-          <p class="hrms-stat-value text-truncate">
-            {% if has_record %}
-              {% if is_incomplete %}
-                <span class="text-warning fs-5 fw-bold">Incomplete</span>
-              {% elif timesheet_record.status == 'present' %}
-                <span class="text-success fs-5 fw-bold">Present</span>
-              {% elif timesheet_record.status == 'late' %}
-                <span class="text-warning fs-5 fw-bold">Late</span>
-              {% elif timesheet_record.status == 'half_day' %}
-                <span class="text-info fs-5 fw-bold">Half Day</span>
-              {% elif timesheet_record.status == 'absent' %}
-                <span class="text-danger fs-5 fw-bold">Absent</span>
-              {% else %}
-                <span class="text-secondary fs-5 fw-bold">{{ attendance_status }}</span>
-              {% endif %}
-            {% else %}
-              <span class="text-secondary fs-5 fw-bold">No Record</span>
-            {% endif %}
-          </p>
-          <p class="hrms-stat-note text-truncate">
-            <span class="hrms-stat-dot {% if has_record and not is_incomplete %}hrms-dot-green{% elif is_incomplete %}hrms-dot-amber{% else %}hrms-dot-secondary{% endif %}"></span>
-            {% if is_incomplete %}Missing event{% elif has_record %}Logged{% else %}No entry{% endif %}
-          </p>
-          <p class="hrms-stat-date-badge text-truncate mb-0">
-            For {{ selected_date|date:"D, M j, Y" }}
-          </p>
+      <div class="ts-summary-card ts-summary-yellow">
+        <div class="ts-summary-icon">
+          <i class="bi bi-airplane"></i>
+        </div>
+        <div>
+          <div class="ts-summary-title">Time Off</div>
+          <div class="ts-summary-value" id="cardTimeOff">{{ summary_time_off }}</div>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- Main Content: Employee List (Left) + Daily Timeline (Right) -->
+  <!-- Main Content Row: Employee Directory (Left) + Project Timesheet Table (Right, Replacing Timeline) -->
   <div class="row g-3">
     
     <!-- Employee Directory Column -->
-    <div class="col-12 col-lg-4 col-xl-3">
+    <div class="col-12 col-lg-3">
       <div class="hrms-card h-100 d-flex flex-column">
         <div class="px-3 py-3 border-bottom d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center gap-2">
@@ -609,7 +797,7 @@
           </div>
           <span class="badge bg-body-secondary text-secondary border px-2 py-1 small">{{ selected_date|date:"M j" }}</span>
         </div>
-        <div class="p-2 flex-grow-1 overflow-y-auto" style="max-height: 580px;">
+        <div class="p-2 flex-grow-1 overflow-y-auto" style="max-height: 640px;">
           <div class="d-flex flex-column gap-1">
             {% for item in employee_list_data %}
               <a href="?date={{ selected_date_str }}&employee={{ item.employee.pk }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}"
@@ -620,21 +808,9 @@
                 <div class="min-w-0 flex-grow-1">
                   <div class="d-flex align-items-center justify-content-between gap-1">
                     <span class="fw-semibold text-truncate small d-block">{{ item.employee.full_name }}</span>
-                    {% if item.record %}
-                      {% if item.is_incomplete %}
-                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle" style="font-size: 0.65rem;">
-                          Incomplete
-                        </span>
-                      {% else %}
-                        <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.65rem;">
-                          {{ item.net_hours }}
-                        </span>
-                      {% endif %}
-                    {% else %}
-                      <span class="badge bg-secondary-subtle text-secondary" style="font-size: 0.65rem;">
-                        No Log
-                      </span>
-                    {% endif %}
+                    <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.65rem;">
+                      {{ item.net_hours }}
+                    </span>
                   </div>
                   <div class="d-flex align-items-center justify-content-between text-secondary" style="font-size: 0.72rem;">
                     <span class="text-truncate">{{ item.employee.employee_id }}</span>
@@ -652,189 +828,625 @@
       </div>
     </div>
 
-    <!-- Timeline Column -->
-    <div class="col-12 col-lg-8 col-xl-9">
-      <div class="hrms-card h-100">
-        
-        <!-- Timeline Header -->
-        <div class="px-4 py-3 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
-          {% if selected_employee %}
-            <div class="d-flex align-items-center gap-3">
-              <span class="hrms-header-avatar flex-shrink-0" style="width: 40px; height: 40px; font-size: 0.95rem;">
-                {{ selected_employee.first_name|slice:":1" }}{{ selected_employee.last_name|slice:":1" }}
-              </span>
-              <div>
-                <h2 class="h6 mb-0 d-flex align-items-center gap-2">
-                  <span>{{ selected_employee.full_name }}</span>
-                  <span class="badge text-bg-light border text-secondary fw-normal">{{ selected_employee.employee_id }}</span>
-                </h2>
-                <div class="text-secondary small">
-                  {{ selected_employee.job_title }} · <span class="fw-medium text-body">{{ selected_employee.department.name }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-              <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 fs-6 fw-semibold">
-                {{ selected_date|date:"l, F j, Y" }}
-              </span>
-            </div>
-          {% else %}
-            <h2 class="h6 mb-0">Daily Timeline · {{ selected_date|date:"l, F j, Y" }}</h2>
+    <!-- Timesheet Table Column (Replaces the vertical timeline) -->
+    <div class="col-12 col-lg-9">
+      
+      <!-- Week Navigation & Status Sub-bar (from Image 1 & 3) -->
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3 px-1">
+        <div class="d-flex align-items-center gap-2">
+          <div class="d-inline-flex align-items-center border rounded-2 bg-body px-2 py-1 gap-2 shadow-sm">
+            <a href="?date={{ prev_week_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
+               class="text-secondary text-decoration-none px-1" title="Previous Week">
+              <i class="bi bi-chevron-left"></i>
+            </a>
+            <span class="fw-semibold small font-monospace text-body">{{ week_range_str }}</span>
+            <a href="?date={{ next_week_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
+               class="text-secondary text-decoration-none px-1" title="Next Week">
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          </div>
+          {% if weekly_timesheet %}
+            <a href="{% url 'timesheets:copy_last_week' %}?timesheet_id={{ weekly_timesheet.pk }}" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1.5" style="font-size: 11.5px; height: 30px;">
+              <i class="bi bi-copy"></i>
+              <span>Copy Last week hours</span>
+            </a>
           {% endif %}
         </div>
 
-        <!-- Timeline Body -->
-        <div class="p-4">
-          {% if has_record %}
+        <div class="d-flex align-items-center gap-2">
+          {% if weekly_timesheet and weekly_timesheet.status == 'approved' %}
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1.5 font-monospace fw-semibold" style="font-size: 11px;">
+              <i class="bi bi-check-circle-fill me-1"></i>PM Approved
+            </span>
+          {% elif weekly_timesheet and weekly_timesheet.status == 'submitted' %}
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1.5 font-monospace fw-semibold" style="font-size: 11px;">
+              <i class="bi bi-hourglass-split me-1"></i>Submitted
+            </span>
+          {% else %}
+            <span class="badge bg-secondary-subtle text-secondary border px-2.5 py-1.5 font-monospace fw-semibold" style="font-size: 11px;">
+              Not Submitted
+            </span>
+          {% endif %}
+        </div>
+      </div>
 
-            <!-- Incomplete Attendance Alert Banner (if missing required milestones) -->
-            {% if is_incomplete %}
-              <div class="alert alert-warning border border-warning-subtle rounded-3 d-flex align-items-start gap-2 mb-4 p-3 bg-warning-subtle bg-opacity-25" role="alert">
-                <svg class="lucide lucide-alert-triangle flex-shrink-0 text-warning mt-0.5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
-                <div class="small flex-grow-1">
-                  <div class="fw-semibold text-warning-emphasis">Incomplete Attendance Record Detected</div>
-                  <div class="text-secondary mt-0.5">
-                    This shift has unrecorded mandatory timestamps: <span class="badge text-bg-warning">{{ timesheet_record.missing_events_summary }}</span>.
-                    {% if selected_date == today %}
-                      Shift may currently be active or employee may not yet have logged clock-out.
-                    {% else %}
-                      Supervisor review or manual clock-out logging is required to finalize net working hours.
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-
-            <!-- Executive Shift Summary Bar -->
-            <div class="p-3 mb-4 rounded-3 border bg-body-tertiary d-flex flex-wrap align-items-center justify-content-between gap-3">
-              <div class="d-flex align-items-center gap-2">
-                <span class="text-secondary small">Gross Shift:</span>
-                <span class="fw-semibold font-monospace">{{ gross_working_hours }}</span>
-              </div>
-              <div class="d-flex align-items-center gap-2">
-                <span class="text-secondary small">Break Duration:</span>
-                <span class="fw-semibold font-monospace text-warning-emphasis">{{ break_duration }}</span>
-              </div>
-              <div class="d-flex align-items-center gap-2">
-                <span class="text-secondary small">Net Working Hours:</span>
-                <span class="fw-bold fs-6 font-monospace text-primary">{{ total_working_hours }}</span>
-              </div>
-              <div class="d-flex align-items-center gap-2 ms-auto">
-                {% if is_incomplete %}
-                  <span class="hrms-badge-incomplete-shift">
-                    <svg class="lucide lucide-alert-triangle" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
-                    <span>Incomplete Shift</span>
-                  </span>
-                {% else %}
-                  <span class="hrms-badge-complete-shift">
-                    <svg class="lucide lucide-check-circle-2" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                    <span>Complete Shift</span>
-                  </span>
-                {% endif %}
-              </div>
-            </div>
-
-            <!-- Connected Vertical Timeline Structure -->
-            <div class="hrms-timeline">
-              {% for event in timeline_events %}
-                <div class="hrms-timeline-item {% if event.is_missing %}is-missing{% elif event.is_completed %}is-completed{% else %}is-pending{% endif %}">
-                  
-                  <!-- Timeline Node / Icon -->
-                  <div class="hrms-timeline-node {{ event.badge_class }}">
-                    {% if event.is_missing %}
-                      <svg class="lucide lucide-alert-circle text-warning" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-                    {% elif event.icon == "log-in" %}
-                      <svg class="lucide lucide-log-in" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
-                    {% elif event.icon == "play" %}
-                      <svg class="lucide lucide-play" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    {% elif event.icon == "coffee" %}
-                      <svg class="lucide lucide-coffee" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h12Zm0 0h2a3 3 0 0 1 3 3v1a3 3 0 0 1-3 3h-2"/><path d="M6 2v2"/></svg>
-                    {% elif event.icon == "check-circle-2" %}
-                      <svg class="lucide lucide-check-circle-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                    {% elif event.icon == "briefcase" %}
-                      <svg class="lucide lucide-briefcase" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                    {% elif event.icon == "log-out" %}
-                      <svg class="lucide lucide-log-out" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
-                    {% else %}
-                      <svg class="lucide lucide-circle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>
-                    {% endif %}
-                  </div>
-
-                  <!-- Timeline Content Card -->
-                  <div class="hrms-timeline-content p-3 rounded-3 {% if event.is_missing %}border-warning-subtle bg-warning-subtle bg-opacity-10{% endif %}">
-                    <div class="d-flex align-items-center justify-content-between mb-1">
-                      <div class="d-flex align-items-center gap-2">
-                        <span class="fw-semibold text-body fs-6">{{ event.title }}</span>
-                        {% if event.is_missing %}
-                          <span class="badge bg-warning-subtle text-warning border border-warning-subtle small fw-medium">
-                            {{ event.missing_label|default:"Missing Event" }}
-                          </span>
-                        {% endif %}
-                      </div>
-
-                      {% if event.time %}
-                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-6 font-monospace">
-                          {{ event.time }}
-                        </span>
-                      {% else %}
-                        <span class="badge bg-secondary-subtle text-secondary px-2 py-1 small">
-                          Not recorded
-                        </span>
+      <!-- Weekly Project Table Container (Exact Outer HTML as provided) -->
+      <div class="timesheet-card">
+        <div class="table-container">
+          <table class="timesheet-table">
+            <thead>
+              <tr>
+                <th class="project-col">PROJECTS</th>
+                {% for day in week_days %}
+                  <th class="day-col ng-star-inserted" style="padding-left: 3px; padding-right: 2px; width: 79px; text-align: center; margin-left: 13px;">
+                    <div class="day-header">{{ day.day_name }}</div>
+                    <div class="day-header d-flex justify-content-center text-align-center mt-2" style="border-bottom: 4px solid var(--primary); border-radius: 3px; color: #888888;">
+                      {{ day.date_formatted }}
+                      {% if day.has_leave %}
+                        <span class="bi bi-airplane ng-star-inserted ms-1" style="color: #24ed42; font-size: 13px;" title="Time off"></span>
                       {% endif %}
                     </div>
+                  </th>
+                {% endfor %}
+                <th class="total-col">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
 
-                    <p class="text-secondary small mb-0">{{ event.description }}</p>
-
-                    <!-- Interval Elapsed Time Indicator between Milestones -->
-                    {% if event.elapsed_text %}
-                      <div class="mt-2 pt-2 border-top d-flex align-items-center gap-2 small text-secondary">
-                        <svg class="lucide lucide-timer text-primary" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
-                        <span class="fw-medium text-body">{{ event.elapsed_text }}</span>
-                      </div>
-                    {% endif %}
+              <!-- Attendance / Paid Leave Row (from User HTML) -->
+              <tr class="attendance-row ng-star-inserted">
+                <td class="project-col" style="background-color: #f0f8ff; border-bottom: 2px solid var(--btn-outline-primary, #006098);">
+                  <div class="d-flex align-items-center gap-2 timesheetleave-content">
+                    <i class="bi bi-airplane text-primary fs-6"></i>
+                    <div class="time-off-label">Time Off: Paid Leave</div>
+                    <span class="tooltip-container" title="Indicates paid leave hours for the day, not a recorded time entry.">
+                      <i class="bi bi-info-circle text-secondary" style="font-size: 12px;"></i>
+                    </span>
                   </div>
+                </td>
+                {% for h in leave_hours_per_day %}
+                  <td class="day-col ng-star-inserted" style="background-color: #f0f8ff; text-align: center; font-weight: 600;">
+                    {% if h %}
+                      <div class="ng-star-inserted text-primary">{{ h }}</div>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+                <td class="total-col" style="background-color: #f0f8ff; color: #006098; font-weight: 700;">
+                  {{ total_leave_display }}
+                </td>
+              </tr>
 
-                </div>
+              <!-- Project Task Rows (from User HTML & Image 1) -->
+              {% for row in task_rows %}
+                <tr class="task-row ng-star-inserted" id="taskRow_{{ row.pk }}" data-row-id="{{ row.pk }}">
+                  <td class="project-col">
+                    <div class="project-task-container">
+                      <div class="w-100">
+                        <div class="project-name mb-1 d-flex align-items-start justify-content-between">
+                          <div>
+                            <div style="font-weight: 700; color: #0f172a;">{{ row.project_name }}</div>
+                            {% if row.milestone_name %}
+                              <div class="milestone-name ng-star-inserted" style="font-size: 11px; color: #333; font-weight: 500; margin-top: 2px;">
+                                {{ row.milestone_name }}
+                              </div>
+                            {% endif %}
+                          </div>
+                          <button type="button" class="task-row-delete-btn" onclick="deleteTaskRow({{ row.pk }})" title="Delete task row">
+                            <i class="bi bi-trash3" style="font-size: 11px;"></i>
+                          </button>
+                        </div>
+                        <div class="project-task-container1">
+                          <span class="task-name ng-star-inserted" title="{{ row.task_name }}">
+                            {{ row.task_name }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- 7 Day Columns for this task -->
+                  {% for cell in row.ordered_cells %}
+                    <td class="day-col ng-star-inserted">
+                      <div class="time-entry-container ng-star-inserted">
+                        <input type="text"
+                               name="hours_{{ cell.pk }}"
+                               id="input_cell_{{ cell.pk }}"
+                               value="{{ cell.hours_str }}"
+                               placeholder="0:00"
+                               maxlength="5"
+                               data-cell-id="{{ cell.pk }}"
+                               data-row-id="{{ row.pk }}"
+                               data-day-index="{{ cell.day_index }}"
+                               class="time-entry-input {% if cell.notes %}has-notes{% endif %}"
+                               oninput="onHoursInputChange(this)"
+                               onfocus="showCellNotesPopover(this)"
+                               onblur="scheduleHideCellNotesPopover(this)">
+                        
+                        <!-- Hover Tooltip (Image 2) -->
+                        {% if cell.notes %}
+                          <div class="timesheet-cell-tooltip" id="tooltip_cell_{{ cell.pk }}">
+                            <div class="fw-bold mb-1">{{ row.task_name }} · {{ cell.hours_str }} hrs</div>
+                            <div>{{ cell.notes|linebreaksbr }}</div>
+                          </div>
+                        {% endif %}
+
+                        <!-- Cell Edit Notes Popover (Image 3) -->
+                        <div class="cell-notes-popover" id="popover_cell_{{ cell.pk }}">
+                          <div class="d-flex align-items-center justify-content-between mb-1">
+                            <span class="fw-bold small text-body" style="font-size: 11px;">Task Notes / Hourly Log</span>
+                            <span class="badge bg-primary-subtle text-primary" style="font-size: 9px;">Day {{ cell.day_index|add:1 }}</span>
+                          </div>
+                          <textarea class="form-control"
+                                    id="notes_cell_{{ cell.pk }}"
+                                    placeholder="Enter what you worked on per hour/task..."
+                                    onchange="onCellNotesChange({{ cell.pk }})">{{ cell.notes }}</textarea>
+                          <div class="d-flex justify-content-end gap-1 mt-1">
+                            <button type="button" class="btn btn-sm btn-primary py-0 px-2" style="font-size: 10px;" onclick="closeCellNotesPopover({{ cell.pk }})">Done</button>
+                          </div>
+                        </div>
+
+                      </div>
+                    </td>
+                  {% endfor %}
+
+                  <!-- Row Total Column -->
+                  <td class="total-col">
+                    <div class="time-entry total row-total-display" id="rowTotal_{{ row.pk }}" style="padding-left: 3px; padding-right: 2px; text-align: center; font-weight: 700; color: #006098;">
+                      {{ row.total_hours_display }}
+                    </div>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="9" class="p-4 text-center text-secondary small">
+                    No project tasks added for this week yet. Click <strong>+ Add Time Entry</strong> below to add your first project task.
+                  </td>
+                </tr>
               {% endfor %}
-            </div>
 
-            <!-- Notes Section if present -->
-            {% if timesheet_record.notes %}
-              <div class="mt-4 p-3 rounded-3 border bg-body-tertiary">
-                <h6 class="small fw-semibold mb-1">Supervisor / Employee Notes</h6>
-                <p class="small text-secondary mb-0">{{ timesheet_record.notes|linebreaksbr }}</p>
-              </div>
-            {% endif %}
+              <!-- + Add Time Entry row button (Image 3) -->
+              <tr class="add-entry-row">
+                <td class="project-col" style="border-right: none; padding: 10px 14px;">
+                  <button type="button" class="btn-add-time-entry" data-bs-toggle="modal" data-bs-target="#manualTimeEntryModal">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Add Time Entry</span>
+                  </button>
+                </td>
+                <td colspan="8" style="border-left: none;"></td>
+              </tr>
 
-          {% else %}
-            <!-- Proper Empty State -->
-            <div class="text-center py-5">
-              <div class="hrms-empty-icon mx-auto mb-3 d-inline-flex align-items-center justify-content-center rounded-circle"
-                   style="width: 56px; height: 56px; background-color: rgba(37, 99, 235, 0.08); color: #2563eb;">
-                <svg class="lucide lucide-calendar-x" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><line x1="10" x2="14" y1="14" y2="18"/><line x1="14" x2="10" y1="14" y2="18"/></svg>
-              </div>
-              <h3 class="h6 fw-semibold text-body">No Timesheet Records Found</h3>
-              <p class="text-secondary small mb-3" style="max-width: 24rem; margin: 0 auto;">
-                {% if selected_employee %}
-                  There are no timesheet, clock-in, or break events recorded for <strong class="text-body">{{ selected_employee.full_name }}</strong> on <strong class="text-body">{{ selected_date|date:"F j, Y" }}</strong>.
-                {% else %}
-                  Please select an employee to view their daily timesheet timeline.
-                {% endif %}
-              </p>
-              <div class="d-inline-flex align-items-center gap-2">
-                <a href="?date={{ today_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
-                   class="btn btn-sm btn-outline-primary">
-                  View Today
-                </a>
-              </div>
-            </div>
-          {% endif %}
+              <!-- Totals row: Total hours/days (from User HTML & Image 1) -->
+              <tr class="totals-row">
+                <td class="total-label">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <span>Total hours/days</span>
+                    <span class="badge bg-secondary-subtle text-secondary small fw-normal">Standard 9h/day</span>
+                  </div>
+                </td>
+                {% for day in week_days %}
+                  <td class="day-col ng-star-inserted">
+                    <div class="time-total col-total-display" id="dayTotal_{{ day.day_index }}">
+                      {{ day.total_hours }}
+                    </div>
+                    <!-- 9-Hour Allocation Target Indicator -->
+                    <div class="mt-1">
+                      <span class="day-9h-pill {% if day.is_target_met %}day-9h-met{% elif day.total_minutes > 0 %}day-9h-sub{% else %}day-9h-sub text-muted{% endif %}"
+                            title="Click to view 9-hour task allocation breakdown"
+                            onclick="openDayAllocationModal({{ day.day_index }})">
+                        {% if day.is_target_met %}
+                          9h Met <i class="bi bi-check"></i>
+                        {% elif day.total_minutes > 0 %}
+                          {{ day.total_hours }} / 9h
+                        {% else %}
+                          0h / 9h
+                        {% endif %}
+                      </span>
+                    </div>
+                  </td>
+                {% endfor %}
+                <td class="total-col">
+                  <div class="time-total" style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px;">
+                    <span id="grandTotalDisplay">{{ grand_total_display }}</span>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Certify Bar (from User HTML) -->
+        <div class="timesheet-content-container">
+          <div class="certify-bar">
+            <span class="bi bi-check-circle-fill certify-icon"></span>
+            <p class="mb-0 certifly-text">
+              I certify that all hours entered are accurate, reflect actual work performed, and comply with organizational policies.
+            </p>
+          </div>
+        </div>
+
+        <!-- Timesheet Action Buttons (Image 3: Save as Draft, Submit Timesheet) -->
+        <div class="timesheet-action-footer">
+          <button type="button" class="btn-ts-draft" onclick="submitTimesheetAction('draft')">
+            <i class="bi bi-save me-1"></i> Save as Draft
+          </button>
+          <button type="button" class="btn-ts-submit" onclick="submitTimesheetAction('submit')">
+            <i class="bi bi-send-check me-1"></i> Submit Timesheet
+          </button>
         </div>
 
       </div>
+
     </div>
 
   </div>
 
 </div>
+
+<!-- Modal: Manual Time Entry (Image 4) -->
+<div class="modal fade" id="manualTimeEntryModal" tabindex="-1" aria-labelledby="manualTimeEntryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header text-white" style="background-color: #006098;">
+        <h5 class="modal-title fs-6 fw-semibold" id="manualTimeEntryModalLabel">Manual Time Entry</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="addTimeEntryForm" onsubmit="onAddEntryFormSubmit(event)">
+        <div class="modal-body p-4">
+          <input type="hidden" name="timesheet_id" value="{{ weekly_timesheet.pk }}">
+
+          <div class="row g-3">
+            <!-- Project Selection -->
+            <div class="col-12 col-sm-6">
+              <label class="form-label small fw-semibold">Project <span class="text-danger">*</span></label>
+              <select name="project_name" class="form-select form-select-sm" required id="modalProjectSelect" onchange="onModalProjectChange(this)">
+                {% for proj in projects %}
+                  <option value="{{ proj.name }}">{{ proj.name }}</option>
+                {% empty %}
+                  <option value="Cardy Product Demo">Cardy Product Demo</option>
+                {% endfor %}
+                <option value="__NEW__">+ Add New Project...</option>
+              </select>
+              <input type="text" name="custom_project_name" id="modalCustomProjectInput" class="form-control form-control-sm mt-2 d-none" placeholder="Enter custom project name">
+            </div>
+
+            <!-- Milestone Name -->
+            <div class="col-12 col-sm-6">
+              <label class="form-label small fw-semibold">Milestone Name <span class="text-danger">*</span></label>
+              <input type="text" name="milestone_name" class="form-control form-control-sm" placeholder="e.g. LSSI, North Dakota CCWIS" value="North Dakota CCWIS" required>
+            </div>
+
+            <!-- Entry Type Segmented Buttons -->
+            <div class="col-12 col-sm-6">
+              <label class="form-label small fw-semibold">Entry Type <span class="text-danger">*</span></label>
+              <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="entry_type" id="entryTypeTask" value="task" checked>
+                <label class="btn btn-sm btn-outline-primary" for="entryTypeTask">Task</label>
+
+                <input type="radio" class="btn-check" name="entry_type" id="entryTypeMeeting" value="meeting">
+                <label class="btn btn-sm btn-outline-primary" for="entryTypeMeeting">Meeting</label>
+              </div>
+            </div>
+
+            <!-- Task Name -->
+            <div class="col-12 col-sm-6">
+              <label class="form-label small fw-semibold">Task <span class="text-danger">*</span></label>
+              <input type="text" name="task_name" class="form-control form-control-sm" placeholder="Enter task name or feature" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer bg-body-tertiary px-4 py-2 border-top">
+          <button type="button" class="btn btn-sm btn-outline-secondary px-3" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-sm text-white px-4" style="background-color: #006098;">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: 9-Hour Daily Task Breakdown Modal -->
+<div class="modal fade" id="dayAllocationModal" tabindex="-1" aria-labelledby="dayAllocationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header text-white" style="background-color: #006098;">
+        <h5 class="modal-title fs-6 fw-semibold" id="dayAllocationModalLabel">Daily 9-Hour Work Allocation</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4" id="dayAllocationModalBody">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
+      <div class="modal-footer bg-body-tertiary px-4 py-2 border-top">
+        <button type="button" class="btn btn-sm btn-outline-secondary px-3" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Days data from Django context
+  const weekDaysData = {{ week_days|safe }};
+  const timesheetId = {{ weekly_timesheet.pk|default:0 }};
+
+  // Convert "HH:MM" string to total minutes
+  function parseTimeToMinutes(str) {
+    if (!str) return 0;
+    str = String(str).trim();
+    if (str.includes(":")) {
+      const parts = str.split(":");
+      const h = parseInt(parts[0], 10) || 0;
+      const m = parseInt(parts[1], 10) || 0;
+      return (h * 60) + m;
+    }
+    const val = parseFloat(str);
+    return isNaN(val) ? 0 : Math.round(val * 60);
+  }
+
+  // Convert minutes to "HH:MM"
+  function formatMinutesToTime(mins) {
+    if (mins <= 0) return "0:00";
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return `${h}:${m < 10 ? '0' : ''}${m}`;
+  }
+
+  // Dynamic recalculation when any hours input changes
+  function onHoursInputChange(inputEl) {
+    const rowId = inputEl.getAttribute("data-row-id");
+    const dayIndex = parseInt(inputEl.getAttribute("data-day-index"), 10);
+
+    // 1. Recalculate row total
+    const rowInputs = document.querySelectorAll(`input[data-row-id="${rowId}"]`);
+    let rowMins = 0;
+    rowInputs.forEach(inp => {
+      rowMins += parseTimeToMinutes(inp.value);
+    });
+    const rowTotalEl = document.getElementById(`rowTotal_${rowId}`);
+    if (rowTotalEl) {
+      rowTotalEl.textContent = formatMinutesToTime(rowMins);
+    }
+
+    // 2. Recalculate column (day) totals across all rows
+    let colMins = 0;
+    const dayInputs = document.querySelectorAll(`input[data-day-index="${dayIndex}"]`);
+    dayInputs.forEach(inp => {
+      colMins += parseTimeToMinutes(inp.value);
+    });
+    const dayTotalEl = document.getElementById(`dayTotal_${dayIndex}`);
+    if (dayTotalEl) {
+      dayTotalEl.textContent = formatMinutesToTime(colMins);
+    }
+
+    // Update 9-hour target badge
+    const dayTargetPill = dayTotalEl?.parentElement?.querySelector('.day-9h-pill');
+    if (dayTargetPill) {
+      if (colMins >= 540) {
+        dayTargetPill.className = "day-9h-pill day-9h-met";
+        dayTargetPill.innerHTML = `9h Met <i class="bi bi-check"></i>`;
+      } else if (colMins > 0) {
+        dayTargetPill.className = "day-9h-pill day-9h-sub";
+        dayTargetPill.textContent = `${formatMinutesToTime(colMins)} / 9h`;
+      } else {
+        dayTargetPill.className = "day-9h-pill day-9h-sub text-muted";
+        dayTargetPill.textContent = `0h / 9h`;
+      }
+    }
+
+    // 3. Recalculate Grand Total & Top Summary Cards
+    let grandMins = 0;
+    document.querySelectorAll(".time-entry-input").forEach(inp => {
+      grandMins += parseTimeToMinutes(inp.value);
+    });
+    const grandFormatted = formatMinutesToTime(grandMins);
+    const grandTotalEl = document.getElementById("grandTotalDisplay");
+    if (grandTotalEl) grandTotalEl.textContent = grandFormatted;
+
+    const cardWorkingHours = document.getElementById("cardWorkingHours");
+    if (cardWorkingHours) cardWorkingHours.textContent = grandFormatted;
+    const cardNonBillable = document.getElementById("cardNonBillable");
+    if (cardNonBillable) cardNonBillable.textContent = grandFormatted;
+  }
+
+  // Show notes popover for cell
+  let activeHideTimeout = null;
+  function showCellNotesPopover(inputEl) {
+    clearTimeout(activeHideTimeout);
+    document.querySelectorAll(".cell-notes-popover.active").forEach(p => p.classList.remove("active"));
+    const cellId = inputEl.getAttribute("data-cell-id");
+    const popover = document.getElementById(`popover_cell_${cellId}`);
+    if (popover) {
+      popover.classList.add("active");
+    }
+  }
+
+  function scheduleHideCellNotesPopover(inputEl) {
+    activeHideTimeout = setTimeout(() => {
+      const cellId = inputEl.getAttribute("data-cell-id");
+      const popover = document.getElementById(`popover_cell_${cellId}`);
+      if (popover && !popover.contains(document.activeElement)) {
+        popover.classList.remove("active");
+      }
+    }, 250);
+  }
+
+  function closeCellNotesPopover(cellId) {
+    const popover = document.getElementById(`popover_cell_${cellId}`);
+    if (popover) popover.classList.remove("active");
+  }
+
+  function onCellNotesChange(cellId) {
+    const textarea = document.getElementById(`notes_cell_${cellId}`);
+    const input = document.getElementById(`input_cell_${cellId}`);
+    if (textarea && input) {
+      if (textarea.value.trim().length > 0) {
+        input.classList.add("has-notes");
+      } else {
+        input.classList.remove("has-notes");
+      }
+    }
+  }
+
+  // Project select change handler in Modal
+  function onModalProjectChange(selectEl) {
+    const customInput = document.getElementById("modalCustomProjectInput");
+    if (selectEl.value === "__NEW__") {
+      customInput.classList.remove("d-none");
+      customInput.required = true;
+      customInput.focus();
+    } else {
+      customInput.classList.add("d-none");
+      customInput.required = false;
+    }
+  }
+
+  // Handle adding task entry form submit via AJAX
+  function onAddEntryFormSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    if (formData.get("project_name") === "__NEW__") {
+      formData.set("project_name", formData.get("custom_project_name"));
+    }
+
+    fetch("{% url 'timesheets:add_task_entry' %}", {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        // Reload page to display new row cleanly with full state
+        window.location.reload();
+      } else {
+        alert("Failed to add task: " + (data.message || "Unknown error"));
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      window.location.reload();
+    });
+  }
+
+  // Delete task row
+  function deleteTaskRow(rowId) {
+    if (!confirm("Are you sure you want to remove this project task row?")) return;
+    fetch(`/timesheets/delete-row/${rowId}/`, {
+      method: "GET",
+      headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        const tr = document.getElementById(`taskRow_${rowId}`);
+        if (tr) tr.remove();
+        // Recalculate totals
+        onHoursInputChange(document.querySelector(".time-entry-input") || { getAttribute: () => 0 });
+      } else {
+        window.location.reload();
+      }
+    })
+    .catch(err => window.location.reload());
+  }
+
+  // Save / Submit Timesheet
+  function submitTimesheetAction(action) {
+    const entries = [];
+    document.querySelectorAll(".time-entry-input").forEach(inp => {
+      const cellId = inp.getAttribute("data-cell-id");
+      const hours = inp.value.trim() || "0:00";
+      const notesEl = document.getElementById(`notes_cell_${cellId}`);
+      const notes = notesEl ? notesEl.value.trim() : "";
+      entries.push({ cell_id: cellId, hours: hours, notes: notes });
+    });
+
+    const payload = {
+      timesheet_id: timesheetId,
+      action: action,
+      certified: true,
+      entries: entries,
+    };
+
+    fetch("{% url 'timesheets:save_timesheet' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        alert(action === "submit" ? "Timesheet submitted successfully for review!" : "Timesheet saved as draft!");
+        window.location.reload();
+      } else {
+        alert("Save failed: " + data.message);
+      }
+    })
+    .catch(err => {
+      alert("Error saving timesheet. Please try again.");
+    });
+  }
+
+  // 9-Hour Daily Work Allocation Breakdown Modal
+  function openDayAllocationModal(dayIndex) {
+    const day = weekDaysData[dayIndex];
+    if (!day) return;
+
+    const modalBody = document.getElementById("dayAllocationModalBody");
+    const modalTitle = document.getElementById("dayAllocationModalLabel");
+    if (!modalBody) return;
+
+    modalTitle.textContent = `${day.day_name} (${day.date_formatted}) — 9-Hour Daily Task Allocation`;
+
+    let html = `
+      <div class="p-3 mb-3 rounded-3 border bg-body-tertiary d-flex align-items-center justify-content-between">
+        <div>
+          <span class="text-secondary small d-block">Daily Standard Target</span>
+          <span class="fw-bold fs-6">9h 00m</span>
+        </div>
+        <div>
+          <span class="text-secondary small d-block">Total Hours Logged</span>
+          <span class="fw-bold fs-6 ${day.is_target_met ? 'text-success' : 'text-primary'}">${day.total_hours}</span>
+        </div>
+        <div>
+          <span class="text-secondary small d-block">Target Status</span>
+          <span class="badge ${day.is_target_met ? 'bg-success' : 'bg-warning'} px-2 py-1">${day.is_target_met ? 'Completed (9h+)' : 'In Progress'}</span>
+        </div>
+      </div>
+      <h6 class="small fw-bold text-uppercase text-secondary mb-2" style="font-size: 11px;">Where & What Tasks Worked On:</h6>
+    `;
+
+    if (day.tasks_breakdown && day.tasks_breakdown.length > 0) {
+      html += `<div class="d-flex flex-column gap-2">`;
+      day.tasks_breakdown.forEach((t, idx) => {
+        html += `
+          <div class="p-2.5 rounded-2 border bg-body d-flex flex-column gap-1">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <span class="fw-bold text-body small">${t.project_name}</span>
+                <span class="text-secondary small"> · ${t.milestone_name || 'General'}</span>
+              </div>
+              <span class="badge bg-primary-subtle text-primary fw-bold font-monospace">${t.hours_str} hrs</span>
+            </div>
+            <div class="text-primary small fw-medium">${t.task_name}</div>
+            ${t.notes ? `<div class="text-secondary small mt-1 bg-body-tertiary p-2 rounded-1 font-monospace" style="font-size: 11px;">${t.notes.replace(/\n/g, '<br>')}</div>` : '<div class="text-secondary small fst-italic">No additional notes provided</div>'}
+          </div>
+        `;
+      });
+      html += `</div>`;
+    } else {
+      html += `<div class="text-center py-4 text-secondary small">No tasks logged for this day yet.</div>`;
+    }
+
+    modalBody.innerHTML = html;
+    const bsModal = new bootstrap.Modal(document.getElementById('dayAllocationModal'));
+    bsModal.show();
+  }
+</script>
+
 {% endblock %}
