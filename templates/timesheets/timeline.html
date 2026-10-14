@@ -1,0 +1,387 @@
+{% extends "base.html" %}
+
+{% block title %}Timesheet Timeline · HRMS{% endblock %}
+{% block page_title %}Timesheet Timeline{% endblock %}
+{% block page_subtitle %}
+  <p class="hrms-page-subtitle">Daily clock-in, breaks, working hours, and activity timeline for employees.</p>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column gap-3">
+
+  <!-- Filter & Quick Date Navigation Toolbar -->
+  <div class="hrms-card p-3">
+    <form method="get" action="{% url 'timesheets:timeline' %}" class="row g-2 align-items-center">
+      
+      <!-- Quick Date Buttons -->
+      <div class="col-12 col-md-auto d-flex align-items-center gap-1">
+        <a href="?date={{ prev_date_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
+           class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1"
+           title="Go to previous day">
+          <svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          <span>Previous Day</span>
+        </a>
+        <a href="?date={{ today_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
+           class="btn btn-sm {% if selected_date_str == today_str %}btn-primary{% else %}btn-outline-primary{% endif %}"
+           title="Go to today">
+          Today
+        </a>
+        <a href="?date={{ next_date_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
+           class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1"
+           title="Go to next day">
+          <span>Next Day</span>
+          <svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
+
+      <!-- Date Input -->
+      <div class="col-12 col-sm-6 col-md-auto">
+        <div class="input-group input-group-sm">
+          <span class="input-group-text bg-body-tertiary">
+            <svg class="lucide lucide-calendar" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+          </span>
+          <input type="date" name="date" value="{{ selected_date_str }}" class="form-control form-control-sm" aria-label="Select Date">
+        </div>
+      </div>
+
+      <!-- Department Selector -->
+      <div class="col-12 col-sm-6 col-md-auto">
+        <select name="department" class="form-select form-select-sm" aria-label="Filter by department">
+          <option value="">All Departments</option>
+          {% for dept in departments %}
+            <option value="{{ dept.pk }}" {% if selected_dept and selected_dept.pk == dept.pk %}selected{% endif %}>
+              {{ dept.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Employee Selector -->
+      <div class="col-12 col-sm-6 col-md-auto">
+        <select name="employee" class="form-select form-select-sm" aria-label="Select employee">
+          {% for emp in employees %}
+            <option value="{{ emp.pk }}" {% if selected_employee and selected_employee.pk == emp.pk %}selected{% endif %}>
+              {{ emp.employee_id }} — {{ emp.full_name }}
+            </option>
+          {% empty %}
+            <option value="">No employees</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="col-12 col-md-auto ms-auto d-flex align-items-center gap-2">
+        <button type="submit" class="btn btn-sm btn-primary d-inline-flex align-items-center gap-1">
+          <svg class="lucide lucide-filter" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span>Apply</span>
+        </button>
+        <a href="{% url 'timesheets:timeline' %}" class="btn btn-sm btn-outline-secondary" title="Reset all filters">
+          Reset
+        </a>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Weekly Navigation Strip -->
+  <div class="hrms-card px-3 py-2">
+    <div class="d-flex align-items-center justify-content-between gap-2 overflow-x-auto py-1">
+      <a href="?date={{ prev_week_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
+         class="btn btn-sm btn-outline-secondary flex-shrink-0 d-inline-flex align-items-center gap-1"
+         title="Previous Week">
+        <svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        <span class="d-none d-sm-inline">Prev Week</span>
+      </a>
+
+      <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center">
+        {% for day in week_days %}
+          <a href="?date={{ day.date_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
+             class="hrms-week-pill text-decoration-none {% if day.is_selected %}active{% endif %} {% if day.is_today %}is-today{% endif %} text-center px-3 py-2 rounded-3"
+             title="{{ day.date|date:'l, F j' }}">
+            <span class="d-block small fw-semibold text-uppercase hrms-week-day">{{ day.day_name }}</span>
+            <span class="d-block fs-6 fw-bold hrms-week-num">{{ day.day_num }}</span>
+            {% if day.is_today %}
+              <span class="badge hrms-today-badge">Today</span>
+            {% endif %}
+          </a>
+        {% endfor %}
+      </div>
+
+      <a href="?date={{ next_week_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
+         class="btn btn-sm btn-outline-secondary flex-shrink-0 d-inline-flex align-items-center gap-1"
+         title="Next Week">
+        <span class="d-none d-sm-inline">Next Week</span>
+        <svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Summary Cards Row (4 cards) -->
+  <div class="row g-3">
+    
+    <!-- Total Working Hours -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="hrms-card hrms-stat d-flex align-items-start gap-3 h-100">
+        <span class="hrms-stat-icon hrms-icon-blue flex-shrink-0">
+          <svg class="lucide lucide-clock" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </span>
+        <div class="flex-grow-1 min-w-0">
+          <p class="hrms-stat-label">Total Working Hours</p>
+          <p class="hrms-stat-value text-truncate">{{ total_working_hours }}</p>
+          <p class="hrms-stat-note text-truncate">
+            {% if has_record %}
+              <span class="hrms-stat-dot hrms-dot-green"></span>Gross: {{ gross_working_hours }}
+            {% else %}
+              <span class="hrms-stat-dot hrms-dot-amber"></span>No hours recorded
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Break Duration -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="hrms-card hrms-stat d-flex align-items-start gap-3 h-100">
+        <span class="hrms-stat-icon hrms-icon-amber flex-shrink-0">
+          <svg class="lucide lucide-coffee" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h12Zm0 0h2a3 3 0 0 1 3 3v1a3 3 0 0 1-3 3h-2"/><path d="M6 2v2"/></svg>
+        </span>
+        <div class="flex-grow-1 min-w-0">
+          <p class="hrms-stat-label">Break Duration</p>
+          <p class="hrms-stat-value text-truncate">{{ break_duration }}</p>
+          <p class="hrms-stat-note text-truncate">
+            {% if break_minutes > 0 %}
+              <span class="hrms-stat-dot hrms-dot-amber"></span>Subtracted from gross
+            {% else %}
+              <span class="hrms-stat-dot hrms-dot-green"></span>No breaks taken
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Late Arrivals Status -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="hrms-card hrms-stat d-flex align-items-start gap-3 h-100">
+        <span class="hrms-stat-icon hrms-icon-purple flex-shrink-0">
+          <svg class="lucide lucide-timer" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
+        </span>
+        <div class="flex-grow-1 min-w-0">
+          <p class="hrms-stat-label">Late Arrivals</p>
+          <p class="hrms-stat-value text-truncate">
+            {% if has_record %}
+              {% if timesheet_record.is_late %}
+                <span class="text-danger fs-5 fw-bold">Late Arrival</span>
+              {% else %}
+                <span class="text-success fs-5 fw-bold">On Time</span>
+              {% endif %}
+            {% else %}
+              <span class="text-secondary fs-5 fw-bold">—</span>
+            {% endif %}
+          </p>
+          <p class="hrms-stat-note text-truncate">
+            <span class="hrms-stat-dot {% if timesheet_record.is_late %}hrms-dot-amber{% else %}hrms-dot-green{% endif %}"></span>Shift start: 09:00 AM
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendance Status -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="hrms-card hrms-stat d-flex align-items-start gap-3 h-100">
+        <span class="hrms-stat-icon hrms-icon-green flex-shrink-0">
+          <svg class="lucide lucide-check-circle-2" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        </span>
+        <div class="flex-grow-1 min-w-0">
+          <p class="hrms-stat-label">Attendance Status</p>
+          <p class="hrms-stat-value text-truncate">
+            {% if has_record %}
+              {% if timesheet_record.status == 'present' %}
+                <span class="text-success fs-5 fw-bold">Present</span>
+              {% elif timesheet_record.status == 'late' %}
+                <span class="text-warning fs-5 fw-bold">Late</span>
+              {% elif timesheet_record.status == 'half_day' %}
+                <span class="text-info fs-5 fw-bold">Half Day</span>
+              {% elif timesheet_record.status == 'absent' %}
+                <span class="text-danger fs-5 fw-bold">Absent</span>
+              {% else %}
+                <span class="text-secondary fs-5 fw-bold">{{ attendance_status }}</span>
+              {% endif %}
+            {% else %}
+              <span class="text-secondary fs-5 fw-bold">No Record</span>
+            {% endif %}
+          </p>
+          <p class="hrms-stat-note text-truncate">
+            <span class="hrms-stat-dot {% if has_record %}hrms-dot-green{% else %}hrms-dot-amber{% endif %}"></span>{{ selected_date|date:"M j, Y" }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Main Content: Employee List (Left) + Daily Timeline (Right) -->
+  <div class="row g-3">
+    
+    <!-- Employee Directory Column -->
+    <div class="col-12 col-lg-4 col-xl-3">
+      <div class="hrms-card h-100 d-flex flex-column">
+        <div class="px-3 py-3 border-bottom d-flex align-items-center justify-content-between">
+          <h2 class="h6 mb-0">Employees</h2>
+          <span class="badge text-bg-primary-subtle text-primary border border-primary-subtle">{{ employee_list_data|length }}</span>
+        </div>
+        <div class="p-2 flex-grow-1 overflow-y-auto" style="max-height: 580px;">
+          <div class="d-flex flex-column gap-1">
+            {% for item in employee_list_data %}
+              <a href="?date={{ selected_date_str }}&employee={{ item.employee.pk }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}"
+                 class="hrms-emp-list-item d-flex align-items-center gap-2 p-2 rounded-3 text-decoration-none {% if item.is_selected %}active{% endif %}">
+                <span class="hrms-avatar-sm flex-shrink-0">
+                  {{ item.employee.first_name|slice:":1" }}{{ item.employee.last_name|slice:":1" }}
+                </span>
+                <div class="min-w-0 flex-grow-1">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <span class="fw-semibold text-truncate small d-block">{{ item.employee.full_name }}</span>
+                    {% if item.record %}
+                      <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.65rem;">
+                        {{ item.net_hours }}
+                      </span>
+                    {% else %}
+                      <span class="badge bg-secondary-subtle text-secondary" style="font-size: 0.65rem;">
+                        No Log
+                      </span>
+                    {% endif %}
+                  </div>
+                  <div class="d-flex align-items-center justify-content-between text-secondary" style="font-size: 0.72rem;">
+                    <span class="text-truncate">{{ item.employee.employee_id }}</span>
+                    <span class="text-truncate">{{ item.employee.department.name }}</span>
+                  </div>
+                </div>
+              </a>
+            {% empty %}
+              <div class="p-3 text-center text-secondary small">
+                No active employees found.
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline Column -->
+    <div class="col-12 col-lg-8 col-xl-9">
+      <div class="hrms-card h-100">
+        
+        <!-- Timeline Header -->
+        <div class="px-4 py-3 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
+          {% if selected_employee %}
+            <div class="d-flex align-items-center gap-3">
+              <span class="hrms-header-avatar flex-shrink-0" style="width: 38px; height: 38px; font-size: 0.95rem;">
+                {{ selected_employee.first_name|slice:":1" }}{{ selected_employee.last_name|slice:":1" }}
+              </span>
+              <div>
+                <h2 class="h6 mb-0 d-flex align-items-center gap-2">
+                  <span>{{ selected_employee.full_name }}</span>
+                  <span class="badge text-bg-light border text-secondary fw-normal">{{ selected_employee.employee_id }}</span>
+                </h2>
+                <div class="text-secondary small">
+                  {{ selected_employee.job_title }} · <span class="fw-medium text-body">{{ selected_employee.department.name }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 fs-6 fw-semibold">
+                {{ selected_date|date:"l, F j, Y" }}
+              </span>
+            </div>
+          {% else %}
+            <h2 class="h6 mb-0">Daily Timeline</h2>
+          {% endif %}
+        </div>
+
+        <!-- Timeline Body -->
+        <div class="p-4">
+          {% if has_record %}
+            <!-- Vertical Timeline Structure -->
+            <div class="hrms-timeline">
+              {% for event in timeline_events %}
+                <div class="hrms-timeline-item {% if event.is_completed %}is-completed{% else %}is-pending{% endif %}">
+                  
+                  <!-- Timeline Node / Icon -->
+                  <div class="hrms-timeline-node {{ event.badge_class }}">
+                    {% if event.icon == "log-in" %}
+                      <svg class="lucide lucide-log-in" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+                    {% elif event.icon == "play" %}
+                      <svg class="lucide lucide-play" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    {% elif event.icon == "coffee" %}
+                      <svg class="lucide lucide-coffee" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h12Zm0 0h2a3 3 0 0 1 3 3v1a3 3 0 0 1-3 3h-2"/><path d="M6 2v2"/></svg>
+                    {% elif event.icon == "check-circle-2" %}
+                      <svg class="lucide lucide-check-circle-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    {% elif event.icon == "briefcase" %}
+                      <svg class="lucide lucide-briefcase" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    {% elif event.icon == "log-out" %}
+                      <svg class="lucide lucide-log-out" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                    {% else %}
+                      <svg class="lucide lucide-circle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>
+                    {% endif %}
+                  </div>
+
+                  <!-- Timeline Content Card -->
+                  <div class="hrms-timeline-content p-3 rounded-3 border">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                      <span class="fw-semibold text-body fs-6">{{ event.title }}</span>
+                      {% if event.time %}
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-6 font-monospace">
+                          {{ event.time }}
+                        </span>
+                      {% else %}
+                        <span class="badge bg-secondary-subtle text-secondary px-2 py-1 small">
+                          Not recorded
+                        </span>
+                      {% endif %}
+                    </div>
+                    <p class="text-secondary small mb-0">{{ event.description }}</p>
+                  </div>
+
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Notes Section if present -->
+            {% if timesheet_record.notes %}
+              <div class="mt-4 p-3 rounded-3 border bg-body-tertiary">
+                <h6 class="small fw-semibold mb-1">Supervisor / Employee Notes</h6>
+                <p class="small text-secondary mb-0">{{ timesheet_record.notes|linebreaksbr }}</p>
+              </div>
+            {% endif %}
+
+          {% else %}
+            <!-- Proper Empty State -->
+            <div class="text-center py-5">
+              <div class="hrms-empty-icon mx-auto mb-3 d-inline-flex align-items-center justify-content-center rounded-circle"
+                   style="width: 56px; height: 56px; background-color: rgba(37, 99, 235, 0.08); color: #2563eb;">
+                <svg class="lucide lucide-calendar-x" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><line x1="10" x2="14" y1="14" y2="18"/><line x1="14" x2="10" y1="14" y2="18"/></svg>
+              </div>
+              <h3 class="h6 fw-semibold text-body">No Timesheet Records Found</h3>
+              <p class="text-secondary small mb-3" style="max-width: 24rem; margin: 0 auto;">
+                {% if selected_employee %}
+                  There are no timesheet, clock-in, or break events recorded for <strong class="text-body">{{ selected_employee.full_name }}</strong> on <strong class="text-body">{{ selected_date|date:"F j, Y" }}</strong>.
+                {% else %}
+                  Please select an employee to view their daily timesheet timeline.
+                {% endif %}
+              </p>
+              <div class="d-inline-flex align-items-center gap-2">
+                <a href="?date={{ today_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
+                   class="btn btn-sm btn-outline-primary">
+                  View Today
+                </a>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

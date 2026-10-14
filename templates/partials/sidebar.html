@@ -53,6 +53,22 @@
         <span class="hrms-nav-text">Attendance</span>
         <span class="hrms-nav-soon">soon</span>
       </a>
+      <a class="hrms-nav-link {% if app_name == 'timesheets' %}active{% endif %}"
+         href="{% url 'timesheets:timeline' %}"
+         data-bs-toggle="tooltip"
+         data-bs-placement="right"
+         data-bs-custom-class="hrms-sidebar-tooltip"
+         title="Timesheet">
+        <svg class="lucide lucide-calendar-clock bi bi-calendar-clock" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"/>
+          <path d="M16 2v4"/>
+          <path d="M8 2v4"/>
+          <path d="M3 10h5"/>
+          <path d="M17.5 17.5 16 16.3V14"/>
+          <circle cx="16" cy="16" r="6"/>
+        </svg>
+        <span class="hrms-nav-text">Timesheet</span>
+      </a>
       <a class="hrms-nav-link {% if app_name == 'leave' %}active{% endif %}"
          href="{% url 'leave:home' %}"
          data-bs-toggle="tooltip"

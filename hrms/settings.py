@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "leave",
     "payroll",
     "dashboard",
+    "timesheets",
 ]
 
 MIDDLEWARE = [

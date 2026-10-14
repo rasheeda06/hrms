@@ -1,3 +1,3 @@
-from django.db import models
+"""Attendance models. Reuses Timesheet model from timesheets app."""
 
-# Create your models here.
+from timesheets.models import Timesheet as Attendance  # noqa: F401

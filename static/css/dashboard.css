@@ -2169,3 +2169,173 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
   transform: scale(1.1);
 }
 
+/* -------------------------------------------------------------------------
+   Timesheet Timeline Dashboard Styles
+------------------------------------------------------------------------- */
+
+/* Week navigation strip */
+.hrms-week-pill {
+  color: var(--hrms-text-body, #1f2937);
+  background-color: transparent;
+  border: 1px solid var(--hrms-border, #e5e7eb);
+  min-width: 62px;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.hrms-week-pill:hover {
+  background-color: rgba(37, 99, 235, 0.06);
+  border-color: #93c5fd;
+  color: #2563eb;
+  transform: translateY(-1px);
+}
+.hrms-week-pill.active {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28) !important;
+}
+.hrms-week-pill.active .hrms-week-day,
+.hrms-week-pill.active .hrms-week-num {
+  color: #ffffff !important;
+}
+.hrms-today-badge {
+  font-size: 0.6rem !important;
+  padding: 1px 4px !important;
+  background-color: rgba(37, 99, 235, 0.15) !important;
+  color: #2563eb !important;
+  border-radius: 4px !important;
+}
+.hrms-week-pill.active .hrms-today-badge {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+}
+
+/* Employee list in sidebar */
+.hrms-emp-list-item {
+  color: inherit;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+.hrms-emp-list-item:hover {
+  background-color: rgba(241, 245, 249, 0.8);
+}
+.hrms-emp-list-item.active {
+  background-color: rgba(37, 99, 235, 0.08);
+  border-color: rgba(37, 99, 235, 0.25);
+}
+
+/* Vertical Timeline */
+.hrms-timeline {
+  position: relative;
+  padding-left: 2.25rem;
+}
+.hrms-timeline::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 17px;
+  width: 2px;
+  background-color: #e2e8f0;
+}
+.hrms-timeline-item {
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+.hrms-timeline-item:last-child {
+  padding-bottom: 0;
+}
+.hrms-timeline-node {
+  position: absolute;
+  left: -2.25rem;
+  top: 4px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  z-index: 2;
+  transition: all 0.18s ease;
+}
+.hrms-timeline-content {
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.15s ease;
+}
+.hrms-timeline-item:hover .hrms-timeline-content {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: #cbd5e1 !important;
+}
+
+/* Timeline color classes */
+.hrms-timeline-blue {
+  background-color: rgba(37, 99, 235, 0.1) !important;
+  color: #2563eb !important;
+  border-color: rgba(37, 99, 235, 0.3) !important;
+}
+.hrms-timeline-indigo {
+  background-color: rgba(99, 102, 241, 0.1) !important;
+  color: #6366f1 !important;
+  border-color: rgba(99, 102, 241, 0.3) !important;
+}
+.hrms-timeline-amber {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+  color: #d97706 !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+.hrms-timeline-teal {
+  background-color: rgba(13, 148, 136, 0.1) !important;
+  color: #0d9488 !important;
+  border-color: rgba(13, 148, 136, 0.3) !important;
+}
+.hrms-timeline-purple {
+  background-color: rgba(147, 51, 234, 0.1) !important;
+  color: #9333ea !important;
+  border-color: rgba(147, 51, 234, 0.3) !important;
+}
+
+/* Dark mode overrides for Timeline */
+html[data-bs-theme="dark"] .hrms-week-pill {
+  color: #e5e7eb;
+  border-color: #374151;
+  background-color: #111827;
+}
+html[data-bs-theme="dark"] .hrms-week-pill:hover {
+  background-color: rgba(96, 165, 250, 0.15);
+  border-color: #60a5fa;
+  color: #93c5fd;
+}
+html[data-bs-theme="dark"] .hrms-week-pill.active {
+  background-color: #2563eb !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+html[data-bs-theme="dark"] .hrms-emp-list-item:hover {
+  background-color: rgba(55, 65, 81, 0.5);
+}
+html[data-bs-theme="dark"] .hrms-emp-list-item.active {
+  background-color: rgba(37, 99, 235, 0.18);
+  border-color: rgba(96, 165, 250, 0.4);
+}
+html[data-bs-theme="dark"] .hrms-timeline::before {
+  background-color: #374151;
+}
+html[data-bs-theme="dark"] .hrms-timeline-node {
+  background-color: #1f2937;
+  border-color: #4b5563;
+}
+html[data-bs-theme="dark"] .hrms-timeline-content {
+  background-color: #111827;
+  border-color: #374151 !important;
+}
+html[data-bs-theme="dark"] .hrms-timeline-item:hover .hrms-timeline-content {
+  border-color: #4b5563 !important;
+}
+
