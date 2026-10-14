@@ -46,7 +46,7 @@
 
       <!-- Department Selector with Auto-submit on change -->
       <div class="col-12 col-sm-6 col-md-auto">
-        <select name="department" class="form-select form-select-sm" aria-label="Filter by department" onchange="this.form.submit()">
+        <select name="department" class="form-select form-select-sm hrms-select-dept" style="min-width: 165px;" aria-label="Filter by department" onchange="this.form.submit()">
           <option value="">All Departments</option>
           {% for dept in departments %}
             <option value="{{ dept.pk }}" {% if selected_dept and selected_dept.pk == dept.pk %}selected{% endif %}>
@@ -58,7 +58,7 @@
 
       <!-- Employee Selector with Auto-submit on change -->
       <div class="col-12 col-sm-6 col-md-auto">
-        <select name="employee" class="form-select form-select-sm" aria-label="Select employee" onchange="this.form.submit()">
+        <select name="employee" class="form-select form-select-sm hrms-select-emp" style="min-width: 220px;" aria-label="Select employee" onchange="this.form.submit()">
           {% for emp in employees %}
             <option value="{{ emp.pk }}" {% if selected_employee and selected_employee.pk == emp.pk %}selected{% endif %}>
               {{ emp.employee_id }} — {{ emp.full_name }}
