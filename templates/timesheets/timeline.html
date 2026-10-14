@@ -517,8 +517,41 @@
     border-color: rgba(59, 130, 246, 0.3) !important;
     color: #bfdbfe !important;
   }
-  html[data-bs-theme="dark"] .certify-icon {
-    color: #60a5fa !important;
+  .badge-entry-meeting {
+    background-color: #f3e8ff;
+    color: #7e22ce;
+    border: 1px solid #d8b4fe;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    line-height: 1.4;
+  }
+  .badge-entry-task {
+    background-color: var(--hrms-primary-light, #eff6ff);
+    color: var(--hrms-primary, #2563eb);
+    border: 1px solid rgba(37, 99, 235, 0.25);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    line-height: 1.4;
+  }
+  html[data-bs-theme="dark"] .badge-entry-meeting {
+    background-color: rgba(147, 51, 234, 0.2) !important;
+    color: #c084fc !important;
+    border-color: rgba(168, 85, 247, 0.3) !important;
+  }
+  html[data-bs-theme="dark"] .badge-entry-task {
+    background-color: rgba(37, 99, 235, 0.2) !important;
+    color: #93c5fd !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
   }
 </style>
 
@@ -827,8 +860,17 @@
                             {{ row.milestone_name }}
                           </div>
                         {% endif %}
-                        <div class="text-primary fw-medium text-truncate" style="font-size: 12px; margin-top: 2px;">
-                          {{ row.task_name }}
+                        <div class="d-flex align-items-center gap-1.5 mt-1">
+                          {% if row.entry_type == 'meeting' %}
+                            <span class="badge-entry-meeting" title="Meeting Entry">
+                              <i class="bi bi-camera-video"></i> Meeting
+                            </span>
+                          {% else %}
+                            <span class="badge-entry-task" title="Task Entry">
+                              <i class="bi bi-check2-square"></i> Task
+                            </span>
+                          {% endif %}
+                          <span class="text-primary fw-medium text-truncate" style="font-size: 12px;">{{ row.task_name }}</span>
                         </div>
                       </div>
                       <button type="button" class="task-row-delete-btn" onclick="deleteTaskRow({{ row.pk }})" title="Delete task row">
@@ -1021,56 +1063,136 @@
               {% endif %}
             </div>
 
-            <!-- Milestone Name -->
-            <div class="col-12 col-sm-6">
-              <label class="form-label small fw-semibold">Milestone / Module <span class="text-secondary fw-normal">(Optional)</span></label>
-              <input type="text" name="milestone_name" class="form-control form-control-sm" placeholder="e.g. Phase 1, UI, API Integration">
-            </div>
-
-            <!-- Entry Type Segmented Buttons -->
+            <!-- Entry Type Dropdown -->
             <div class="col-12 col-sm-6">
               <label class="form-label small fw-semibold">Entry Type <span class="text-danger">*</span></label>
-              <div class="btn-group w-100" role="group">
-                <input type="radio" class="btn-check" name="entry_type" id="entryTypeTask" value="task" checked>
-                <label class="btn btn-sm btn-outline-primary" for="entryTypeTask">Task</label>
-
-                <input type="radio" class="btn-check" name="entry_type" id="entryTypeMeeting" value="meeting">
-                <label class="btn btn-sm btn-outline-primary" for="entryTypeMeeting">Meeting</label>
-              </div>
-            </div>
-
-            <!-- Task Name -->
-            <div class="col-12 col-sm-6">
-              <label class="form-label small fw-semibold">Task Name <span class="text-danger">*</span></label>
-              <input type="text" name="task_name" class="form-control form-control-sm" placeholder="Enter task name or feature description" required>
-            </div>
-
-            <!-- Day of Week & Initial Hours -->
-            <div class="col-12 col-sm-6">
-              <label class="form-label small fw-semibold">Day of Week</label>
-              <select name="day_index" class="form-select form-select-sm">
-                {% for day in week_days %}
-                  <option value="{{ day.day_index }}" {% if day.is_selected %}selected{% endif %}>{{ day.day_name }} — {{ day.date_formatted }}</option>
-                {% endfor %}
+              <select name="entry_type" id="modalEntryTypeSelect" class="form-select form-select-sm" required onchange="onEntryTypeChange(this.value)">
+                <option value="" selected>-- Select Entry Type --</option>
+                <option value="task">Task</option>
+                <option value="meeting">Meeting</option>
               </select>
             </div>
-
-            <div class="col-12 col-sm-6">
-              <label class="form-label small fw-semibold">Initial Hours <span class="text-secondary fw-normal">(HH:MM)</span></label>
-              <input type="text" name="hours" class="form-control form-control-sm" placeholder="0:00" value="0:00">
-            </div>
-
-            <!-- Work Description / Notes -->
-            <div class="col-12">
-              <label class="form-label small fw-semibold">Work Description / Hourly Log <span class="text-secondary fw-normal">(Optional)</span></label>
-              <textarea name="notes" class="form-control form-control-sm" rows="2" placeholder="Describe the work done on this task..."></textarea>
-            </div>
-
           </div>
+
+          <!-- Empty State Helper: No fields visible until Task or Meeting is selected -->
+          <div id="noEntryTypeAlert" class="text-center py-4 my-3 border rounded-2 bg-light-subtle">
+            <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 38px; height: 38px; background-color: var(--hrms-primary-light, #eff6ff); color: var(--hrms-primary, #2563eb);">
+              <i class="bi bi-ui-checks fs-5"></i>
+            </div>
+            <div class="small fw-semibold text-body">Select an Entry Type to continue</div>
+            <div class="text-secondary small mt-1" style="font-size: 11.5px;">
+              Choose <strong>Task</strong> for development, bugs, or feature work, or <strong>Meeting</strong> for standups, syncs, and client discussions.
+            </div>
+          </div>
+
+          <!-- Task Dynamic Fields (Hidden by default until 'Task' selected) -->
+          <div id="taskFieldsContainer" class="d-none mt-3">
+            <div class="p-3 border rounded-2 bg-light-subtle">
+              <div class="d-flex align-items-center gap-1.5 mb-2 text-primary fw-semibold small">
+                <i class="bi bi-check2-square"></i> Task Details
+              </div>
+              <div class="row g-3">
+                <div class="col-12 col-sm-6">
+                  <label class="form-label small fw-semibold">Task Name <span class="text-danger">*</span></label>
+                  <input type="text" name="task_name" id="taskNameInput" class="form-control form-control-sm" placeholder="Enter task name (e.g. REST API, UI Fix)">
+                </div>
+
+                <div class="col-12 col-sm-6">
+                  <label class="form-label small fw-semibold">Milestone / Module <span class="text-secondary fw-normal">(Optional)</span></label>
+                  <input type="text" name="milestone_name" id="taskMilestoneInput" class="form-control form-control-sm" placeholder="e.g. Phase 1, Auth Module, Dashboard">
+                </div>
+
+                <div class="col-12 col-sm-6">
+                  <label class="form-label small fw-semibold">Task Category</label>
+                  <select name="task_category" id="taskCategorySelect" class="form-select form-select-sm">
+                    <option value="Development" selected>Development</option>
+                    <option value="Bug Fix">Bug Fix</option>
+                    <option value="Testing / QA">Testing / QA</option>
+                    <option value="Code Review">Code Review</option>
+                    <option value="Documentation">Documentation</option>
+                    <option value="Research & Planning">Research & Planning</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div class="col-12 col-sm-3">
+                  <label class="form-label small fw-semibold">Day of Week</label>
+                  <select name="day_index" id="taskDaySelect" class="form-select form-select-sm">
+                    {% for day in week_days %}
+                      <option value="{{ day.day_index }}" {% if day.is_selected %}selected{% endif %}>{{ day.day_name }} ({{ day.date_formatted }})</option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <div class="col-12 col-sm-3">
+                  <label class="form-label small fw-semibold">Hours <span class="text-secondary fw-normal">(HH:MM)</span></label>
+                  <input type="text" name="hours" id="taskHoursInput" class="form-control form-control-sm" placeholder="0:00" value="0:00">
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label small fw-semibold">Work Description / Hourly Log <span class="text-secondary fw-normal">(Optional)</span></label>
+                  <textarea name="notes" id="taskNotesInput" class="form-control form-control-sm" rows="2" placeholder="Describe the specific work completed on this task..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Meeting Dynamic Fields (Hidden by default until 'Meeting' selected) -->
+          <div id="meetingFieldsContainer" class="d-none mt-3">
+            <div class="p-3 border rounded-2 bg-light-subtle">
+              <div class="d-flex align-items-center gap-1.5 mb-2 text-primary fw-semibold small">
+                <i class="bi bi-camera-video"></i> Meeting Details
+              </div>
+              <div class="row g-3">
+                <div class="col-12 col-sm-6">
+                  <label class="form-label small fw-semibold">Meeting Title / Agenda <span class="text-danger">*</span></label>
+                  <input type="text" name="meeting_title" id="meetingTitleInput" class="form-control form-control-sm" placeholder="Enter meeting title (e.g. Daily Standup, Client Sync)">
+                </div>
+
+                <div class="col-12 col-sm-6">
+                  <label class="form-label small fw-semibold">Meeting Type</label>
+                  <select name="meeting_type" id="meetingTypeSelect" class="form-select form-select-sm">
+                    <option value="Daily Standup" selected>Daily Standup</option>
+                    <option value="Client Sync">Client Sync</option>
+                    <option value="Sprint Planning / Retro">Sprint Planning / Retro</option>
+                    <option value="Technical Review">Technical Review</option>
+                    <option value="1-on-1 Review">1-on-1 Review</option>
+                    <option value="Internal Discussion">Internal Discussion</option>
+                    <option value="General Meeting">General Meeting</option>
+                  </select>
+                </div>
+
+                <div class="col-12 col-sm-6">
+                  <label class="form-label small fw-semibold">Platform / Mode <span class="text-secondary fw-normal">(Optional)</span></label>
+                  <input type="text" name="meeting_platform" id="meetingPlatformInput" class="form-control form-control-sm" placeholder="e.g. Google Meet, Zoom, MS Teams, In-Person">
+                </div>
+
+                <div class="col-12 col-sm-3">
+                  <label class="form-label small fw-semibold">Day of Week</label>
+                  <select name="meeting_day_index" id="meetingDaySelect" class="form-select form-select-sm">
+                    {% for day in week_days %}
+                      <option value="{{ day.day_index }}" {% if day.is_selected %}selected{% endif %}>{{ day.day_name }} ({{ day.date_formatted }})</option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <div class="col-12 col-sm-3">
+                  <label class="form-label small fw-semibold">Duration <span class="text-secondary fw-normal">(HH:MM)</span></label>
+                  <input type="text" name="meeting_hours" id="meetingHoursInput" class="form-control form-control-sm" placeholder="1:00" value="1:00">
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label small fw-semibold">Discussion Notes / Action Items <span class="text-secondary fw-normal">(Optional)</span></label>
+                  <textarea name="meeting_notes" id="meetingNotesInput" class="form-control form-control-sm" rows="2" placeholder="Record key discussion points, decisions made, or action items..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer bg-body-tertiary px-4 py-2 border-top">
           <button type="button" class="btn btn-sm btn-outline-secondary px-3" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-sm btn-primary px-4">Add Task</button>
+          <button type="submit" id="modalSubmitBtn" class="btn btn-sm btn-primary px-4" disabled>Add Entry</button>
         </div>
       </form>
     </div>
@@ -1233,14 +1355,95 @@
     }
   }
 
-  // Handle adding task entry form submit via AJAX
+  // Handle Entry Type dropdown changes: conditionally reveal Task vs Meeting inputs
+  function onEntryTypeChange(val) {
+    const alertBox = document.getElementById("noEntryTypeAlert");
+    const taskContainer = document.getElementById("taskFieldsContainer");
+    const meetingContainer = document.getElementById("meetingFieldsContainer");
+    const taskNameInput = document.getElementById("taskNameInput");
+    const meetingTitleInput = document.getElementById("meetingTitleInput");
+    const submitBtn = document.getElementById("modalSubmitBtn");
+
+    if (val === "task") {
+      alertBox.classList.add("d-none");
+      meetingContainer.classList.add("d-none");
+      taskContainer.classList.remove("d-none");
+
+      if (taskNameInput) taskNameInput.required = true;
+      if (meetingTitleInput) meetingTitleInput.required = false;
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="bi bi-plus-lg me-1"></i> Add Task Entry';
+      }
+      setTimeout(() => { if (taskNameInput) taskNameInput.focus(); }, 80);
+    } else if (val === "meeting") {
+      alertBox.classList.add("d-none");
+      taskContainer.classList.add("d-none");
+      meetingContainer.classList.remove("d-none");
+
+      if (taskNameInput) taskNameInput.required = false;
+      if (meetingTitleInput) meetingTitleInput.required = true;
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="bi bi-camera-video me-1"></i> Add Meeting Entry';
+      }
+      setTimeout(() => { if (meetingTitleInput) meetingTitleInput.focus(); }, 80);
+    } else {
+      // No entry type selected: hide both task and meeting inputs
+      alertBox.classList.remove("d-none");
+      taskContainer.classList.add("d-none");
+      meetingContainer.classList.add("d-none");
+
+      if (taskNameInput) taskNameInput.required = false;
+      if (meetingTitleInput) meetingTitleInput.required = false;
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Add Entry';
+      }
+    }
+  }
+
+  // Handle adding task or meeting entry form submit via AJAX
   function onAddEntryFormSubmit(e) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
 
+    const entryType = formData.get("entry_type");
+    if (!entryType) {
+      alert("Please select an Entry Type (Task or Meeting) from the dropdown.");
+      return;
+    }
+
     if (formData.get("project_name") === "__NEW__") {
-      formData.set("project_name", formData.get("custom_project_name"));
+      const customProj = formData.get("custom_project_name");
+      if (!customProj || !customProj.trim()) {
+        alert("Please enter a custom project name.");
+        return;
+      }
+      formData.set("project_name", customProj.trim());
+    }
+
+    // Map meeting-specific inputs into standard backend parameters
+    if (entryType === "meeting") {
+      const meetingTitle = formData.get("meeting_title");
+      if (!meetingTitle || !meetingTitle.trim()) {
+        alert("Please enter a meeting title.");
+        return;
+      }
+      formData.set("task_name", meetingTitle.trim());
+
+      const mType = formData.get("meeting_type") || "";
+      const mPlatform = formData.get("meeting_platform") || "";
+      const mParts = [mType, mPlatform].filter(Boolean);
+      formData.set("milestone_name", mParts.join(" — ") || "Meeting");
+
+      formData.set("hours", formData.get("meeting_hours") || "1:00");
+      formData.set("day_index", formData.get("meeting_day_index") || "0");
+      formData.set("notes", formData.get("meeting_notes") || "");
     }
 
     fetch("{% url 'timesheets:add_task_entry' %}", {
@@ -1257,7 +1460,7 @@
         // Reload page to display new row cleanly with full state
         window.location.reload();
       } else {
-        alert("Failed to add task: " + (data.message || "Unknown error"));
+        alert("Failed to add entry: " + (data.message || "Unknown error"));
       }
     })
     .catch(err => {
@@ -1265,6 +1468,26 @@
       window.location.reload();
     });
   }
+
+  // Reset entry modal to blank state with no fields visible on open
+  document.addEventListener("DOMContentLoaded", function () {
+    const modalEl = document.getElementById('manualTimeEntryModal');
+    if (modalEl) {
+      modalEl.addEventListener('show.bs.modal', function () {
+        const form = document.getElementById("addTimeEntryForm");
+        if (form) {
+          form.reset();
+          const typeSelect = document.getElementById("modalEntryTypeSelect");
+          if (typeSelect) {
+            typeSelect.value = "";
+            onEntryTypeChange("");
+          }
+          const customInput = document.getElementById("modalCustomProjectInput");
+          if (customInput) customInput.classList.add("d-none");
+        }
+      });
+    }
+  });
 
   // Delete task row
   function deleteTaskRow(rowId) {
@@ -1368,7 +1591,12 @@
               </div>
               <span class="badge bg-primary-subtle text-primary fw-bold font-monospace">${t.hours_str} hrs</span>
             </div>
-            <div class="text-primary small fw-medium">${t.task_name}</div>
+            <div class="d-flex align-items-center gap-1.5 mt-0.5">
+              ${t.entry_type === 'meeting' ?
+                '<span class="badge-entry-meeting"><i class="bi bi-camera-video"></i> Meeting</span>' :
+                '<span class="badge-entry-task"><i class="bi bi-check2-square"></i> Task</span>'}
+              <span class="text-primary small fw-medium">${t.task_name}</span>
+            </div>
             ${t.notes ? `<div class="text-secondary small mt-1 bg-body-tertiary p-2 rounded-1 font-monospace" style="font-size: 11px;">${t.notes.replace(/\n/g, '<br>')}</div>` : '<div class="text-secondary small fst-italic">No additional notes provided</div>'}
           </div>
         `;

@@ -299,3 +299,53 @@ class TimesheetTimelineDashboardTests(TestCase):
         }
         response = self.client.post(reverse("timesheets:save_timesheet"), post_data)
         self.assertEqual(response.status_code, 302)
+
+    def test_entry_type_dropdown_and_dynamic_containers_rendered(self):
+        """Entry type dropdown and dynamic task/meeting containers exist in modal."""
+        response = self.client.get(
+            reverse("timesheets:timeline"),
+            {"date": "2026-10-14", "employee": self.employee.pk},
+        )
+        self.assertEqual(response.status_code, 200)
+        # Entry type dropdown
+        self.assertContains(response, 'id="modalEntryTypeSelect"')
+        self.assertContains(response, "-- Select Entry Type --")
+        self.assertContains(response, 'value="task"')
+        self.assertContains(response, 'value="meeting"')
+        # Conditional containers
+        self.assertContains(response, 'id="noEntryTypeAlert"')
+        self.assertContains(response, 'id="taskFieldsContainer"')
+        self.assertContains(response, 'id="meetingFieldsContainer"')
+        # Specific fields
+        self.assertContains(response, 'name="task_name"')
+        self.assertContains(response, 'name="task_category"')
+        self.assertContains(response, 'name="meeting_title"')
+        self.assertContains(response, 'name="meeting_type"')
+        self.assertContains(response, 'name="meeting_platform"')
+
+    def test_add_meeting_entry_via_post(self):
+        """Can add a dedicated meeting entry with meeting title, type, duration, and notes."""
+        post_data = {
+            "employee_id": self.employee.pk,
+            "project_name": "Product Launch",
+            "entry_type": "meeting",
+            "meeting_title": "Sprint 34 Retrospective",
+            "meeting_type": "Sprint Planning / Retro",
+            "meeting_platform": "Google Meet",
+            "entry_date": "2026-10-14",
+            "meeting_hours": "01:30",
+            "meeting_notes": "Reviewed velocity and action items for next sprint",
+        }
+        response = self.client.post(reverse("timesheets:add_task_entry"), post_data)
+        self.assertEqual(response.status_code, 302)
+
+        # Verify page shows meeting row with meeting badge
+        timeline_res = self.client.get(
+            reverse("timesheets:timeline"),
+            {"date": "2026-10-14", "employee": self.employee.pk},
+        )
+        self.assertEqual(timeline_res.status_code, 200)
+        self.assertContains(timeline_res, "Product Launch")
+        self.assertContains(timeline_res, "Sprint 34 Retrospective")
+        self.assertContains(timeline_res, "badge-entry-meeting")
+        self.assertContains(timeline_res, "Meeting")

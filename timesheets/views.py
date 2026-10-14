@@ -144,6 +144,7 @@ def admin_timeline(request):
                     "project_name": r.project_name,
                     "milestone_name": r.milestone_name,
                     "task_name": r.task_name,
+                    "entry_type": r.entry_type,
                     "hours_str": c.hours_str,
                     "hours_minutes": c.hours_minutes,
                     "notes": c.notes,
@@ -370,9 +371,29 @@ def add_task_entry(request):
     if not project_name:
         project_name = "General Project"
 
-    milestone_name = request.POST.get("milestone_name", "").strip()
-    task_name = request.POST.get("task_name", "").strip() or "Standard Task"
     entry_type = request.POST.get("entry_type", "task").strip()
+
+    if entry_type == "meeting":
+        meeting_title = request.POST.get("meeting_title", "").strip()
+        task_name = meeting_title or request.POST.get("task_name", "").strip() or "Meeting"
+        meeting_type = request.POST.get("meeting_type", "").strip()
+        platform = request.POST.get("meeting_platform", "").strip()
+        milestone_parts = [p for p in [meeting_type, platform] if p]
+        milestone_name = " — ".join(milestone_parts) if milestone_parts else (request.POST.get("milestone_name", "").strip() or "Meeting")
+        hours_param = request.POST.get("meeting_hours", "").strip() or request.POST.get("hours", "").strip()
+        day_index_param = request.POST.get("meeting_day_index") if request.POST.get("meeting_day_index") is not None else request.POST.get("day_index")
+        notes_param = request.POST.get("meeting_notes", "").strip() or request.POST.get("notes", "").strip()
+    else:
+        task_name = request.POST.get("task_name", "").strip() or "Standard Task"
+        milestone_name = request.POST.get("milestone_name", "").strip()
+        task_category = request.POST.get("task_category", "").strip()
+        if not milestone_name and task_category:
+            milestone_name = task_category
+        elif milestone_name and task_category and task_category not in milestone_name:
+            milestone_name = f"{milestone_name} ({task_category})"
+        hours_param = request.POST.get("hours", "").strip()
+        day_index_param = request.POST.get("day_index")
+        notes_param = request.POST.get("notes", "").strip()
 
     proj, _ = Project.objects.get_or_create(name=project_name)
     if milestone_name:
@@ -389,12 +410,11 @@ def add_task_entry(request):
         order=order,
     )
 
-    hours_param = request.POST.get("hours", "").strip()
     entry_date_param = request.POST.get("entry_date", "").strip()
     target_day_index = None
-    if "day_index" in request.POST and request.POST.get("day_index") != "":
+    if day_index_param is not None and str(day_index_param).strip() != "":
         try:
-            target_day_index = int(request.POST.get("day_index"))
+            target_day_index = int(day_index_param)
         except ValueError:
             target_day_index = None
     elif entry_date_param:
