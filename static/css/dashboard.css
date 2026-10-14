@@ -2207,47 +2207,224 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
 }
 
 /* -------------------------------------------------------------------------
+/* -------------------------------------------------------------------------
    Timesheet Timeline Dashboard Styles
 ------------------------------------------------------------------------- */
+
+/* Unified Toolbar Buttons for Timesheet page */
+.hrms-time-btn {
+  height: 34px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  box-shadow: none;
+  transition: all 0.15s ease;
+}
+
+.hrms-time-btn svg {
+  flex-shrink: 0;
+}
+
+/* Subtle navigation buttons: Previous Day, Next Day, Prev Week, Next Week */
+.hrms-time-btn-nav {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: none;
+}
+.hrms-time-btn-nav:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+.hrms-time-btn-nav:active {
+  background-color: #cbd5e1;
+  color: #0f172a;
+  transform: translateY(0);
+}
+.hrms-time-btn-nav:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Apply button: Solid blue background, white text, no visible border */
+.hrms-time-btn-apply {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.12);
+}
+.hrms-time-btn-apply:hover {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+.hrms-time-btn-apply:active {
+  background-color: #1e40af;
+  color: #ffffff;
+  transform: translateY(0);
+}
+.hrms-time-btn-apply:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Reset button: Neutral background with minimal or no border */
+.hrms-time-btn-reset {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: none;
+}
+.hrms-time-btn-reset:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+.hrms-time-btn-reset:active {
+  background-color: #cbd5e1;
+  color: #0f172a;
+  transform: translateY(0);
+}
+.hrms-time-btn-reset:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Today button (active state vs inactive state) */
+.hrms-time-btn-today {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: none;
+}
+.hrms-time-btn-today:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+.hrms-time-btn-today.is-active {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.12);
+}
+.hrms-time-btn-today.is-active:hover {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+.hrms-time-btn-today:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Date input in toolbar */
+.hrms-time-date-wrap {
+  height: 34px;
+}
+.hrms-time-date-wrap .input-group-text {
+  height: 34px;
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+  color: #64748b;
+  font-size: 12px;
+  border-radius: 6px 0 0 6px;
+}
+.hrms-time-date-wrap .form-control {
+  height: 34px;
+  font-size: 12px;
+  border-color: #cbd5e1;
+  border-radius: 0 6px 6px 0;
+  padding: 0 0.75rem;
+}
+
+/* Timesheet Filter Dropdowns: Ample right padding to prevent text-arrow collision */
+.hrms-time-select {
+  height: 34px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  padding-left: 0.85rem;
+  padding-right: 2.5rem;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E');
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 14px 14px;
+  color: #1e293b;
+  box-shadow: none;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.hrms-time-select:hover {
+  border-color: #93c5fd;
+  background-color: #f8fafc;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+.hrms-time-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+  outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+.hrms-time-select-dept {
+  min-width: 165px;
+}
+.hrms-time-select-emp {
+  min-width: 220px;
+}
 
 /* Week navigation strip */
 .hrms-week-pill {
   color: var(--hrms-text-body, #1f2937);
-  background-color: transparent;
-  border: 1px solid var(--hrms-border, #e5e7eb);
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
   min-width: 62px;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s ease;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-shadow: none;
 }
 .hrms-week-pill:hover {
-  background-color: rgba(37, 99, 235, 0.06);
-  border-color: #93c5fd;
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
   color: #2563eb;
   transform: translateY(-1px);
 }
 .hrms-week-pill.active {
-  background-color: #2563eb !important;
-  border-color: #2563eb !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28) !important;
+  background-color: #2563eb;
+  border: 1px solid #2563eb;
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
+}
+.hrms-week-pill.active:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #ffffff;
 }
 .hrms-week-pill.active .hrms-week-day,
 .hrms-week-pill.active .hrms-week-num {
-  color: #ffffff !important;
+  color: #ffffff;
 }
 .hrms-today-badge {
-  font-size: 0.6rem !important;
-  padding: 1px 4px !important;
-  background-color: rgba(37, 99, 235, 0.15) !important;
-  color: #2563eb !important;
-  border-radius: 4px !important;
+  font-size: 0.6rem;
+  padding: 1px 4px;
+  background-color: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+  border-radius: 4px;
 }
 .hrms-week-pill.active .hrms-today-badge {
-  background-color: rgba(255, 255, 255, 0.25) !important;
-  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
 }
 
 /* Employee list in sidebar */
@@ -2429,5 +2606,51 @@ html[data-bs-theme="dark"] .hrms-interval-pill {
 }
 html[data-bs-theme="dark"] .hrms-stat-date-badge {
   color: #9ca3af;
+}
+
+/* Dark mode toolbar buttons and inputs */
+html[data-bs-theme="dark"] .hrms-time-btn-nav,
+html[data-bs-theme="dark"] .hrms-time-btn-reset,
+html[data-bs-theme="dark"] .hrms-time-btn-today {
+  background-color: #1f2937;
+  color: #cbd5e1;
+}
+html[data-bs-theme="dark"] .hrms-time-btn-nav:hover,
+html[data-bs-theme="dark"] .hrms-time-btn-reset:hover,
+html[data-bs-theme="dark"] .hrms-time-btn-today:hover {
+  background-color: #374151;
+  color: #f3f4f6;
+}
+html[data-bs-theme="dark"] .hrms-time-btn-today.is-active {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+html[data-bs-theme="dark"] .hrms-time-select {
+  background-color: #111827;
+  border-color: #374151;
+  color: #f3f4f6;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+html[data-bs-theme="dark"] .hrms-time-select:hover {
+  border-color: #60a5fa;
+  background-color: #1f2937;
+}
+html[data-bs-theme="dark"] .hrms-time-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+html[data-bs-theme="dark"] .hrms-time-select option {
+  background-color: #111827;
+  color: #f3f4f6;
+}
+html[data-bs-theme="dark"] .hrms-time-date-wrap .input-group-text {
+  background-color: #1f2937;
+  border-color: #374151;
+  color: #9ca3af;
+}
+html[data-bs-theme="dark"] .hrms-time-date-wrap .form-control {
+  background-color: #111827;
+  border-color: #374151;
+  color: #f3f4f6;
 }
 

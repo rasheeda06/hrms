@@ -11,23 +11,23 @@
 
   <!-- Filter & Quick Date Navigation Toolbar -->
   <div class="hrms-card p-3">
-    <form method="get" action="{% url 'timesheets:timeline' %}" class="row g-2 align-items-center">
+    <form method="get" action="{% url 'timesheets:timeline' %}" class="d-flex flex-wrap align-items-center gap-2">
       
-      <!-- Quick Date Buttons -->
-      <div class="col-12 col-md-auto d-flex align-items-center gap-1">
+      <!-- Quick Date Buttons: Previous Day, Today, Next Day -->
+      <div class="d-inline-flex align-items-center gap-1 flex-shrink-0">
         <a href="?date={{ prev_date_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
-           class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1"
+           class="hrms-time-btn hrms-time-btn-nav"
            title="Go to previous day">
           <svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
           <span>Previous Day</span>
         </a>
         <a href="?date={{ today_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
-           class="btn btn-sm {% if selected_date_str == today_str %}btn-primary{% else %}btn-outline-primary{% endif %}"
+           class="hrms-time-btn hrms-time-btn-today {% if selected_date_str == today_str %}is-active{% endif %}"
            title="Go to today">
           Today
         </a>
         <a href="?date={{ next_date_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
-           class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1"
+           class="hrms-time-btn hrms-time-btn-nav"
            title="Go to next day">
           <span>Next Day</span>
           <svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
@@ -35,8 +35,8 @@
       </div>
 
       <!-- Date Input with Auto-submit on change for complete sync -->
-      <div class="col-12 col-sm-6 col-md-auto">
-        <div class="input-group input-group-sm">
+      <div class="hrms-time-date-wrap flex-grow-1 flex-sm-grow-0" style="min-width: 150px;">
+        <div class="input-group input-group-sm h-100">
           <span class="input-group-text bg-body-tertiary">
             <svg class="lucide lucide-calendar" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
           </span>
@@ -45,8 +45,8 @@
       </div>
 
       <!-- Department Selector with Auto-submit on change -->
-      <div class="col-12 col-sm-6 col-md-auto">
-        <select name="department" class="form-select form-select-sm hrms-select-dept" style="min-width: 165px;" aria-label="Filter by department" onchange="this.form.submit()">
+      <div class="flex-grow-1 flex-md-grow-0" style="min-width: 165px;">
+        <select name="department" class="form-select hrms-time-select hrms-time-select-dept w-100" aria-label="Filter by department" onchange="this.form.submit()">
           <option value="">All Departments</option>
           {% for dept in departments %}
             <option value="{{ dept.pk }}" {% if selected_dept and selected_dept.pk == dept.pk %}selected{% endif %}>
@@ -57,8 +57,8 @@
       </div>
 
       <!-- Employee Selector with Auto-submit on change -->
-      <div class="col-12 col-sm-6 col-md-auto">
-        <select name="employee" class="form-select form-select-sm hrms-select-emp" style="min-width: 220px;" aria-label="Select employee" onchange="this.form.submit()">
+      <div class="flex-grow-1 flex-md-grow-0" style="min-width: 220px;">
+        <select name="employee" class="form-select hrms-time-select hrms-time-select-emp w-100" aria-label="Select employee" onchange="this.form.submit()">
           {% for emp in employees %}
             <option value="{{ emp.pk }}" {% if selected_employee and selected_employee.pk == emp.pk %}selected{% endif %}>
               {{ emp.employee_id }} — {{ emp.full_name }}
@@ -69,13 +69,13 @@
         </select>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="col-12 col-md-auto ms-auto d-flex align-items-center gap-2">
-        <button type="submit" class="btn btn-sm btn-primary d-inline-flex align-items-center gap-1">
+      <!-- Action Buttons: Apply & Reset -->
+      <div class="d-inline-flex align-items-center gap-2 ms-auto">
+        <button type="submit" class="hrms-time-btn hrms-time-btn-apply" title="Apply filters">
           <svg class="lucide lucide-filter" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
           <span>Apply</span>
         </button>
-        <a href="{% url 'timesheets:timeline' %}" class="btn btn-sm btn-outline-secondary" title="Reset all filters">
+        <a href="{% url 'timesheets:timeline' %}" class="hrms-time-btn hrms-time-btn-reset" title="Reset all filters">
           Reset
         </a>
       </div>
@@ -87,7 +87,7 @@
   <div class="hrms-card px-3 py-2">
     <div class="d-flex align-items-center justify-content-between gap-2 overflow-x-auto py-1">
       <a href="?date={{ prev_week_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
-         class="btn btn-sm btn-outline-secondary flex-shrink-0 d-inline-flex align-items-center gap-1"
+         class="hrms-time-btn hrms-time-btn-nav flex-shrink-0"
          title="Previous Week (7 days earlier)">
         <svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         <span class="d-none d-sm-inline">Prev Week</span>
@@ -96,7 +96,7 @@
       <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center">
         {% for day in week_days %}
           <a href="?date={{ day.date_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
-             class="hrms-week-pill text-decoration-none {% if day.is_selected %}active{% endif %} {% if day.is_today %}is-today{% endif %} text-center px-3 py-2 rounded-3"
+             class="hrms-week-pill text-decoration-none {% if day.is_selected %}active{% endif %} {% if day.is_today %}is-today{% endif %} text-center px-3 py-2 rounded-2"
              title="{{ day.date|date:'l, F j, Y' }}"
              {% if day.is_selected %}aria-current="date"{% endif %}>
             <span class="d-block small fw-semibold text-uppercase hrms-week-day">{{ day.day_name }}</span>
@@ -111,7 +111,7 @@
       </div>
 
       <a href="?date={{ next_week_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
-         class="btn btn-sm btn-outline-secondary flex-shrink-0 d-inline-flex align-items-center gap-1"
+         class="hrms-time-btn hrms-time-btn-nav flex-shrink-0"
          title="Next Week (7 days later)">
         <span class="d-none d-sm-inline">Next Week</span>
         <svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
