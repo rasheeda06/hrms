@@ -1059,13 +1059,14 @@
     border: 1px solid var(--hrms-border, #e2e8f0) !important;
     border-radius: 12px !important;
     box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.04) !important;
-    overflow: hidden !important;
+    overflow: visible !important;
   }
   .hrms-modal-header {
     background-color: var(--hrms-card-bg, #ffffff) !important;
     border-bottom: 1px solid var(--hrms-border, #e2e8f0) !important;
     border-top: none !important;
     padding: 1.1rem 1.5rem !important;
+    border-radius: 12px 12px 0 0 !important;
   }
   .hrms-modal-title {
     color: var(--hrms-text-heading, #0f172a) !important;
@@ -1077,6 +1078,7 @@
     background-color: var(--hrms-card-bg, #ffffff) !important;
     border-top: 1px solid var(--hrms-border, #e2e8f0) !important;
     padding: 0.9rem 1.5rem !important;
+    border-radius: 0 0 12px 12px !important;
   }
   .hrms-modal-card {
     background-color: var(--hrms-page-bg, #f8fafc) !important;
@@ -1146,6 +1148,144 @@
     transform: translateY(-1px) !important;
     box-shadow: 0 3px 8px rgba(37, 99, 235, 0.28) !important;
   }
+  /* Custom UI Dropdown System (Matching Dashboard & UI Theme) */
+  .hrms-dropdown-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  .hrms-dropdown-trigger {
+    width: 100%;
+    height: 36px;
+    background-color: var(--hrms-card-bg, #ffffff);
+    border: 1px solid var(--hrms-border, #cbd5e1);
+    border-radius: 6px;
+    padding: 0 0.85rem;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--hrms-text-body, #1e293b);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    user-select: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    text-align: left;
+    box-sizing: border-box;
+  }
+  .hrms-dropdown-trigger:hover {
+    border-color: #93c5fd;
+    background-color: #f8fafc;
+  }
+  .hrms-dropdown-trigger:focus,
+  .hrms-dropdown-wrapper.is-open .hrms-dropdown-trigger {
+    border-color: var(--hrms-primary, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+    outline: none;
+  }
+  .hrms-dropdown-trigger .hrms-dropdown-text {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .hrms-dropdown-trigger .hrms-dropdown-chevron {
+    flex-shrink: 0;
+    width: 13px;
+    height: 13px;
+    color: #64748b;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.15s ease;
+  }
+  .hrms-dropdown-wrapper.is-open .hrms-dropdown-chevron {
+    transform: rotate(180deg);
+    color: var(--hrms-primary, #2563eb);
+  }
+
+  /* Dropdown Menu Popup */
+  .hrms-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    min-width: 100%;
+    background-color: var(--hrms-card-bg, #ffffff);
+    border: 1px solid var(--hrms-border, #e2e8f0);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.14), 0 4px 8px -2px rgba(15, 23, 42, 0.06);
+    padding: 4px;
+    z-index: 1090;
+    max-height: 220px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: none;
+    animation: hrmsDropdownFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hrms-dropdown-wrapper.is-open .hrms-dropdown-menu {
+    display: block;
+  }
+  @keyframes hrmsDropdownFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Custom Scrollbar for Dropdown Menu */
+  .hrms-dropdown-menu::-webkit-scrollbar {
+    width: 5px;
+  }
+  .hrms-dropdown-menu::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .hrms-dropdown-menu::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  /* Dropdown Menu Items */
+  .hrms-dropdown-item {
+    padding: 0.48rem 0.75rem;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--hrms-text-body, #334155);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    transition: background-color 0.12s ease, color 0.12s ease;
+    user-select: none;
+    margin-bottom: 1px;
+  }
+  .hrms-dropdown-item:last-child {
+    margin-bottom: 0;
+  }
+  .hrms-dropdown-item:hover {
+    background-color: var(--hrms-primary-light, #eff6ff);
+    color: var(--hrms-primary, #2563eb);
+  }
+  .hrms-dropdown-item.is-selected {
+    background-color: var(--hrms-primary, #2563eb);
+    color: #ffffff;
+    font-weight: 600;
+  }
+  .hrms-dropdown-item.is-selected .hrms-dropdown-check {
+    color: #ffffff;
+    display: inline-block;
+  }
+  .hrms-dropdown-item .hrms-dropdown-check {
+    display: none;
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  /* Toolbar specific size (32px height) */
+  .hrms-dropdown-trigger-sm {
+    height: 32px !important;
+    font-size: 12px !important;
+    padding: 0 0.75rem !important;
+  }
+
   .hrms-modal-content .form-select,
   .hrms-modal-content .form-control {
     height: 36px !important;
@@ -1223,6 +1363,47 @@
   }
   html[data-bs-theme="dark"] .hrms-modal-content .form-label {
     color: #f3f4f6 !important;
+  }
+  html[data-bs-theme="dark"] .hrms-dropdown-trigger,
+  [data-bs-theme="dark"] .hrms-dropdown-trigger {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #f3f4f6 !important;
+  }
+  html[data-bs-theme="dark"] .hrms-dropdown-trigger:hover,
+  [data-bs-theme="dark"] .hrms-dropdown-trigger:hover {
+    border-color: #60a5fa !important;
+    background-color: #242f3d !important;
+  }
+  html[data-bs-theme="dark"] .hrms-dropdown-trigger:focus,
+  html[data-bs-theme="dark"] .hrms-dropdown-wrapper.is-open .hrms-dropdown-trigger,
+  [data-bs-theme="dark"] .hrms-dropdown-wrapper.is-open .hrms-dropdown-trigger {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.22) !important;
+  }
+  html[data-bs-theme="dark"] .hrms-dropdown-menu,
+  [data-bs-theme="dark"] .hrms-dropdown-menu {
+    background-color: #111827 !important;
+    border-color: #334155 !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.65), 0 4px 10px -2px rgba(0, 0, 0, 0.45) !important;
+  }
+  html[data-bs-theme="dark"] .hrms-dropdown-menu::-webkit-scrollbar-thumb,
+  [data-bs-theme="dark"] .hrms-dropdown-menu::-webkit-scrollbar-thumb {
+    background: #374151 !important;
+  }
+  html[data-bs-theme="dark"] .hrms-dropdown-item,
+  [data-bs-theme="dark"] .hrms-dropdown-item {
+    color: #cbd5e1 !important;
+  }
+  html[data-bs-theme="dark"] .hrms-dropdown-item:hover,
+  [data-bs-theme="dark"] .hrms-dropdown-item:hover {
+    background-color: rgba(59, 130, 246, 0.16) !important;
+    color: #93c5fd !important;
+  }
+  html[data-bs-theme="dark"] .hrms-dropdown-item.is-selected,
+  [data-bs-theme="dark"] .hrms-dropdown-item.is-selected {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
   }
 </style>
 
@@ -1766,7 +1947,7 @@
             <div class="col-12 col-sm-6">
               <label class="form-label small fw-semibold">Project <span class="text-danger">*</span></label>
               {% if projects %}
-                <select name="project_name" class="form-select form-select-sm" required id="modalProjectSelect" onchange="onModalProjectChange(this)">
+                <select name="project_name" class="form-select form-select-sm hrms-custom-select" required id="modalProjectSelect" onchange="onModalProjectChange(this)">
                   {% for proj in projects %}
                     <option value="{{ proj.name }}">{{ proj.name }}</option>
                   {% endfor %}
@@ -1781,7 +1962,7 @@
             <!-- Entry Type Dropdown -->
             <div class="col-12 col-sm-6">
               <label class="form-label small fw-semibold">Entry Type <span class="text-danger">*</span></label>
-              <select name="entry_type" id="modalEntryTypeSelect" class="form-select form-select-sm" required onchange="onEntryTypeChange(this.value)">
+              <select name="entry_type" id="modalEntryTypeSelect" class="form-select form-select-sm hrms-custom-select" required onchange="onEntryTypeChange(this.value)">
                 <option value="" selected>-- Select Entry Type --</option>
                 <option value="task">Task</option>
                 <option value="meeting">Meeting</option>
@@ -1819,7 +2000,7 @@
 
                 <div class="col-12 col-sm-6">
                   <label class="form-label small fw-semibold">Task Category</label>
-                  <select name="task_category" id="taskCategorySelect" class="form-select form-select-sm">
+                  <select name="task_category" id="taskCategorySelect" class="form-select form-select-sm hrms-custom-select">
                     <option value="Development" selected>Development</option>
                     <option value="Bug Fix">Bug Fix</option>
                     <option value="Testing / QA">Testing / QA</option>
@@ -1830,16 +2011,16 @@
                   </select>
                 </div>
 
-                <div class="col-12 col-sm-3">
+                <div class="col-12 col-sm-6">
                   <label class="form-label small fw-semibold">Day of Week</label>
-                  <select name="day_index" id="taskDaySelect" class="form-select form-select-sm">
+                  <select name="day_index" id="taskDaySelect" class="form-select form-select-sm hrms-custom-select">
                     {% for day in week_days %}
                       <option value="{{ day.day_index }}" {% if day.is_selected %}selected{% endif %}>{{ day.day_name }} ({{ day.date_formatted }})</option>
                     {% endfor %}
                   </select>
                 </div>
 
-                <div class="col-12 col-sm-3">
+                <div class="col-12 col-sm-6">
                   <label class="form-label small fw-semibold">Hours <span class="text-secondary fw-normal">(HH:MM)</span></label>
                   <input type="text" name="hours" id="taskHoursInput" class="form-control form-control-sm" placeholder="0:00" value="0:00">
                 </div>
@@ -1866,7 +2047,7 @@
 
                 <div class="col-12 col-sm-6">
                   <label class="form-label small fw-semibold">Meeting Type</label>
-                  <select name="meeting_type" id="meetingTypeSelect" class="form-select form-select-sm">
+                  <select name="meeting_type" id="meetingTypeSelect" class="form-select form-select-sm hrms-custom-select">
                     <option value="Daily Standup" selected>Daily Standup</option>
                     <option value="Client Sync">Client Sync</option>
                     <option value="Sprint Planning / Retro">Sprint Planning / Retro</option>
@@ -1882,16 +2063,16 @@
                   <input type="text" name="meeting_platform" id="meetingPlatformInput" class="form-control form-control-sm" placeholder="e.g. Google Meet, Zoom, MS Teams, In-Person">
                 </div>
 
-                <div class="col-12 col-sm-3">
+                <div class="col-12 col-sm-6">
                   <label class="form-label small fw-semibold">Day of Week</label>
-                  <select name="meeting_day_index" id="meetingDaySelect" class="form-select form-select-sm">
+                  <select name="meeting_day_index" id="meetingDaySelect" class="form-select form-select-sm hrms-custom-select">
                     {% for day in week_days %}
                       <option value="{{ day.day_index }}" {% if day.is_selected %}selected{% endif %}>{{ day.day_name }} ({{ day.date_formatted }})</option>
                     {% endfor %}
                   </select>
                 </div>
 
-                <div class="col-12 col-sm-3">
+                <div class="col-12 col-sm-6">
                   <label class="form-label small fw-semibold">Duration <span class="text-secondary fw-normal">(HH:MM)</span></label>
                   <input type="text" name="meeting_hours" id="meetingHoursInput" class="form-control form-control-sm" placeholder="1:00" value="1:00">
                 </div>
@@ -2318,8 +2499,135 @@
     });
   }
 
-  // Reset entry modal to blank state with no fields visible on open
+  // Custom UI Dropdown System: replaces native OS popups with themed UI dropdowns
+  function enhanceSelectToCustomDropdown(selectEl, isSmall) {
+    if (!selectEl || selectEl.getAttribute("data-custom-enhanced") === "true") return;
+
+    selectEl.setAttribute("data-custom-enhanced", "true");
+    selectEl.style.display = "none";
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "hrms-dropdown-wrapper";
+
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = `hrms-dropdown-trigger ${isSmall ? "hrms-dropdown-trigger-sm" : ""}`;
+
+    const textSpan = document.createElement("span");
+    textSpan.className = "hrms-dropdown-text";
+
+    const chevron = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    chevron.setAttribute("class", "hrms-dropdown-chevron");
+    chevron.setAttribute("viewBox", "0 0 24 24");
+    chevron.setAttribute("fill", "none");
+    chevron.setAttribute("stroke", "currentColor");
+    chevron.setAttribute("stroke-width", "2");
+    chevron.setAttribute("stroke-linecap", "round");
+    chevron.setAttribute("stroke-linejoin", "round");
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", "m6 9 6 6 6-6");
+    chevron.appendChild(path);
+
+    trigger.appendChild(textSpan);
+    trigger.appendChild(chevron);
+
+    const menu = document.createElement("div");
+    menu.className = "hrms-dropdown-menu";
+
+    function populateItems() {
+      menu.innerHTML = "";
+      const options = Array.from(selectEl.options);
+      let selectedOption = selectEl.options[selectEl.selectedIndex] || options[0];
+
+      textSpan.textContent = selectedOption ? selectedOption.text : "-- Select --";
+
+      options.forEach(opt => {
+        const item = document.createElement("div");
+        item.className = "hrms-dropdown-item";
+        item.setAttribute("data-value", opt.value);
+
+        if (opt.value === selectEl.value) {
+          item.classList.add("is-selected");
+        }
+
+        const label = document.createElement("span");
+        label.className = "text-truncate";
+        label.textContent = opt.text;
+
+        const checkIcon = document.createElement("i");
+        checkIcon.className = "bi bi-check2 hrms-dropdown-check";
+
+        item.appendChild(label);
+        item.appendChild(checkIcon);
+
+        item.addEventListener("click", function (e) {
+          e.stopPropagation();
+          selectEl.value = opt.value;
+          updateCustomDropdownDisplay(selectEl);
+          wrapper.classList.remove("is-open");
+
+          // Fire inline onchange if present, otherwise dispatch standard change event
+          if (typeof selectEl.onchange === "function") {
+            selectEl.onchange();
+          } else {
+            selectEl.dispatchEvent(new Event("change", { bubbles: true }));
+          }
+        });
+
+        menu.appendChild(item);
+      });
+    }
+
+    populateItems();
+
+    trigger.addEventListener("click", function (e) {
+      e.stopPropagation();
+      document.querySelectorAll(".hrms-dropdown-wrapper.is-open").forEach(w => {
+        if (w !== wrapper) w.classList.remove("is-open");
+      });
+      wrapper.classList.toggle("is-open");
+    });
+
+    wrapper.appendChild(trigger);
+    wrapper.appendChild(menu);
+
+    selectEl.parentNode.insertBefore(wrapper, selectEl.nextSibling);
+
+    selectEl._customDropdownWrapper = wrapper;
+    selectEl._populateCustomDropdown = populateItems;
+  }
+
+  function updateCustomDropdownDisplay(selectEl) {
+    if (!selectEl || !selectEl._customDropdownWrapper) return;
+    const wrapper = selectEl._customDropdownWrapper;
+    const triggerText = wrapper.querySelector(".hrms-dropdown-text");
+    const selectedOpt = selectEl.options[selectEl.selectedIndex];
+    if (triggerText && selectedOpt) {
+      triggerText.textContent = selectedOpt.text;
+    }
+    wrapper.querySelectorAll(".hrms-dropdown-item").forEach(item => {
+      if (item.getAttribute("data-value") === selectEl.value) {
+        item.classList.add("is-selected");
+      } else {
+        item.classList.remove("is-selected");
+      }
+    });
+  }
+
+  // Global click outside to dismiss all custom dropdowns
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".hrms-dropdown-wrapper")) {
+      document.querySelectorAll(".hrms-dropdown-wrapper.is-open").forEach(w => w.classList.remove("is-open"));
+    }
+  });
+
+  // Reset entry modal to blank state with no fields visible on open & init custom dropdowns
   document.addEventListener("DOMContentLoaded", function () {
+    // Enhance toolbar dropdowns (32px height)
+    document.querySelectorAll(".hrms-time-select").forEach(sel => enhanceSelectToCustomDropdown(sel, true));
+    // Enhance modal dropdowns (36px height)
+    document.querySelectorAll(".hrms-custom-select").forEach(sel => enhanceSelectToCustomDropdown(sel, false));
+
     const modalEl = document.getElementById('manualTimeEntryModal');
     if (modalEl) {
       modalEl.addEventListener('show.bs.modal', function () {
@@ -2333,6 +2641,11 @@
           }
           const customInput = document.getElementById("modalCustomProjectInput");
           if (customInput) customInput.classList.add("d-none");
+
+          // Sync all enhanced selects in modal
+          document.querySelectorAll(".hrms-custom-select").forEach(sel => {
+            updateCustomDropdownDisplay(sel);
+          });
         }
       });
     }
