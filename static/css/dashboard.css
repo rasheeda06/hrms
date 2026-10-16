@@ -2389,28 +2389,32 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
   color: #475569;
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  min-width: 58px;
-  padding: 4px 6px;
+  width: 62px;
+  min-width: 62px;
+  max-width: 62px;
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  padding: 3px 2px;
   border-radius: 6px;
   transition: all 0.15s ease;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1px;
+  box-sizing: border-box;
+  margin: 0;
   box-shadow: none;
 }
 .hrms-week-pill:hover {
   background-color: #f8fafc;
   border-color: #cbd5e1;
   color: #1e293b;
-  transform: translateY(-1px);
 }
 .hrms-week-pill.is-today {
   background-color: #eff6ff;
   border: 1.5px solid #2563eb;
   color: #1d4ed8;
-  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.12);
 }
 .hrms-week-pill.is-today .hrms-week-day,
 .hrms-week-pill.is-today .hrms-week-num {
@@ -2421,7 +2425,6 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
   background-color: #2563eb;
   border: 1.5px solid #2563eb;
   color: #ffffff;
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
 }
 .hrms-week-pill.active:hover {
   background-color: #1d4ed8;
@@ -2433,13 +2436,21 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
   color: #ffffff;
 }
 .hrms-week-today-pill {
-  font-size: 8px;
+  font-size: 7.5px;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  padding: 1px 4px;
+  letter-spacing: 0.04em;
+  padding: 0 4px;
+  height: 11px;
+  line-height: 11px;
   border-radius: 3px;
-  line-height: 1;
   display: inline-block;
+  margin-top: 1px;
+}
+.hrms-week-today-placeholder {
+  height: 11px;
+  line-height: 11px;
+  display: block;
+  visibility: hidden;
   margin-top: 1px;
 }
 .hrms-week-pill.is-today .hrms-week-today-pill {

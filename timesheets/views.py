@@ -399,17 +399,6 @@ def add_task_entry(request):
     if milestone_name:
         ProjectMilestone.objects.get_or_create(project=proj, name=milestone_name)
 
-    order = weekly_ts.rows.count()
-    row = TimesheetTaskRow.objects.create(
-        weekly_timesheet=weekly_ts,
-        project=proj,
-        project_name=project_name,
-        milestone_name=milestone_name,
-        task_name=task_name,
-        entry_type=entry_type,
-        order=order,
-    )
-
     entry_date_param = request.POST.get("entry_date", "").strip()
     target_day_index = None
     if day_index_param is not None and str(day_index_param).strip() != "":
@@ -424,7 +413,47 @@ def add_task_entry(request):
         except ValueError:
             target_day_index = None
 
-    notes_param = request.POST.get("notes", "").strip()
+    if target_day_index is not None and (target_day_index < 0 or target_day_index > 6):
+        target_day_index = None
+
+    # Duplicate row prevention: check if a matching row already exists
+    existing_row = weekly_ts.rows.filter(
+        project_name__iexact=project_name,
+        task_name__iexact=task_name
+    ).first()
+
+    if existing_row:
+        # If user is adding time for a specific day, apply it to the existing row
+        if target_day_index is not None and hours_param:
+            cell = existing_row.cells.filter(day_index=target_day_index).first()
+            if cell:
+                cell.set_time(hours_param, notes_param)
+                cell.save()
+                if request.headers.get("x-requested-with") == "XMLHttpRequest" or request.content_type == "application/json":
+                    return JsonResponse({
+                        "status": "success",
+                        "message": f"Updated existing row for '{task_name}' on Day {target_day_index + 1}",
+                        "row_id": existing_row.pk,
+                    })
+                return redirect(f"/timesheets/?date={weekly_ts.week_start_date}&employee={weekly_ts.employee_id}")
+
+        if request.headers.get("x-requested-with") == "XMLHttpRequest" or request.content_type == "application/json":
+            return JsonResponse({
+                "status": "error",
+                "message": f"A task row for '{task_name}' already exists in this weekly timesheet."
+            }, status=400)
+        return redirect(f"/timesheets/?date={weekly_ts.week_start_date}&employee={weekly_ts.employee_id}")
+
+    order = weekly_ts.rows.count()
+    row = TimesheetTaskRow.objects.create(
+        weekly_timesheet=weekly_ts,
+        project=proj,
+        project_name=project_name,
+        milestone_name=milestone_name,
+        task_name=task_name,
+        entry_type=entry_type,
+        order=order,
+    )
 
     cells = []
     for i in range(7):
