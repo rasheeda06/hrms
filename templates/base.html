@@ -27,6 +27,14 @@
       font-size: 12px !important;
     }
 
+    :root {
+      --bs-primary: #2563eb;
+      --bs-primary-rgb: 37, 99, 235;
+      --bs-primary-text-emphasis: #1e40af;
+      --bs-primary-bg-subtle: #eff6ff;
+      --bs-primary-border-subtle: #bfdbfe;
+    }
+
     /* Enterprise Universal Button System */
     .btn {
       font-size: 12px !important;
@@ -59,6 +67,18 @@
       color: #ffffff !important;
       box-shadow: 0 3px 10px rgba(37, 99, 235, 0.22) !important;
       transform: translateY(-1px) !important;
+    }
+    .btn-primary:disabled,
+    .btn-primary.disabled,
+    .btn:disabled,
+    .btn.disabled {
+      background-color: #cbd5e1 !important;
+      border-color: #cbd5e1 !important;
+      color: #ffffff !important;
+      opacity: 1 !important;
+      cursor: not-allowed !important;
+      box-shadow: none !important;
+      transform: none !important;
     }
     .btn-outline-primary {
       background-color: transparent !important;
