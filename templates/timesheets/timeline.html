@@ -431,7 +431,7 @@
     width: 100%;
   }
   .time-entry-input {
-    width: 62px;
+    width: 60px;
     height: 30px;
     text-align: center;
     font-size: 12px;
@@ -440,7 +440,7 @@
     border: 1px solid #cbd5e1;
     border-radius: 6px;
     background-color: #ffffff;
-    padding: 2px 16px 2px 4px;
+    padding: 2px 4px;
     transition: all 0.15s ease;
     box-sizing: border-box;
     cursor: pointer;
@@ -469,40 +469,6 @@
   }
   .time-entry-input.has-notes {
     border-left: 3px solid var(--hrms-primary, #2563eb) !important;
-  }
-
-  /* Cell Comment Indicator Button inside cell */
-  .cell-comment-btn {
-    position: absolute;
-    right: 3px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 15px;
-    height: 15px;
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: #94a3b8;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 9.5px;
-    opacity: 0;
-    transition: all 0.15s ease;
-    border-radius: 3px;
-    z-index: 2;
-  }
-  .time-entry-container:hover .cell-comment-btn {
-    opacity: 1;
-  }
-  .cell-comment-btn.has-content {
-    opacity: 1;
-    color: var(--hrms-primary, #2563eb);
-  }
-  .cell-comment-btn:hover {
-    background-color: rgba(37, 99, 235, 0.12);
-    color: var(--hrms-primary, #2563eb);
   }
 
   /* Quick Time Picker Dropdown (Access all times when clicked) */
@@ -620,29 +586,7 @@
     border-color: #2563eb;
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
   }
-  .comment-chips-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-top: 5px;
-    margin-bottom: 6px;
-  }
-  .comment-chip {
-    font-size: 9.5px;
-    font-weight: 500;
-    background-color: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    color: #475569;
-    border-radius: 12px;
-    padding: 1px 7px;
-    cursor: pointer;
-    transition: all 0.12s ease;
-    border: none;
-  }
-  .comment-chip:hover {
-    background-color: #eff6ff;
-    color: #1d4ed8;
-  }
+
 
   /* Totals Row */
   .totals-row td {
@@ -1096,19 +1040,7 @@
     color: #93c5fd !important;
     border-color: rgba(59, 130, 246, 0.3) !important;
   }
-  html[data-bs-theme="dark"] .cell-comment-btn,
-  [data-bs-theme="dark"] .cell-comment-btn {
-    color: #64748b;
-  }
-  html[data-bs-theme="dark"] .cell-comment-btn.has-content,
-  [data-bs-theme="dark"] .cell-comment-btn.has-content {
-    color: #60a5fa !important;
-  }
-  html[data-bs-theme="dark"] .cell-comment-btn:hover,
-  [data-bs-theme="dark"] .cell-comment-btn:hover {
-    background-color: rgba(59, 130, 246, 0.2);
-    color: #93c5fd;
-  }
+
   html[data-bs-theme="dark"] .cell-time-dropdown,
   [data-bs-theme="dark"] .cell-time-dropdown {
     background-color: #111827 !important;
@@ -1152,17 +1084,7 @@
     border-color: #3b82f6 !important;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25) !important;
   }
-  html[data-bs-theme="dark"] .comment-chip,
-  [data-bs-theme="dark"] .comment-chip {
-    background-color: #1e293b !important;
-    border-color: #334155 !important;
-    color: #94a3b8 !important;
-  }
-  html[data-bs-theme="dark"] .comment-chip:hover,
-  [data-bs-theme="dark"] .comment-chip:hover {
-    background-color: #334155 !important;
-    color: #f8fafc !important;
-  }
+
   html[data-bs-theme="dark"] .certify-bar,
   [data-bs-theme="dark"] .certify-bar {
     background-color: rgba(37, 99, 235, 0.12) !important;
@@ -1636,15 +1558,6 @@
                                onfocus="onTimeEntryFocus(this)"
                                onblur="onTimeEntryBlur(this)">
 
-                        <!-- Comment Indicator Button (Shown on hover or when has notes) -->
-                        <button type="button"
-                                id="comment_trigger_{{ cell.pk }}"
-                                class="cell-comment-btn {% if cell.notes %}has-content{% endif %}"
-                                title="{% if cell.notes %}{{ cell.notes }}{% else %}Add comment on hover{% endif %}"
-                                onclick="openCommentHoverCard(event, {{ cell.pk }})">
-                          <i class="bi {% if cell.notes %}bi-chat-left-text-fill{% else %}bi-chat-left-plus{% endif %}"></i>
-                        </button>
-
                         <!-- Quick Time Picker Dropdown (Access all times when clicked) -->
                         <div class="cell-time-dropdown" id="time_dropdown_{{ cell.pk }}" onclick="event.stopPropagation()">
                           <div class="d-flex align-items-center justify-content-between px-1 pb-1 mb-1 border-bottom">
@@ -1678,33 +1591,21 @@
                           </div>
                         </div>
 
-                        <!-- Comment Hover Card (Add comments when hover on it) -->
+                        <!-- Comment Hover Card (Shows comment when hovering on the time) -->
                         <div class="cell-hover-comment-card" id="comment_card_{{ cell.pk }}" onclick="event.stopPropagation()">
                           <div class="d-flex align-items-center justify-content-between mb-1.5">
-                            <div class="d-flex align-items-center gap-1 text-truncate">
-                              <i class="bi bi-chat-left-text text-primary" style="font-size: 11px;"></i>
-                              <span class="fw-bold small text-body" style="font-size: 11px;">Add Comment</span>
-                            </div>
+                            <span class="fw-bold small text-body" style="font-size: 11px;">Comment</span>
                             <span class="badge bg-primary-subtle text-primary font-monospace" style="font-size: 9px;">Day {{ cell.day_index|add:1 }} · {{ cell.hours_str }}h</span>
                           </div>
 
                           <textarea class="form-control cell-comment-textarea"
                                     id="comment_input_{{ cell.pk }}"
-                                    placeholder="Add comment / work notes on hover..."
+                                    placeholder="Enter comment..."
                                     onfocus="onCommentTextareaFocus({{ cell.pk }})"
                                     onblur="onCommentTextareaBlur({{ cell.pk }})"
                                     onkeydown="onCommentKeydown(event, {{ cell.pk }})">{{ cell.notes }}</textarea>
 
-                          <!-- Quick comment suggestion chips -->
-                          <div class="comment-chips-wrap">
-                            <button type="button" class="comment-chip" onclick="addCommentTag({{ cell.pk }}, 'Completed')">+ Completed</button>
-                            <button type="button" class="comment-chip" onclick="addCommentTag({{ cell.pk }}, 'In Progress')">+ In Progress</button>
-                            <button type="button" class="comment-chip" onclick="addCommentTag({{ cell.pk }}, 'Code Review')">+ Review</button>
-                            <button type="button" class="comment-chip" onclick="addCommentTag({{ cell.pk }}, 'Bug Fix')">+ Bug Fix</button>
-                            <button type="button" class="comment-chip" onclick="addCommentTag({{ cell.pk }}, 'Meeting')">+ Meeting</button>
-                          </div>
-
-                          <div class="d-flex align-items-center justify-content-between mt-1 pt-1 border-top">
+                          <div class="d-flex align-items-center justify-content-between mt-1.5 pt-1 border-top">
                             <span id="comment_status_{{ cell.pk }}" class="text-success small fw-semibold" style="font-size: 10px; display: none;">
                               <i class="bi bi-check-circle-fill me-1"></i>Saved
                             </span>
@@ -2248,20 +2149,6 @@
     }
   }
 
-  function addCommentTag(cellId, tagText) {
-    const textarea = document.getElementById(`comment_input_${cellId}`);
-    if (!textarea) return;
-    const current = textarea.value.trim();
-    if (current) {
-      if (!current.includes(tagText)) {
-        textarea.value = current + " · " + tagText;
-      }
-    } else {
-      textarea.value = tagText;
-    }
-    textarea.focus();
-  }
-
   function clearCellComment(cellId) {
     const textarea = document.getElementById(`comment_input_${cellId}`);
     if (textarea) textarea.value = "";
@@ -2271,7 +2158,6 @@
   function saveCellComment(cellId) {
     const textarea = document.getElementById(`comment_input_${cellId}`);
     const input = document.getElementById(`input_cell_${cellId}`);
-    const trigger = document.getElementById(`comment_trigger_${cellId}`);
     const statusEl = document.getElementById(`comment_status_${cellId}`);
     const hiddenNotes = document.getElementById(`notes_cell_${cellId}`);
     if (!textarea || !input) return;
@@ -2282,18 +2168,8 @@
     // Update UI indicators
     if (notesVal) {
       input.classList.add("has-notes");
-      if (trigger) {
-        trigger.classList.add("has-content");
-        trigger.title = notesVal;
-        trigger.innerHTML = '<i class="bi bi-chat-left-text-fill"></i>';
-      }
     } else {
       input.classList.remove("has-notes");
-      if (trigger) {
-        trigger.classList.remove("has-content");
-        trigger.title = "Add comment on hover";
-        trigger.innerHTML = '<i class="bi bi-chat-left-plus"></i>';
-      }
     }
 
     if (hiddenNotes) hiddenNotes.value = notesVal;
@@ -2332,7 +2208,7 @@
     if (!e.target.closest(".cell-time-dropdown") && !e.target.closest(".time-entry-input")) {
       closeAllTimeDropdowns();
     }
-    if (!e.target.closest(".cell-hover-comment-card") && !e.target.closest(".cell-comment-btn")) {
+    if (!e.target.closest(".cell-hover-comment-card") && !e.target.closest(".time-entry-container")) {
       document.querySelectorAll(".cell-hover-comment-card.is-active").forEach(c => c.classList.remove("is-active"));
     }
   });
