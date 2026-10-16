@@ -60,18 +60,30 @@
     color: #0f172a !important;
   }
   .hrms-time-btn-apply {
-    background-color: #2563eb !important;
+    background-color: var(--hrms-primary, #2563eb) !important;
+    border: 1px solid var(--hrms-primary, #2563eb) !important;
     color: #ffffff !important;
+    font-weight: 500 !important;
+    padding: 0 0.85rem !important;
+    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.15) !important;
   }
   .hrms-time-btn-apply:hover {
-    background-color: #1d4ed8 !important;
+    background-color: var(--hrms-primary-hover, #1d4ed8) !important;
+    border-color: var(--hrms-primary-hover, #1d4ed8) !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25) !important;
   }
   .hrms-time-btn-reset {
-    background-color: #f1f5f9 !important;
-    color: #64748b !important;
+    background-color: var(--hrms-card-bg, #ffffff) !important;
+    border: 1px solid var(--hrms-border, #cbd5e1) !important;
+    color: var(--hrms-text-muted, #475569) !important;
+    font-weight: 500 !important;
+    padding: 0 0.85rem !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
   }
   .hrms-time-btn-reset:hover {
-    background-color: #e2e8f0 !important;
+    background-color: #f1f5f9 !important;
+    border-color: #94a3b8 !important;
     color: #0f172a !important;
   }
   .hrms-time-btn-today {
@@ -93,23 +105,25 @@
     background-color: #ffffff;
   }
 
-  /* Toolbar Inputs & Selects: Perfectly Matched 32px Height */
+  /* Toolbar Inputs & Selects: Perfectly Matched 32px Height, Defined Padding */
   .hrms-time-select {
     height: 32px !important;
-    font-size: 11.5px !important;
+    font-size: 12px !important;
     padding-left: 0.75rem !important;
     padding-right: 2.25rem !important;
     border-radius: 6px !important;
-    border-color: #cbd5e1 !important;
-    color: #1e293b !important;
+    border: 1px solid #cbd5e1 !important;
+    color: var(--hrms-text-body, #1e293b) !important;
+    background-color: var(--hrms-card-bg, #ffffff) !important;
     background-position: right 0.75rem center !important;
     box-sizing: border-box !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
   }
   .hrms-time-date-wrap .input-group,
   .hrms-time-date-wrap .input-group-text,
   .hrms-time-date-wrap input[type="date"] {
     height: 32px !important;
-    font-size: 11.5px !important;
+    font-size: 12px !important;
     box-sizing: border-box !important;
   }
   .hrms-time-date-wrap .input-group-text {
@@ -469,62 +483,6 @@
   }
   .time-entry-input.has-notes {
     border-left: 3px solid var(--hrms-primary, #2563eb) !important;
-  }
-
-  /* Quick Time Picker Dropdown (Access all times when clicked) */
-  .cell-time-dropdown {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 50%;
-    transform: translateX(-50%);
-    width: 224px;
-    background: #ffffff;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.16), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    padding: 8px;
-    z-index: 1070;
-    display: none;
-    text-align: left;
-  }
-  .cell-time-dropdown.is-open {
-    display: block;
-    animation: fadeInDropdown 0.15s ease;
-  }
-  @keyframes fadeInDropdown {
-    from { opacity: 0; transform: translate(-50%, -4px); }
-    to { opacity: 1; transform: translate(-50%, 0); }
-  }
-  .time-preset-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
-    margin-top: 6px;
-    margin-bottom: 6px;
-  }
-  .time-preset-btn {
-    border: 1px solid #e2e8f0;
-    background-color: #f8fafc;
-    color: #334155;
-    font-size: 11px;
-    font-weight: 500;
-    padding: 3px 0;
-    text-align: center;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.12s ease;
-    line-height: 1.3;
-  }
-  .time-preset-btn:hover {
-    background-color: #eff6ff;
-    border-color: #bfdbfe;
-    color: #1d4ed8;
-  }
-  .time-preset-btn.is-active {
-    background-color: #2563eb;
-    border-color: #2563eb;
-    color: #ffffff;
-    font-weight: 700;
   }
 
   /* Comment Hover Card (Add comments when hover on it) */
@@ -1041,31 +999,6 @@
     border-color: rgba(59, 130, 246, 0.3) !important;
   }
 
-  html[data-bs-theme="dark"] .cell-time-dropdown,
-  [data-bs-theme="dark"] .cell-time-dropdown {
-    background-color: #111827 !important;
-    border-color: #334155 !important;
-    color: #f8fafc !important;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
-  }
-  html[data-bs-theme="dark"] .time-preset-btn,
-  [data-bs-theme="dark"] .time-preset-btn {
-    background-color: #1e293b !important;
-    border-color: #334155 !important;
-    color: #cbd5e1 !important;
-  }
-  html[data-bs-theme="dark"] .time-preset-btn:hover,
-  [data-bs-theme="dark"] .time-preset-btn:hover {
-    background-color: #334155 !important;
-    border-color: #475569 !important;
-    color: #ffffff !important;
-  }
-  html[data-bs-theme="dark"] .time-preset-btn.is-active,
-  [data-bs-theme="dark"] .time-preset-btn.is-active {
-    background-color: #2563eb !important;
-    border-color: #2563eb !important;
-    color: #ffffff !important;
-  }
   html[data-bs-theme="dark"] .cell-hover-comment-card,
   [data-bs-theme="dark"] .cell-hover-comment-card {
     background-color: #111827 !important;
@@ -1131,8 +1064,8 @@
   .hrms-modal-header {
     background-color: var(--hrms-card-bg, #ffffff) !important;
     border-bottom: 1px solid var(--hrms-border, #e2e8f0) !important;
-    border-top: 3px solid var(--hrms-primary, #2563eb) !important;
-    padding: 1rem 1.25rem !important;
+    border-top: none !important;
+    padding: 1.1rem 1.5rem !important;
   }
   .hrms-modal-title {
     color: var(--hrms-text-heading, #0f172a) !important;
@@ -1141,9 +1074,9 @@
     letter-spacing: -0.01em !important;
   }
   .hrms-modal-footer {
-    background-color: var(--hrms-page-bg, #f8fafc) !important;
+    background-color: var(--hrms-card-bg, #ffffff) !important;
     border-top: 1px solid var(--hrms-border, #e2e8f0) !important;
-    padding: 0.75rem 1.25rem !important;
+    padding: 0.9rem 1.5rem !important;
   }
   .hrms-modal-card {
     background-color: var(--hrms-page-bg, #f8fafc) !important;
@@ -1155,11 +1088,43 @@
     border: 1px dashed var(--hrms-border, #cbd5e1) !important;
     border-radius: 8px !important;
   }
+  .hrms-modal-btn-cancel {
+    height: 32px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    padding: 0 1rem !important;
+    border-radius: 6px !important;
+    background-color: var(--hrms-card-bg, #ffffff) !important;
+    border: 1px solid var(--hrms-border, #cbd5e1) !important;
+    color: var(--hrms-text-body, #475569) !important;
+    transition: all 0.15s ease !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .hrms-modal-btn-cancel:hover {
+    background-color: #f1f5f9 !important;
+    border-color: #94a3b8 !important;
+    color: #0f172a !important;
+  }
+  .hrms-modal-submit-btn {
+    height: 32px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    padding: 0 1.25rem !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.35rem !important;
+    transition: all 0.15s ease !important;
+  }
   .hrms-modal-submit-btn:disabled,
   #modalSubmitBtn:disabled {
-    background-color: #cbd5e1 !important;
-    border-color: #cbd5e1 !important;
-    color: #ffffff !important;
+    background-color: #e2e8f0 !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #94a3b8 !important;
     opacity: 1 !important;
     cursor: not-allowed !important;
     box-shadow: none !important;
@@ -1168,14 +1133,44 @@
   .hrms-modal-submit-btn:not(:disabled),
   #modalSubmitBtn:not(:disabled) {
     background-color: var(--hrms-primary, #2563eb) !important;
-    border-color: var(--hrms-primary, #2563eb) !important;
+    border: 1px solid var(--hrms-primary, #2563eb) !important;
     color: #ffffff !important;
+    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2) !important;
+    cursor: pointer !important;
   }
   .hrms-modal-submit-btn:not(:disabled):hover,
   #modalSubmitBtn:not(:disabled):hover {
     background-color: var(--hrms-primary-hover, #1d4ed8) !important;
     border-color: var(--hrms-primary-hover, #1d4ed8) !important;
+    color: #ffffff !important;
     transform: translateY(-1px) !important;
+    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.28) !important;
+  }
+  .hrms-modal-content .form-select,
+  .hrms-modal-content .form-control {
+    height: 36px !important;
+    font-size: 12px !important;
+    border-radius: 6px !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 0.45rem 0.85rem !important;
+    background-color: var(--hrms-card-bg, #ffffff) !important;
+    color: var(--hrms-text-body, #1e293b) !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+    box-sizing: border-box !important;
+  }
+  .hrms-modal-content .form-select {
+    padding-right: 2.25rem !important;
+    background-position: right 0.75rem center !important;
+  }
+  .hrms-modal-content textarea.form-control {
+    height: auto !important;
+    min-height: 60px !important;
+  }
+  .hrms-modal-content .form-label {
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    color: var(--hrms-text-heading, #0f172a) !important;
+    margin-bottom: 5px !important;
   }
   html[data-bs-theme="dark"] .hrms-modal-content {
     background-color: #111827 !important;
@@ -1184,13 +1179,13 @@
   html[data-bs-theme="dark"] .hrms-modal-header {
     background-color: #111827 !important;
     border-bottom-color: #334155 !important;
-    border-top-color: #3b82f6 !important;
+    border-top: none !important;
   }
   html[data-bs-theme="dark"] .hrms-modal-title {
     color: #f8fafc !important;
   }
   html[data-bs-theme="dark"] .hrms-modal-footer {
-    background-color: #0b0f19 !important;
+    background-color: #111827 !important;
     border-top-color: #334155 !important;
   }
   html[data-bs-theme="dark"] .hrms-modal-card,
@@ -1198,11 +1193,36 @@
     background-color: #0b0f19 !important;
     border-color: #334155 !important;
   }
+  html[data-bs-theme="dark"] .hrms-modal-btn-cancel {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #cbd5e1 !important;
+  }
+  html[data-bs-theme="dark"] .hrms-modal-btn-cancel:hover {
+    background-color: #334155 !important;
+    border-color: #475569 !important;
+    color: #ffffff !important;
+  }
   html[data-bs-theme="dark"] .hrms-modal-submit-btn:disabled,
   html[data-bs-theme="dark"] #modalSubmitBtn:disabled {
-    background-color: #334155 !important;
+    background-color: #1e293b !important;
     border-color: #334155 !important;
     color: #64748b !important;
+  }
+  html[data-bs-theme="dark"] .hrms-modal-submit-btn:not(:disabled),
+  html[data-bs-theme="dark"] #modalSubmitBtn:not(:disabled) {
+    background-color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+  }
+  html[data-bs-theme="dark"] .hrms-modal-content .form-select,
+  html[data-bs-theme="dark"] .hrms-modal-content .form-control {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #f3f4f6 !important;
+  }
+  html[data-bs-theme="dark"] .hrms-modal-content .form-label {
+    color: #f3f4f6 !important;
   }
 </style>
 
@@ -1210,7 +1230,7 @@
 
   <!-- Filter & Quick Date Navigation Toolbar -->
   <div class="hrms-card p-3">
-    <form method="get" action="{% url 'timesheets:timeline' %}" class="d-flex flex-wrap align-items-center gap-2">
+    <form method="get" action="{% url 'timesheets:timeline' %}" class="d-flex flex-wrap align-items-center gap-2.5">
       
       <!-- Quick Date Buttons: Previous Day, Today, Next Day (Compact Size) -->
       <div class="d-inline-flex align-items-center gap-1 flex-shrink-0">
@@ -1235,7 +1255,7 @@
       </div>
 
       <!-- Date Input with Auto-submit on change for complete sync -->
-      <div class="hrms-time-date-wrap flex-grow-1 flex-sm-grow-0" style="min-width: 145px;">
+      <div class="hrms-time-date-wrap flex-grow-1 flex-sm-grow-0" style="width: 170px; min-width: 170px;">
         <div class="input-group input-group-sm h-100">
           <span class="input-group-text bg-body-tertiary">
             <svg class="lucide lucide-calendar" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
@@ -1245,7 +1265,7 @@
       </div>
 
       <!-- Department Selector with Auto-submit on change -->
-      <div class="flex-grow-1 flex-md-grow-0" style="min-width: 160px;">
+      <div class="flex-grow-1 flex-md-grow-0" style="width: 205px; min-width: 205px;">
         <select name="department" class="form-select hrms-time-select hrms-time-select-dept w-100" aria-label="Filter by department" onchange="if(this.form.employee) this.form.employee.value=''; this.form.submit();">
           <option value="">All Departments</option>
           {% for dept in departments %}
@@ -1257,7 +1277,7 @@
       </div>
 
       <!-- Employee Selector with Auto-submit on change -->
-      <div class="flex-grow-1 flex-md-grow-0" style="min-width: 215px;">
+      <div class="flex-grow-1 flex-md-grow-0" style="width: 205px; min-width: 205px;">
         <select name="employee" class="form-select hrms-time-select hrms-time-select-emp w-100" aria-label="Select employee" onchange="this.form.submit()">
           {% for emp in employees %}
             <option value="{{ emp.pk }}" {% if selected_employee and selected_employee.pk == emp.pk %}selected{% endif %}>
@@ -1270,7 +1290,7 @@
       </div>
 
       <!-- Action Buttons: Apply & Reset (Smaller & Clean) -->
-      <div class="d-inline-flex align-items-center gap-1.5 ms-auto">
+      <div class="d-inline-flex align-items-center gap-2 ms-auto">
         <button type="submit" class="hrms-time-btn hrms-time-btn-apply" title="Apply filters">
           <svg class="lucide lucide-filter" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
           <span>Apply</span>
@@ -1552,44 +1572,10 @@
                                data-day-index="{{ cell.day_index }}"
                                data-entry-type="{{ row.entry_type }}"
                                class="time-entry-input {% if cell.notes %}has-notes{% endif %} {% if cell.hours_minutes > 0 %}has-hours{% endif %}"
-                               onclick="openQuickTimeMenu(event, {{ cell.pk }})"
                                oninput="onHoursInputChange(this)"
                                onkeydown="onTimeEntryKeydown(event, this)"
                                onfocus="onTimeEntryFocus(this)"
                                onblur="onTimeEntryBlur(this)">
-
-                        <!-- Quick Time Picker Dropdown (Access all times when clicked) -->
-                        <div class="cell-time-dropdown" id="time_dropdown_{{ cell.pk }}" onclick="event.stopPropagation()">
-                          <div class="d-flex align-items-center justify-content-between px-1 pb-1 mb-1 border-bottom">
-                            <div class="d-flex align-items-center gap-1">
-                              <i class="bi bi-clock text-primary" style="font-size: 11px;"></i>
-                              <span class="fw-bold" style="font-size: 11px;">Access All Times</span>
-                            </div>
-                            <span class="badge bg-primary-subtle text-primary font-monospace" style="font-size: 9px;">9h standard</span>
-                          </div>
-                          <div class="time-preset-grid">
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '0:00' %}is-active{% endif %}" data-preset="0:00" onclick="selectTimePreset({{ cell.pk }}, '0:00')">0:00</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '0:30' %}is-active{% endif %}" data-preset="0:30" onclick="selectTimePreset({{ cell.pk }}, '0:30')">0:30</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '1:00' %}is-active{% endif %}" data-preset="1:00" onclick="selectTimePreset({{ cell.pk }}, '1:00')">1:00</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '1:30' %}is-active{% endif %}" data-preset="1:30" onclick="selectTimePreset({{ cell.pk }}, '1:30')">1:30</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '2:00' %}is-active{% endif %}" data-preset="2:00" onclick="selectTimePreset({{ cell.pk }}, '2:00')">2:00</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '2:30' %}is-active{% endif %}" data-preset="2:30" onclick="selectTimePreset({{ cell.pk }}, '2:30')">2:30</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '3:00' %}is-active{% endif %}" data-preset="3:00" onclick="selectTimePreset({{ cell.pk }}, '3:00')">3:00</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '3:30' %}is-active{% endif %}" data-preset="3:30" onclick="selectTimePreset({{ cell.pk }}, '3:30')">3:30</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '4:00' %}is-active{% endif %}" data-preset="4:00" onclick="selectTimePreset({{ cell.pk }}, '4:00')">4:00</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '4:30' %}is-active{% endif %}" data-preset="4:30" onclick="selectTimePreset({{ cell.pk }}, '4:30')">4:30</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '5:00' %}is-active{% endif %}" data-preset="5:00" onclick="selectTimePreset({{ cell.pk }}, '5:00')">5:00</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '5:30' %}is-active{% endif %}" data-preset="5:30" onclick="selectTimePreset({{ cell.pk }}, '5:30')">5:30</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '6:00' %}is-active{% endif %}" data-preset="6:00" onclick="selectTimePreset({{ cell.pk }}, '6:00')">6:00</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '7:00' %}is-active{% endif %}" data-preset="7:00" onclick="selectTimePreset({{ cell.pk }}, '7:00')">7:00</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '8:00' %}is-active{% endif %}" data-preset="8:00" onclick="selectTimePreset({{ cell.pk }}, '8:00')">8:00</button>
-                            <button type="button" class="time-preset-btn {% if cell.hours_str == '9:00' %}is-active{% endif %}" data-preset="9:00" onclick="selectTimePreset({{ cell.pk }}, '9:00')">9:00</button>
-                          </div>
-                          <div class="pt-1 border-top d-flex align-items-center justify-content-between text-secondary" style="font-size: 9.5px;">
-                            <span>Or type any hours</span>
-                            <button type="button" class="btn btn-link text-secondary p-0 text-decoration-none" style="font-size: 9.5px;" onclick="closeAllTimeDropdowns()">Close</button>
-                          </div>
-                        </div>
 
                         <!-- Comment Hover Card (Shows comment when hovering on the time) -->
                         <div class="cell-hover-comment-card" id="comment_card_{{ cell.pk }}" onclick="event.stopPropagation()">
@@ -1920,8 +1906,8 @@
 
         </div>
         <div class="modal-footer hrms-modal-footer px-4 py-2 border-top d-flex justify-content-end gap-2">
-          <button type="button" class="btn btn-sm btn-outline-secondary px-3" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" id="modalSubmitBtn" class="btn btn-sm btn-primary hrms-modal-submit-btn px-4" disabled>Add Entry</button>
+          <button type="button" class="btn hrms-modal-btn-cancel" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" id="modalSubmitBtn" class="btn hrms-modal-submit-btn" disabled>Add Entry</button>
         </div>
       </form>
     </div>
@@ -1950,7 +1936,7 @@
         <!-- Rendered dynamically via JavaScript -->
       </div>
       <div class="modal-footer hrms-modal-footer px-4 py-2 border-top d-flex justify-content-end">
-        <button type="button" class="btn btn-sm btn-outline-secondary px-3" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn hrms-modal-btn-cancel" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -2045,71 +2031,9 @@
     }, 40);
   }
 
-  // Quick Time Picker Dropdown: access all standard times on click
-  function openQuickTimeMenu(event, cellId) {
-    if (event) event.stopPropagation();
-    document.querySelectorAll(".cell-hover-comment-card.is-active").forEach(c => c.classList.remove("is-active"));
-
-    // Close any other open time dropdowns
-    document.querySelectorAll(".cell-time-dropdown.is-open").forEach(d => {
-      if (d.id !== `time_dropdown_${cellId}`) d.classList.remove("is-open");
-    });
-
-    const dropdown = document.getElementById(`time_dropdown_${cellId}`);
-    const input = document.getElementById(`input_cell_${cellId}`);
-    if (dropdown) {
-      dropdown.classList.toggle("is-open");
-      if (dropdown.classList.contains("is-open") && input) {
-        const currentVal = input.value.trim();
-        dropdown.querySelectorAll(".time-preset-btn").forEach(btn => {
-          if (btn.getAttribute("data-preset") === currentVal) {
-            btn.classList.add("is-active");
-          } else {
-            btn.classList.remove("is-active");
-          }
-        });
-      }
-    }
-  }
-
-  // Select a preset time and auto-sync
-  function selectTimePreset(cellId, timeStr) {
-    const input = document.getElementById(`input_cell_${cellId}`);
-    const dropdown = document.getElementById(`time_dropdown_${cellId}`);
-    if (input) {
-      input.value = timeStr;
-      onHoursInputChange(input);
-      input.focus();
-    }
-    if (dropdown) {
-      dropdown.classList.remove("is-open");
-    }
-
-    const notesEl = document.getElementById(`notes_cell_${cellId}`);
-    const notesVal = notesEl ? notesEl.value.trim() : "";
-    fetch("{% url 'timesheets:update_cell' %}", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": "{{ csrf_token }}",
-        "X-Requested-With": "XMLHttpRequest"
-      },
-      body: JSON.stringify({
-        cell_id: cellId,
-        hours: timeStr,
-        notes: notesVal
-      })
-    }).catch(e => console.error("Time preset sync error:", e));
-  }
-
-  function closeAllTimeDropdowns() {
-    document.querySelectorAll(".cell-time-dropdown.is-open").forEach(d => d.classList.remove("is-open"));
-  }
-
   // Comment Card Handlers (Add comments on hover or click)
   function openCommentHoverCard(event, cellId) {
     if (event) event.stopPropagation();
-    closeAllTimeDropdowns();
     const card = document.getElementById(`comment_card_${cellId}`);
     if (card) {
       card.classList.toggle("is-active");
@@ -2131,7 +2055,6 @@
   }
 
   function onCommentTextareaBlur(cellId) {
-    // Keep active for small delay in case clicking a tag or save button
     setTimeout(() => {
       const card = document.getElementById(`comment_card_${cellId}`);
       if (card && !card.contains(document.activeElement)) {
@@ -2205,9 +2128,6 @@
 
   // Global dismiss on click outside
   document.addEventListener("click", function (e) {
-    if (!e.target.closest(".cell-time-dropdown") && !e.target.closest(".time-entry-input")) {
-      closeAllTimeDropdowns();
-    }
     if (!e.target.closest(".cell-hover-comment-card") && !e.target.closest(".time-entry-container")) {
       document.querySelectorAll(".cell-hover-comment-card.is-active").forEach(c => c.classList.remove("is-active"));
     }
@@ -2225,7 +2145,6 @@
         const nextInput = document.querySelector(`input[data-row-id="${rowId}"][data-day-index="${dayIndex + 1}"]`);
         if (nextInput) {
           e.preventDefault();
-          closeAllTimeDropdowns();
           nextInput.focus();
         }
       }
@@ -2234,13 +2153,11 @@
         const prevInput = document.querySelector(`input[data-row-id="${rowId}"][data-day-index="${dayIndex - 1}"]`);
         if (prevInput) {
           e.preventDefault();
-          closeAllTimeDropdowns();
           prevInput.focus();
         }
       }
     } else if (e.key === "ArrowDown" || e.key === "Enter") {
       e.preventDefault();
-      closeAllTimeDropdowns();
       if (currentRowIndex < allRows.length - 1) {
         const nextRow = allRows[currentRowIndex + 1];
         const nextRowId = nextRow.getAttribute("data-row-id");
@@ -2249,7 +2166,6 @@
       }
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      closeAllTimeDropdowns();
       if (currentRowIndex > 0) {
         const prevRow = allRows[currentRowIndex - 1];
         const prevRowId = prevRow.getAttribute("data-row-id");
@@ -2257,7 +2173,6 @@
         if (targetInput) targetInput.focus();
       }
     } else if (e.key === "Escape") {
-      closeAllTimeDropdowns();
       inputEl.blur();
     }
   }
