@@ -7,7 +7,7 @@
   <title>{% block title %}HRMS{% endblock %}</title>
   <script>
     (function () {
-      const savedTheme = localStorage.getItem('hrms-theme') || 'light';
+      const savedTheme = localStorage.getItem('hrms-theme') || 'dark';
       document.documentElement.setAttribute('data-bs-theme', savedTheme);
       const savedSidebar = localStorage.getItem('hrms-sidebar-collapsed');
       if (savedSidebar === 'true') {
@@ -1771,12 +1771,12 @@
       }
     }
 
-    const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+    const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'dark';
     updateTheme(currentTheme);
 
     if (toggleBtn) {
       toggleBtn.addEventListener('click', function () {
-        const activeTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+        const activeTheme = document.documentElement.getAttribute('data-bs-theme') || 'dark';
         const nextTheme = activeTheme === 'dark' ? 'light' : 'dark';
         localStorage.setItem('hrms-theme', nextTheme);
         updateTheme(nextTheme);
