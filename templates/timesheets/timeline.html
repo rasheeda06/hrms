@@ -143,13 +143,14 @@
   /* Timesheet Table & Components - Aligned with HRMS Enterprise Design System */
   .timesheet-card {
     background: var(--hrms-card-bg, #ffffff);
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
-    padding: 1.25rem;
-    margin-bottom: 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+    padding: 0;
+    margin-bottom: 1.5rem;
     display: flex;
     flex-direction: column;
     border: 1px solid var(--hrms-border, #e2e8f0);
+    overflow: hidden;
   }
   .table-container {
     overflow-x: auto;
@@ -158,15 +159,21 @@
   }
   .timesheet-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     min-width: 860px;
     font-size: 12px;
     color: var(--hrms-text-body, #334155);
   }
   .timesheet-table th,
   .timesheet-table td {
-    border: 1px solid var(--hrms-border, #e2e8f0);
     vertical-align: middle;
+    border-bottom: 1px solid var(--hrms-border, #e2e8f0);
+    border-right: 1px solid #f1f5f9;
+  }
+  .timesheet-table th:last-child,
+  .timesheet-table td:last-child {
+    border-right: none;
   }
   .timesheet-table thead th {
     background-color: var(--hrms-table-header-bg, #f8fafc);
@@ -174,13 +181,17 @@
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     padding: 10px 8px;
+    border-top: none;
+  }
+  .timesheet-table thead th:first-child {
+    border-left: none;
   }
   .timesheet-table .project-col {
     min-width: 250px;
     width: 28%;
-    padding-left: 14px;
+    padding-left: 16px;
     padding-right: 14px;
     text-align: left;
   }
@@ -188,7 +199,7 @@
     width: 82px;
     min-width: 78px;
     text-align: center;
-    padding: 6px 4px;
+    padding: 8px 4px;
   }
   .timesheet-table .total-col {
     width: 82px;
@@ -197,17 +208,18 @@
     font-weight: 700;
     color: var(--hrms-primary, #2563eb);
     padding: 8px 6px;
+    background-color: #fafbfc;
   }
   .day-header {
     font-size: 11px;
-    font-weight: 700;
-    color: #334155;
+    font-weight: 600;
+    color: #475569;
     letter-spacing: 0.04em;
   }
   .day-header-date {
     font-size: 10px;
     font-weight: 500;
-    color: #64748b;
+    color: #94a3b8;
     margin-top: 3px;
     display: flex;
     align-items: center;
@@ -218,36 +230,35 @@
   /* Task Rows */
   .task-row {
     transition: background-color 0.12s ease;
+    background-color: #ffffff;
   }
-  .task-row:hover {
-    background-color: #f8fafc;
+  .task-row:hover td {
+    background-color: rgba(37, 99, 235, 0.03);
   }
   .project-name {
-    font-size: 12.5px;
-    font-weight: 700;
-    color: #0f172a;
-    line-height: 1.25;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--hrms-text-heading, #0f172a);
+    line-height: 1.3;
   }
   .milestone-name {
     font-size: 11px;
-    color: #64748b;
+    color: var(--hrms-text-muted, #64748b);
     font-weight: 500;
-    margin-top: 2px;
+    margin-top: 1px;
   }
-  .task-name {
-    font-size: 12px;
-    color: var(--hrms-primary, #2563eb);
+  .task-name-text {
+    font-size: 11.5px;
+    color: var(--hrms-text-body, #334155);
     font-weight: 500;
-    display: inline-block;
-    margin-top: 2px;
   }
   .task-row-delete-btn {
-    border: 1px solid #fecaca;
-    color: #ef4444;
-    background: #fef2f2;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -257,10 +268,8 @@
     flex-shrink: 0;
   }
   .task-row-delete-btn:hover {
-    background: #fee2e2;
-    border-color: #f87171;
+    background-color: #fee2e2;
     color: #dc2626;
-    transform: scale(1.08);
   }
 
   /* Cell Time Entry Input */
@@ -271,22 +280,32 @@
     align-items: center;
   }
   .time-entry-input {
-    width: 62px;
-    height: 30px;
+    width: 58px;
+    height: 28px;
     text-align: center;
-    font-size: 12px;
-    font-weight: 600;
-    color: #1e293b;
-    border: 1px solid #cbd5e1;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #94a3b8;
+    border: 1px solid #e2e8f0;
     border-radius: 6px;
     background-color: #ffffff;
     padding: 2px 4px;
     transition: all 0.15s ease;
   }
+  .time-entry-input:hover {
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+  }
   .time-entry-input:focus {
     border-color: var(--hrms-primary, #2563eb);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     outline: none;
+    background-color: #ffffff;
+    color: #0f172a;
+  }
+  .time-entry-input.has-hours {
+    color: #0f172a;
+    font-weight: 600;
   }
   .time-entry-input.has-notes {
     border-left: 3px solid var(--hrms-primary, #2563eb);
@@ -330,37 +349,45 @@
   /* Totals Row */
   .totals-row td {
     background-color: var(--hrms-table-header-bg, #f8fafc);
-    font-weight: 700;
-    border-top: 2px solid var(--hrms-border, #cbd5e1);
+    border-top: 1px solid var(--hrms-border, #e2e8f0);
+    border-bottom: none;
     padding: 10px 8px;
+    vertical-align: middle;
   }
   .total-label {
-    font-weight: 700;
-    font-size: 12.5px;
-    color: #0f172a;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--hrms-text-heading, #0f172a);
+    padding-left: 16px !important;
   }
   .time-total {
-    font-weight: 700;
-    font-size: 12.5px;
-    color: #0f172a;
+    font-weight: 600;
+    font-size: 12px;
+    color: #64748b;
     text-align: center;
+  }
+  .time-total.has-hours {
+    color: var(--hrms-text-heading, #0f172a);
+    font-weight: 700;
   }
   .total-col .time-total {
     color: var(--hrms-primary, #2563eb);
-    font-size: 13.5px;
-    font-weight: 800;
+    font-size: 13px;
+    font-weight: 700;
   }
 
   /* 9-Hour Daily Work Allocation Badge */
   .day-9h-pill {
-    font-size: 9.5px;
+    font-size: 10px;
     font-weight: 600;
-    padding: 2px 6px;
-    border-radius: 4px;
-    display: inline-block;
-    margin-top: 2px;
+    padding: 1.5px 7px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
     cursor: pointer;
     transition: all 0.12s ease;
+    line-height: 1.35;
   }
   .day-9h-pill:hover {
     transform: translateY(-1px);
@@ -375,33 +402,6 @@
     color: var(--hrms-primary, #2563eb);
     border: 1px solid #bfdbfe;
   }
-  .day-9h-zero {
-    background-color: #f8fafc;
-    color: #94a3b8;
-    border: 1px solid #e2e8f0;
-  }
-
-  /* Add Time Entry Button */
-  .btn-add-time-entry {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--hrms-primary, #2563eb);
-    border: 1px solid var(--hrms-primary, #2563eb);
-    border-radius: 6px;
-    padding: 0.35rem 0.85rem;
-    background-color: transparent;
-    cursor: pointer;
-    transition: all 0.18s ease;
-  }
-  .btn-add-time-entry:hover {
-    background-color: var(--hrms-primary, #2563eb);
-    color: #ffffff;
-    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
-    transform: translateY(-1px);
-  }
 
   /* Certify Bar */
   .certify-bar {
@@ -412,7 +412,6 @@
     border: 1px solid var(--hrms-primary-border, #bfdbfe);
     border-radius: 8px;
     padding: 10px 14px;
-    margin-top: 14px;
   }
   .certify-icon {
     color: var(--hrms-primary, #2563eb);
@@ -420,7 +419,7 @@
     flex-shrink: 0;
   }
   .certifly-text {
-    font-size: 12px;
+    font-size: 11.5px;
     color: #1e40af;
     line-height: 1.4;
   }
@@ -431,7 +430,7 @@
     align-items: center;
     justify-content: flex-end;
     gap: 10px;
-    margin-top: 14px;
+    margin-top: 12px;
   }
 
   /* Cell Hover Tooltip */
@@ -470,14 +469,16 @@
   }
   html[data-bs-theme="dark"] .timesheet-table th,
   html[data-bs-theme="dark"] .timesheet-table td {
-    border-color: #374151 !important;
+    border-color: #1f2937 !important;
+    background-color: #111827 !important;
   }
   html[data-bs-theme="dark"] .timesheet-table thead th {
-    background-color: #1f2937 !important;
-    color: #9ca3af !important;
+    background-color: #1e293b !important;
+    color: #94a3b8 !important;
+    border-color: #374151 !important;
   }
-  html[data-bs-theme="dark"] .task-row:hover {
-    background-color: #1a2234 !important;
+  html[data-bs-theme="dark"] .task-row:hover td {
+    background-color: rgba(59, 130, 246, 0.05) !important;
   }
   html[data-bs-theme="dark"] .project-name {
     color: #f8fafc !important;
@@ -485,28 +486,61 @@
   html[data-bs-theme="dark"] .milestone-name {
     color: #94a3b8 !important;
   }
-  html[data-bs-theme="dark"] .task-name {
-    color: #60a5fa !important;
+  html[data-bs-theme="dark"] .task-name-text {
+    color: #cbd5e1 !important;
   }
   html[data-bs-theme="dark"] .time-entry-input {
     background-color: #0b0f19 !important;
     border-color: #374151 !important;
-    color: #f3f4f6 !important;
+    color: #64748b !important;
+  }
+  html[data-bs-theme="dark"] .time-entry-input:hover {
+    border-color: #4b5563 !important;
+  }
+  html[data-bs-theme="dark"] .time-entry-input.has-hours {
+    color: #f8fafc !important;
   }
   html[data-bs-theme="dark"] .time-entry-input:focus {
     border-color: #3b82f6 !important;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+    background-color: #0b0f19 !important;
   }
   html[data-bs-theme="dark"] .totals-row td {
-    background-color: #1f2937 !important;
+    background-color: #1e293b !important;
     color: #f3f4f6 !important;
+    border-color: #374151 !important;
   }
-  html[data-bs-theme="dark"] .total-label,
+  html[data-bs-theme="dark"] .total-label {
+    color: #f8fafc !important;
+  }
   html[data-bs-theme="dark"] .time-total {
-    color: #f3f4f6 !important;
+    color: #94a3b8 !important;
+  }
+  html[data-bs-theme="dark"] .time-total.has-hours {
+    color: #f8fafc !important;
   }
   html[data-bs-theme="dark"] .total-col .time-total {
     color: #60a5fa !important;
+  }
+  html[data-bs-theme="dark"] .add-entry-row td {
+    background-color: #151d2e !important;
+  }
+  html[data-bs-theme="dark"] .task-row-delete-btn {
+    color: #64748b;
+  }
+  html[data-bs-theme="dark"] .task-row-delete-btn:hover {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+  }
+  html[data-bs-theme="dark"] .day-9h-met {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    color: #34d399 !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+  }
+  html[data-bs-theme="dark"] .day-9h-sub {
+    background-color: rgba(37, 99, 235, 0.15) !important;
+    color: #93c5fd !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
   }
   html[data-bs-theme="dark"] .cell-notes-popover {
     background-color: #1f2937 !important;
@@ -519,8 +553,11 @@
     color: #f3f4f6 !important;
   }
   html[data-bs-theme="dark"] .certify-bar {
-    background-color: rgba(37, 99, 235, 0.15) !important;
-    border-color: rgba(59, 130, 246, 0.3) !important;
+    background-color: rgba(37, 99, 235, 0.12) !important;
+    border-color: rgba(59, 130, 246, 0.25) !important;
+    color: #bfdbfe !important;
+  }
+  html[data-bs-theme="dark"] .certifly-text {
     color: #bfdbfe !important;
   }
   .badge-entry-meeting {
@@ -536,28 +573,10 @@
     gap: 3px;
     line-height: 1.4;
   }
-  .badge-entry-task {
-    background-color: var(--hrms-primary-light, #eff6ff);
-    color: var(--hrms-primary, #2563eb);
-    border: 1px solid rgba(37, 99, 235, 0.25);
-    font-size: 10px;
-    font-weight: 600;
-    padding: 1px 6px;
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    line-height: 1.4;
-  }
   html[data-bs-theme="dark"] .badge-entry-meeting {
     background-color: rgba(147, 51, 234, 0.2) !important;
     color: #c084fc !important;
     border-color: rgba(168, 85, 247, 0.3) !important;
-  }
-  html[data-bs-theme="dark"] .badge-entry-task {
-    background-color: rgba(37, 99, 235, 0.2) !important;
-    color: #93c5fd !important;
-    border-color: rgba(59, 130, 246, 0.3) !important;
   }
 
   /* HRMS Enterprise Modal Styling (matching dashboard cards and palette) */
@@ -924,12 +943,12 @@
               <tr>
                 <th class="project-col">PROJECTS</th>
                 {% for day in week_days %}
-                  <th class="day-col text-center" style="padding: 8px 4px; width: 85px;">
-                    <div class="day-header">{{ day.day_name }}</div>
-                    <div class="day-header-date d-flex justify-content-center align-items-center mt-1" style="font-size: 10px; color: #64748b; font-weight: 500; {% if day.is_today %}color: #2563eb; font-weight: 700;{% endif %}">
+                  <th class="day-col text-center" style="width: 85px;">
+                    <div class="day-header {% if day.is_today %}text-primary fw-bold{% endif %}">{{ day.day_name }}</div>
+                    <div class="day-header-date d-flex justify-content-center align-items-center mt-1" style="font-size: 10px; {% if day.is_today %}color: #2563eb; font-weight: 600;{% else %}color: #94a3b8; font-weight: 500;{% endif %}">
                       {{ day.date_formatted }}
                       {% if day.is_today %}
-                        <span class="badge bg-primary text-white ms-1" style="font-size: 8px; padding: 1px 3px;">TODAY</span>
+                        <span class="badge bg-primary text-white ms-1" style="font-size: 8px; padding: 1px 4px; border-radius: 4px;">TODAY</span>
                       {% endif %}
                     </div>
                   </th>
@@ -945,9 +964,9 @@
                   <td class="project-col">
                     <div class="d-flex align-items-start justify-content-between gap-2 py-1">
                       <div class="min-w-0">
-                        <div class="fw-bold text-body text-truncate" style="font-size: 13px;">{{ row.project_name }}</div>
+                        <div class="project-name text-truncate">{{ row.project_name }}</div>
                         {% if row.milestone_name %}
-                          <div class="text-secondary text-truncate" style="font-size: 11px; font-weight: 500; margin-top: 1px;">
+                          <div class="milestone-name text-truncate">
                             {{ row.milestone_name }}
                           </div>
                         {% endif %}
@@ -956,16 +975,12 @@
                             <span class="badge-entry-meeting" title="Meeting Entry">
                               <i class="bi bi-camera-video"></i> Meeting
                             </span>
-                          {% else %}
-                            <span class="badge-entry-task" title="Task Entry">
-                              <i class="bi bi-check2-square"></i> Task
-                            </span>
                           {% endif %}
-                          <span class="text-primary fw-medium text-truncate" style="font-size: 12px;">{{ row.task_name }}</span>
+                          <span class="task-name-text text-truncate">{{ row.task_name }}</span>
                         </div>
                       </div>
                       <button type="button" class="task-row-delete-btn" onclick="deleteTaskRow({{ row.pk }})" title="Delete task row">
-                        <i class="bi bi-trash3" style="font-size: 11px;"></i>
+                        <i class="bi bi-trash3" style="font-size: 12px;"></i>
                       </button>
                     </div>
                   </td>
@@ -983,7 +998,7 @@
                                data-cell-id="{{ cell.pk }}"
                                data-row-id="{{ row.pk }}"
                                data-day-index="{{ cell.day_index }}"
-                               class="time-entry-input {% if cell.notes %}has-notes{% endif %}"
+                               class="time-entry-input {% if cell.notes %}has-notes{% endif %} {% if cell.hours_minutes > 0 %}has-hours{% endif %}"
                                oninput="onHoursInputChange(this)"
                                onfocus="showCellNotesPopover(this)"
                                onblur="scheduleHideCellNotesPopover(this)">
@@ -1045,42 +1060,40 @@
               <!-- + Add Time Entry row button (when rows exist) -->
               {% if task_rows %}
                 <tr class="add-entry-row">
-                  <td class="project-col" style="border-right: none; padding: 10px 14px;">
-                    <button type="button" class="btn-add-time-entry" data-bs-toggle="modal" data-bs-target="#manualTimeEntryModal">
-                      <i class="bi bi-plus-circle"></i>
+                  <td colspan="9" style="padding: 8px 16px; background-color: #fafbfc; border-bottom: 1px solid var(--hrms-border, #e2e8f0);">
+                    <button type="button" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1.5" data-bs-toggle="modal" data-bs-target="#manualTimeEntryModal" style="font-size: 11.5px; height: 28px; padding: 0.25rem 0.75rem; border-radius: 6px; font-weight: 500;">
+                      <i class="bi bi-plus-lg"></i>
                       <span>Add Time Entry</span>
                     </button>
                   </td>
-                  <td colspan="8" style="border-left: none;"></td>
                 </tr>
               {% endif %}
 
               <!-- Totals row: Total hours/days -->
               <tr class="totals-row">
                 <td class="total-label">
-                  <div class="d-flex align-items-center justify-content-between">
-                    <span>Total hours/days</span>
-                    <span class="badge bg-secondary-subtle text-secondary small fw-normal font-monospace">Standard 9h/day</span>
-                  </div>
+                  Total hours/days
                 </td>
                 {% for day in week_days %}
                   <td class="day-col">
-                    <div class="time-total col-total-display" id="dayTotal_{{ day.day_index }}">
+                    <div class="time-total col-total-display {% if day.total_minutes > 0 %}has-hours{% endif %}" id="dayTotal_{{ day.day_index }}">
                       {{ day.total_hours }}
                     </div>
                     <!-- 9-Hour Allocation Target Indicator -->
-                    <div class="mt-1">
-                      <span class="day-9h-pill {% if day.is_target_met %}day-9h-met{% elif day.total_minutes > 0 %}day-9h-sub{% else %}day-9h-zero{% endif %}"
-                            title="Click to view 9-hour task allocation breakdown"
-                            onclick="openDayAllocationModal({{ day.day_index }})">
-                        {% if day.is_target_met %}
+                    <div class="mt-1" id="dayBadgeContainer_{{ day.day_index }}">
+                      {% if day.is_target_met %}
+                        <span class="day-9h-pill day-9h-met"
+                              title="Click to view 9-hour task allocation breakdown"
+                              onclick="openDayAllocationModal({{ day.day_index }})">
                           9h Met <i class="bi bi-check"></i>
-                        {% elif day.total_minutes > 0 %}
+                        </span>
+                      {% elif day.total_minutes > 0 %}
+                        <span class="day-9h-pill day-9h-sub"
+                              title="Click to view 9-hour task allocation breakdown"
+                              onclick="openDayAllocationModal({{ day.day_index }})">
                           {{ day.total_hours }} / 9h
-                        {% else %}
-                          0h / 9h
-                        {% endif %}
-                      </span>
+                        </span>
+                      {% endif %}
                     </div>
                   </td>
                 {% endfor %}
@@ -1095,24 +1108,23 @@
           </table>
         </div>
 
-        <!-- Certify Bar -->
-        <div class="timesheet-content-container">
+        <!-- Card Footer: Certify Bar & Actions -->
+        <div class="px-3 py-3 border-top" style="background-color: var(--hrms-card-bg, #ffffff);">
           <div class="certify-bar">
             <span class="bi bi-shield-check certify-icon fs-5"></span>
             <p class="mb-0 certifly-text">
               I certify that all hours entered are accurate, reflect actual work performed, and comply with organizational policies.
             </p>
           </div>
-        </div>
 
-        <!-- Timesheet Action Buttons -->
-        <div class="timesheet-action-footer">
-          <button type="button" class="btn btn-sm btn-outline-secondary px-3" onclick="submitTimesheetAction('draft')">
-            <i class="bi bi-save me-1"></i> Save as Draft
-          </button>
-          <button type="button" class="btn btn-sm btn-primary px-4" onclick="submitTimesheetAction('submit')">
-            <i class="bi bi-send-check me-1"></i> Submit Timesheet
-          </button>
+          <div class="timesheet-action-footer">
+            <button type="button" class="btn btn-sm btn-outline-secondary px-3" onclick="submitTimesheetAction('draft')">
+              <i class="bi bi-save me-1"></i> Save as Draft
+            </button>
+            <button type="button" class="btn btn-sm btn-primary px-4" onclick="submitTimesheetAction('submit')">
+              <i class="bi bi-send-check me-1"></i> Submit Timesheet
+            </button>
+          </div>
         </div>
 
       </div>
@@ -1358,6 +1370,13 @@
     const rowId = inputEl.getAttribute("data-row-id");
     const dayIndex = parseInt(inputEl.getAttribute("data-day-index"), 10);
 
+    const valMins = parseTimeToMinutes(inputEl.value);
+    if (valMins > 0) {
+      inputEl.classList.add("has-hours");
+    } else {
+      inputEl.classList.remove("has-hours");
+    }
+
     // 1. Recalculate row total
     const rowInputs = document.querySelectorAll(`input[data-row-id="${rowId}"]`);
     let rowMins = 0;
@@ -1378,20 +1397,22 @@
     const dayTotalEl = document.getElementById(`dayTotal_${dayIndex}`);
     if (dayTotalEl) {
       dayTotalEl.textContent = formatMinutesToTime(colMins);
+      if (colMins > 0) {
+        dayTotalEl.classList.add("has-hours");
+      } else {
+        dayTotalEl.classList.remove("has-hours");
+      }
     }
 
     // Update 9-hour target badge
-    const dayTargetPill = dayTotalEl?.parentElement?.querySelector('.day-9h-pill');
-    if (dayTargetPill) {
+    const badgeContainer = document.getElementById(`dayBadgeContainer_${dayIndex}`);
+    if (badgeContainer) {
       if (colMins >= 540) {
-        dayTargetPill.className = "day-9h-pill day-9h-met";
-        dayTargetPill.innerHTML = `9h Met <i class="bi bi-check"></i>`;
+        badgeContainer.innerHTML = `<span class="day-9h-pill day-9h-met" title="Click to view 9-hour task allocation breakdown" onclick="openDayAllocationModal(${dayIndex})">9h Met <i class="bi bi-check"></i></span>`;
       } else if (colMins > 0) {
-        dayTargetPill.className = "day-9h-pill day-9h-sub";
-        dayTargetPill.textContent = `${formatMinutesToTime(colMins)} / 9h`;
+        badgeContainer.innerHTML = `<span class="day-9h-pill day-9h-sub" title="Click to view 9-hour task allocation breakdown" onclick="openDayAllocationModal(${dayIndex})">${formatMinutesToTime(colMins)} / 9h</span>`;
       } else {
-        dayTargetPill.className = "day-9h-pill day-9h-sub text-muted";
-        dayTargetPill.textContent = `0h / 9h`;
+        badgeContainer.innerHTML = ``;
       }
     }
 
@@ -1596,6 +1617,44 @@
     }
   });
 
+  // Recalculate all totals across all 7 days
+  function recalculateAllTotals() {
+    let grandMins = 0;
+    for (let d = 0; d < 7; d++) {
+      let colMins = 0;
+      document.querySelectorAll(`input[data-day-index="${d}"]`).forEach(inp => {
+        colMins += parseTimeToMinutes(inp.value);
+      });
+      const dayTotalEl = document.getElementById(`dayTotal_${d}`);
+      if (dayTotalEl) {
+        dayTotalEl.textContent = formatMinutesToTime(colMins);
+        if (colMins > 0) {
+          dayTotalEl.classList.add("has-hours");
+        } else {
+          dayTotalEl.classList.remove("has-hours");
+        }
+      }
+      const badgeContainer = document.getElementById(`dayBadgeContainer_${d}`);
+      if (badgeContainer) {
+        if (colMins >= 540) {
+          badgeContainer.innerHTML = `<span class="day-9h-pill day-9h-met" title="Click to view 9-hour task allocation breakdown" onclick="openDayAllocationModal(${d})">9h Met <i class="bi bi-check"></i></span>`;
+        } else if (colMins > 0) {
+          badgeContainer.innerHTML = `<span class="day-9h-pill day-9h-sub" title="Click to view 9-hour task allocation breakdown" onclick="openDayAllocationModal(${d})">${formatMinutesToTime(colMins)} / 9h</span>`;
+        } else {
+          badgeContainer.innerHTML = ``;
+        }
+      }
+      grandMins += colMins;
+    }
+    const grandFormatted = formatMinutesToTime(grandMins);
+    const grandTotalEl = document.getElementById("grandTotalDisplay");
+    if (grandTotalEl) grandTotalEl.textContent = grandFormatted;
+    const cardWorkingHours = document.getElementById("cardWorkingHours");
+    if (cardWorkingHours) cardWorkingHours.textContent = grandFormatted;
+    const cardBillable = document.getElementById("cardBillable");
+    if (cardBillable) cardBillable.textContent = grandFormatted;
+  }
+
   // Delete task row
   function deleteTaskRow(rowId) {
     if (!confirm("Are you sure you want to remove this project task row?")) return;
@@ -1608,8 +1667,11 @@
       if (data.status === "success") {
         const tr = document.getElementById(`taskRow_${rowId}`);
         if (tr) tr.remove();
-        // Recalculate totals
-        onHoursInputChange(document.querySelector(".time-entry-input") || { getAttribute: () => 0 });
+        if (document.querySelectorAll(".task-row").length === 0) {
+          window.location.reload();
+        } else {
+          recalculateAllTotals();
+        }
       } else {
         window.location.reload();
       }
