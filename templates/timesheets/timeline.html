@@ -126,28 +126,29 @@
     padding: 0 0.55rem !important;
   }
 
-  /* Week navigation strip: Uniform 48px Height, Zero Protrusion */
+  /* Week navigation strip: Uniform 54px Height, 12px Gap, Zero Protrusion */
   .hrms-week-pill {
     color: #475569 !important;
     background-color: #ffffff !important;
     border: 1px solid #e2e8f0 !important;
-    width: 62px !important;
-    min-width: 62px !important;
-    max-width: 62px !important;
-    height: 48px !important;
-    min-height: 48px !important;
-    max-height: 48px !important;
-    padding: 3px 2px !important;
-    border-radius: 6px !important;
+    width: 64px !important;
+    min-width: 64px !important;
+    max-width: 64px !important;
+    height: 54px !important;
+    min-height: 54px !important;
+    max-height: 54px !important;
+    padding: 5px 2px 4px !important;
+    border-radius: 8px !important;
     transition: all 0.15s ease !important;
     display: inline-flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: center !important;
+    justify-content: space-between !important;
     box-sizing: border-box !important;
     margin: 0 !important;
     text-align: center !important;
     line-height: 1 !important;
+    flex-shrink: 0 !important;
   }
   .hrms-week-pill:hover {
     background-color: #f8fafc !important;
@@ -169,27 +170,39 @@
     color: #ffffff !important;
   }
   .hrms-week-day {
-    font-size: 9.5px !important;
+    font-size: 10px !important;
     font-weight: 600 !important;
     line-height: 1 !important;
     letter-spacing: 0.04em !important;
+    display: block !important;
   }
   .hrms-week-num {
-    font-size: 13px !important;
+    font-size: 13.5px !important;
     font-weight: 700 !important;
-    line-height: 1.1 !important;
-    margin-top: 1px !important;
+    line-height: 1 !important;
+    margin-top: 2px !important;
+    display: block !important;
+  }
+  .hrms-week-today-slot {
+    height: 12px !important;
+    min-height: 12px !important;
+    max-height: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
   }
   .hrms-week-today-pill {
     font-size: 7.5px !important;
     font-weight: 700 !important;
     letter-spacing: 0.04em !important;
     padding: 0 4px !important;
-    height: 11px !important;
-    line-height: 11px !important;
+    height: 12px !important;
+    line-height: 12px !important;
     border-radius: 3px !important;
-    display: inline-block !important;
-    margin-top: 1px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
   .hrms-week-pill.is-today .hrms-week-today-pill {
     background-color: #2563eb !important;
@@ -198,13 +211,6 @@
   .hrms-week-pill.active .hrms-week-today-pill {
     background-color: rgba(255, 255, 255, 0.28) !important;
     color: #ffffff !important;
-  }
-  .hrms-week-today-placeholder {
-    height: 11px !important;
-    line-height: 11px !important;
-    display: block !important;
-    visibility: hidden !important;
-    margin-top: 1px !important;
   }
 
   /* Employee List Item Styling */
@@ -850,7 +856,7 @@
         <span class="d-none d-sm-inline">Prev Week</span>
       </a>
 
-      <div class="d-flex align-items-center gap-1.5 flex-grow-1 justify-content-center">
+      <div class="d-flex align-items-center flex-grow-1 justify-content-center hrms-week-pills-wrap" style="gap: 12px;">
         {% for day in week_days %}
           <a href="?date={{ day.date_str }}{% if selected_dept %}&department={{ selected_dept.pk }}{% endif %}{% if selected_employee %}&employee={{ selected_employee.pk }}{% endif %}"
              class="hrms-week-pill text-decoration-none {% if day.is_selected %}active{% endif %} {% if day.is_today %}is-today{% endif %} text-center"
@@ -858,11 +864,11 @@
              {% if day.is_selected %}aria-current="date"{% endif %}>
             <span class="d-block text-uppercase hrms-week-day">{{ day.day_name }}</span>
             <span class="d-block hrms-week-num">{{ day.day_num }}</span>
-            {% if day.is_today %}
-              <span class="hrms-week-today-pill">TODAY</span>
-            {% else %}
-              <span class="hrms-week-today-placeholder"></span>
-            {% endif %}
+            <div class="hrms-week-today-slot">
+              {% if day.is_today %}
+                <span class="hrms-week-today-pill">TODAY</span>
+              {% endif %}
+            </div>
           </a>
         {% endfor %}
       </div>

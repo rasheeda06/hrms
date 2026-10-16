@@ -2385,31 +2385,36 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
 }
 
 /* Week navigation strip */
+.hrms-week-pills-wrap {
+  gap: 12px;
+}
 .hrms-week-pill {
   color: #475569;
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  width: 62px;
-  min-width: 62px;
-  max-width: 62px;
-  height: 48px;
-  min-height: 48px;
-  max-height: 48px;
-  padding: 3px 2px;
-  border-radius: 6px;
+  width: 64px;
+  min-width: 64px;
+  max-width: 64px;
+  height: 54px;
+  min-height: 54px;
+  max-height: 54px;
+  padding: 5px 2px 4px;
+  border-radius: 8px;
   transition: all 0.15s ease;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   box-sizing: border-box;
   margin: 0;
   box-shadow: none;
+  flex-shrink: 0;
 }
 .hrms-week-pill:hover {
   background-color: #f8fafc;
   border-color: #cbd5e1;
   color: #1e293b;
+  transform: none;
 }
 .hrms-week-pill.is-today {
   background-color: #eff6ff;
@@ -2435,23 +2440,40 @@ html[data-bs-theme="dark"] .hrms-theme-toggle:hover,
 .hrms-week-pill.active .hrms-week-num {
   color: #ffffff;
 }
+.hrms-week-day {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  display: block;
+}
+.hrms-week-num {
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1;
+  margin-top: 2px;
+  display: block;
+}
+.hrms-week-today-slot {
+  height: 12px;
+  min-height: 12px;
+  max-height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
 .hrms-week-today-pill {
   font-size: 7.5px;
   font-weight: 700;
   letter-spacing: 0.04em;
   padding: 0 4px;
-  height: 11px;
-  line-height: 11px;
+  height: 12px;
+  line-height: 12px;
   border-radius: 3px;
-  display: inline-block;
-  margin-top: 1px;
-}
-.hrms-week-today-placeholder {
-  height: 11px;
-  line-height: 11px;
-  display: block;
-  visibility: hidden;
-  margin-top: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .hrms-week-pill.is-today .hrms-week-today-pill {
   background-color: #2563eb;
