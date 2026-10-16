@@ -349,3 +349,191 @@ class TimesheetTimelineDashboardTests(TestCase):
         self.assertContains(timeline_res, "Sprint 34 Retrospective")
         self.assertContains(timeline_res, "badge-entry-meeting")
         self.assertContains(timeline_res, "Meeting")
+
+    def test_weekly_table_header_alignment_and_badge_slots(self):
+        """Verify that table header uses dedicated badge slots, prevents date overlap, and highlights today."""
+        response = self.client.get(
+            reverse("timesheets:timeline"),
+            {"date": "2026-10-16", "employee": self.employee.pk},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'class="day-header-badge-slot"')
+        self.assertContains(response, 'class="day-header-date"')
+        self.assertContains(response, "is-today-col")
+        self.assertContains(response, "day-today-badge")
+
+    def test_timesheet_summary_cards_and_totals_calculation(self):
+        """Verify summary cards correctly calculate billable, non-billable, and approved time-off hours."""
+        from timesheets.models import WeeklyTimesheet, TimesheetTaskRow, TimesheetDailyCell
+
+        # Monday of test week: 2026-10-12
+        week_start = date(2026, 10, 12)
+        weekly_ts = WeeklyTimesheet.objects.create(
+            employee=self.employee,
+            week_start_date=week_start,
+            status="draft",
+        )
+        # Billable task row
+        task_row = TimesheetTaskRow.objects.create(
+            weekly_timesheet=weekly_ts,
+            project_name="Core HRMS",
+            task_name="Backend API",
+            entry_type="task",
+        )
+        # Meeting row (non-billable)
+        meeting_row = TimesheetTaskRow.objects.create(
+            weekly_timesheet=weekly_ts,
+            project_name="Core HRMS",
+            task_name="Client Standup",
+            entry_type="meeting",
+        )
+        for i in range(7):
+            c_date = week_start + timedelta(days=i)
+            # 4 hours task on day 0
+            task_hours = "4:00" if i == 0 else "0:00"
+            task_mins = 240 if i == 0 else 0
+            TimesheetDailyCell.objects.create(
+                row=task_row, date=c_date, day_index=i, hours_minutes=task_mins, hours_str=task_hours
+            )
+            # 1 hour meeting on day 0
+            meet_hours = "1:00" if i == 0 else "0:00"
+            meet_mins = 60 if i == 0 else 0
+            TimesheetDailyCell.objects.create(
+                row=meeting_row, date=c_date, day_index=i, hours_minutes=meet_mins, hours_str=meet_hours
+            )
+
+        # Create an approved leave record (9 hours) on day 1 (Tuesday Oct 13)
+        Timesheet.objects.create(
+            employee=self.employee,
+            date=date(2026, 10, 13),
+            status=Timesheet.Status.ON_LEAVE,
+        )
+
+        response = self.client.get(
+            reverse("timesheets:timeline"),
+            {"date": "2026-10-12", "employee": self.employee.pk},
+        )
+        self.assertEqual(response.status_code, 200)
+        # Total working hours = 4h + 1h = 5:00
+        self.assertEqual(response.context["summary_working_hours"], "05:00")
+        # Billable = 4:00
+        self.assertEqual(response.context["summary_billable"], "4:00")
+        # Non-billable = 1:00
+        self.assertEqual(response.context["summary_non_billable"], "1:00")
+        # Time off = 9:00
+        self.assertEqual(response.context["summary_time_off"], "9:00")
+
+    def test_save_timesheet_status_actions_and_validation(self):
+        """Test save_timesheet handles draft, submitted, approved, rejected, and clamps hours <= 24."""
+        from timesheets.models import WeeklyTimesheet, TimesheetTaskRow, TimesheetDailyCell
+
+        week_start = date(2026, 10, 12)
+        weekly_ts = WeeklyTimesheet.objects.create(
+            employee=self.employee,
+            week_start_date=week_start,
+            status="draft",
+        )
+        row = TimesheetTaskRow.objects.create(
+            weekly_timesheet=weekly_ts,
+            project_name="QA Testing",
+            task_name="Regression",
+            entry_type="task",
+        )
+        cell = TimesheetDailyCell.objects.create(
+            row=row, date=week_start, day_index=0, hours_minutes=0, hours_str="0:00"
+        )
+
+        # 1. Submit
+        resp = self.client.post(
+            reverse("timesheets:save_timesheet"),
+            data={
+                "timesheet_id": weekly_ts.pk,
+                "action": "submit",
+                "entries": [{"cell_id": cell.pk, "hours": "8:00", "notes": "Tested release candidate"}],
+            },
+            content_type="application/json",
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(resp.status_code, 200)
+        weekly_ts.refresh_from_db()
+        self.assertEqual(weekly_ts.status, "submitted")
+
+        # 2. Approve
+        resp = self.client.post(
+            reverse("timesheets:save_timesheet"),
+            data={"timesheet_id": weekly_ts.pk, "action": "approve"},
+            content_type="application/json",
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(resp.status_code, 200)
+        weekly_ts.refresh_from_db()
+        self.assertEqual(weekly_ts.status, "approved")
+
+        # 3. Reject
+        resp = self.client.post(
+            reverse("timesheets:save_timesheet"),
+            data={"timesheet_id": weekly_ts.pk, "action": "reject"},
+            content_type="application/json",
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(resp.status_code, 200)
+        weekly_ts.refresh_from_db()
+        self.assertEqual(weekly_ts.status, "rejected")
+
+        # 4. Hours validation: inputting > 24 hours clamps to 24:00
+        resp = self.client.post(
+            reverse("timesheets:save_timesheet"),
+            data={
+                "timesheet_id": weekly_ts.pk,
+                "action": "draft",
+                "entries": [{"cell_id": cell.pk, "hours": "30:00", "notes": "Clamping check"}],
+            },
+            content_type="application/json",
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(resp.status_code, 200)
+        cell.refresh_from_db()
+        self.assertEqual(cell.hours_str, "24:00")
+        self.assertEqual(cell.hours_minutes, 1440)
+
+    def test_copy_last_week_prevents_duplicate_rows(self):
+        """Copying last week rows must not create duplicates if tasks already exist."""
+        from timesheets.models import WeeklyTimesheet, TimesheetTaskRow, TimesheetDailyCell
+
+        # Previous week (starts 2026-10-05)
+        prev_week_start = date(2026, 10, 5)
+        prev_ts = WeeklyTimesheet.objects.create(
+            employee=self.employee,
+            week_start_date=prev_week_start,
+            status="approved",
+        )
+        TimesheetTaskRow.objects.create(
+            weekly_timesheet=prev_ts,
+            project_name="Web Portal",
+            task_name="Dashboard Refactor",
+            entry_type="task",
+        )
+
+        # Current week (starts 2026-10-12)
+        curr_week_start = date(2026, 10, 12)
+        curr_ts = WeeklyTimesheet.objects.create(
+            employee=self.employee,
+            week_start_date=curr_week_start,
+            status="draft",
+        )
+
+        # First copy: should create 1 row
+        resp = self.client.get(
+            reverse("timesheets:copy_last_week"),
+            {"timesheet_id": curr_ts.pk},
+        )
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(curr_ts.rows.count(), 1)
+
+        # Second copy: row already exists, should not create duplicate
+        resp2 = self.client.get(
+            reverse("timesheets:copy_last_week"),
+            {"timesheet_id": curr_ts.pk},
+        )
+        self.assertEqual(resp2.status_code, 302)
+        self.assertEqual(curr_ts.rows.count(), 1)

@@ -262,7 +262,7 @@
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    min-width: 880px;
+    min-width: 980px;
     font-size: 12px;
     color: var(--hrms-text-body, #334155);
     table-layout: fixed;
@@ -284,30 +284,33 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    padding: 10px 8px;
+    padding: 8px 6px 6px;
     border-top: none;
   }
   .timesheet-table thead th:first-child {
     border-left: none;
   }
   .timesheet-table .project-col {
-    width: auto;
-    min-width: 260px;
+    width: 270px;
+    min-width: 250px;
     padding-left: 16px;
     padding-right: 14px;
     text-align: left;
   }
   .timesheet-table .day-col {
-    width: 88px;
-    min-width: 88px;
-    max-width: 88px;
+    width: 98px;
+    min-width: 96px;
+    max-width: 102px;
     text-align: center;
-    padding: 8px 4px;
+    padding: 8px 4px 6px;
+  }
+  .timesheet-table .day-col.is-today-col {
+    background-color: #f8faff !important;
   }
   .timesheet-table .total-col {
-    width: 90px;
-    min-width: 90px;
-    max-width: 90px;
+    width: 94px;
+    min-width: 92px;
+    max-width: 98px;
     text-align: center;
     font-weight: 700;
     color: var(--hrms-primary, #2563eb);
@@ -316,19 +319,62 @@
   }
   .day-header {
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     color: #475569;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    margin-bottom: 2px;
   }
   .day-header-date {
-    font-size: 10px;
+    font-size: 10.5px;
     font-weight: 500;
     color: #94a3b8;
-    margin-top: 3px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .day-col.is-today-col .day-header-date {
+    color: #2563eb;
+    font-weight: 600;
+  }
+  .day-header-badge-slot {
+    height: 16px;
+    min-height: 16px;
+    max-height: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 3px;
+    margin-top: 3px;
+    width: 100%;
+  }
+  .day-today-badge {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 1px 6px;
+    height: 15px;
+    line-height: 13px;
+    border-radius: 4px;
+    background-color: #2563eb;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .day-leave-badge {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 1px 6px;
+    height: 15px;
+    line-height: 13px;
+    border-radius: 4px;
+    background-color: #f59e0b;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* Task Rows */
@@ -384,28 +430,35 @@
     align-items: center;
   }
   .time-entry-input {
-    width: 58px;
-    height: 28px;
+    width: 60px;
+    height: 30px;
     text-align: center;
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 500;
-    color: #94a3b8;
-    border: 1px solid #e2e8f0;
+    color: #334155;
+    border: 1px solid #cbd5e1;
     border-radius: 6px;
     background-color: #ffffff;
     padding: 2px 4px;
     transition: all 0.15s ease;
+    box-sizing: border-box;
   }
   .time-entry-input:hover {
-    border-color: #cbd5e1;
+    border-color: #94a3b8;
     background-color: #f8fafc;
   }
   .time-entry-input:focus {
     border-color: var(--hrms-primary, #2563eb);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
     outline: none;
     background-color: #ffffff;
     color: #0f172a;
+    font-weight: 600;
+  }
+  .time-entry-input.is-invalid-input {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    color: #dc2626 !important;
   }
   .time-entry-input.has-hours {
     color: #0f172a;
@@ -809,7 +862,7 @@
 
       <!-- Department Selector with Auto-submit on change -->
       <div class="flex-grow-1 flex-md-grow-0" style="min-width: 160px;">
-        <select name="department" class="form-select hrms-time-select hrms-time-select-dept w-100" aria-label="Filter by department" onchange="this.form.submit()">
+        <select name="department" class="form-select hrms-time-select hrms-time-select-dept w-100" aria-label="Filter by department" onchange="if(this.form.employee) this.form.employee.value=''; this.form.submit();">
           <option value="">All Departments</option>
           {% for dept in departments %}
             <option value="{{ dept.pk }}" {% if selected_dept and selected_dept.pk == dept.pk %}selected{% endif %}>
@@ -1027,15 +1080,19 @@
         <div class="d-flex align-items-center gap-2">
           {% if weekly_timesheet and weekly_timesheet.status == 'approved' %}
             <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1.5 font-monospace fw-semibold d-inline-flex align-items-center" style="font-size: 11px; height: 32px; border-radius: 6px; box-sizing: border-box;">
-              <i class="bi bi-check-circle-fill me-1"></i>PM Approved
+              <i class="bi bi-check-circle-fill me-1.5"></i>PM Approved
             </span>
           {% elif weekly_timesheet and weekly_timesheet.status == 'submitted' %}
             <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1.5 font-monospace fw-semibold d-inline-flex align-items-center" style="font-size: 11px; height: 32px; border-radius: 6px; box-sizing: border-box;">
-              <i class="bi bi-hourglass-split me-1"></i>Submitted
+              <i class="bi bi-hourglass-split me-1.5"></i>Submitted
+            </span>
+          {% elif weekly_timesheet and weekly_timesheet.status == 'rejected' %}
+            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2.5 py-1.5 font-monospace fw-semibold d-inline-flex align-items-center" style="font-size: 11px; height: 32px; border-radius: 6px; box-sizing: border-box;">
+              <i class="bi bi-x-circle-fill me-1.5"></i>Rejected
             </span>
           {% else %}
             <span class="badge bg-secondary-subtle text-secondary border px-2.5 py-1.5 font-monospace fw-semibold d-inline-flex align-items-center" style="font-size: 11px; height: 32px; border-radius: 6px; box-sizing: border-box;">
-              Not Submitted
+              <i class="bi bi-pencil-square me-1.5"></i>Not Submitted
             </span>
           {% endif %}
         </div>
@@ -1049,12 +1106,16 @@
               <tr>
                 <th class="project-col">PROJECTS</th>
                 {% for day in week_days %}
-                  <th class="day-col text-center">
+                  <th class="day-col text-center {% if day.is_today %}is-today-col{% endif %}">
                     <div class="day-header {% if day.is_today %}text-primary fw-bold{% endif %}">{{ day.day_name }}</div>
-                    <div class="day-header-date d-flex justify-content-center align-items-center mt-1" style="font-size: 10px; {% if day.is_today %}color: #2563eb; font-weight: 600;{% else %}color: #94a3b8; font-weight: 500;{% endif %}">
+                    <div class="day-header-date">
                       {{ day.date_formatted }}
+                    </div>
+                    <div class="day-header-badge-slot">
                       {% if day.is_today %}
-                        <span class="badge bg-primary text-white ms-1" style="font-size: 8px; padding: 1px 4px; border-radius: 4px;">TODAY</span>
+                        <span class="day-today-badge">TODAY</span>
+                      {% elif day.has_leave %}
+                        <span class="day-leave-badge" title="{{ day.leave_type }}">LEAVE</span>
                       {% endif %}
                     </div>
                   </th>
@@ -1066,7 +1127,7 @@
 
               <!-- Project Task Rows -->
               {% for row in task_rows %}
-                <tr class="task-row" id="taskRow_{{ row.pk }}" data-row-id="{{ row.pk }}">
+                <tr class="task-row" id="taskRow_{{ row.pk }}" data-row-id="{{ row.pk }}" data-entry-type="{{ row.entry_type }}">
                   <td class="project-col">
                     <div class="d-flex align-items-start justify-content-between gap-2 py-1">
                       <div class="min-w-0">
@@ -1093,7 +1154,7 @@
 
                   <!-- 7 Day Columns for this task -->
                   {% for cell in row.ordered_cells %}
-                    <td class="day-col">
+                    <td class="day-col {% if cell.date == today %}is-today-col{% endif %}">
                       <div class="time-entry-container">
                         <input type="text"
                                name="hours_{{ cell.pk }}"
@@ -1104,10 +1165,12 @@
                                data-cell-id="{{ cell.pk }}"
                                data-row-id="{{ row.pk }}"
                                data-day-index="{{ cell.day_index }}"
+                               data-entry-type="{{ row.entry_type }}"
                                class="time-entry-input {% if cell.notes %}has-notes{% endif %} {% if cell.hours_minutes > 0 %}has-hours{% endif %}"
                                oninput="onHoursInputChange(this)"
-                               onfocus="showCellNotesPopover(this)"
-                               onblur="scheduleHideCellNotesPopover(this)">
+                               onkeydown="onTimeEntryKeydown(event, this)"
+                               onfocus="onTimeEntryFocus(this)"
+                               onblur="onTimeEntryBlur(this)">
                         
                         <!-- Hover Tooltip -->
                         {% if cell.notes %}
@@ -1181,7 +1244,7 @@
                   Total hours/days
                 </td>
                 {% for day in week_days %}
-                  <td class="day-col">
+                  <td class="day-col {% if day.is_today %}is-today-col{% endif %}">
                     <div class="time-total col-total-display {% if day.total_minutes > 0 %}has-hours{% endif %}" id="dayTotal_{{ day.day_index }}">
                       {{ day.total_hours }}
                     </div>
@@ -1224,12 +1287,33 @@
           </div>
 
           <div class="timesheet-action-footer">
-            <button type="button" id="btnSaveDraft" class="btn btn-sm btn-outline-secondary px-3" style="height: 34px; border-radius: 6px; font-size: 12px; font-weight: 500;" onclick="submitTimesheetAction('draft')">
-              <i class="bi bi-save me-1"></i> Save as Draft
-            </button>
-            <button type="button" id="btnSubmitTimesheet" class="btn btn-sm btn-primary px-4" style="height: 34px; border-radius: 6px; font-size: 12px; font-weight: 500;" onclick="submitTimesheetAction('submit')">
-              <i class="bi bi-send-check me-1"></i> Submit Timesheet
-            </button>
+            {% if weekly_timesheet and weekly_timesheet.status == 'approved' %}
+              <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
+                <span class="text-success small fw-semibold d-flex align-items-center gap-1.5">
+                  <i class="bi bi-check-circle-fill"></i> Timesheet has been PM Approved and verified.
+                </span>
+                <button type="button" id="btnReopenTimesheet" class="btn btn-sm btn-outline-warning px-3" style="height: 34px; border-radius: 6px; font-size: 12px; font-weight: 500;" onclick="submitTimesheetAction('draft')">
+                  <i class="bi bi-arrow-counterclockwise me-1"></i> Reopen as Draft
+                </button>
+              </div>
+            {% elif weekly_timesheet and weekly_timesheet.status == 'submitted' %}
+              <button type="button" id="btnSaveDraft" class="btn btn-sm btn-outline-secondary px-3" style="height: 34px; border-radius: 6px; font-size: 12px; font-weight: 500;" onclick="submitTimesheetAction('draft')">
+                <i class="bi bi-pencil me-1"></i> Return to Draft
+              </button>
+              <button type="button" id="btnRejectTimesheet" class="btn btn-sm btn-outline-danger px-3" style="height: 34px; border-radius: 6px; font-size: 12px; font-weight: 500;" onclick="submitTimesheetAction('reject')">
+                <i class="bi bi-x-circle me-1"></i> Reject
+              </button>
+              <button type="button" id="btnApproveTimesheet" class="btn btn-sm btn-success px-4" style="height: 34px; border-radius: 6px; font-size: 12px; font-weight: 500;" onclick="submitTimesheetAction('approve')">
+                <i class="bi bi-check-circle me-1"></i> PM Approve
+              </button>
+            {% else %}
+              <button type="button" id="btnSaveDraft" class="btn btn-sm btn-outline-secondary px-3" style="height: 34px; border-radius: 6px; font-size: 12px; font-weight: 500;" onclick="submitTimesheetAction('draft')">
+                <i class="bi bi-save me-1"></i> Save as Draft
+              </button>
+              <button type="button" id="btnSubmitTimesheet" class="btn btn-sm btn-primary px-4" style="height: 34px; border-radius: 6px; font-size: 12px; font-weight: 500;" onclick="submitTimesheetAction('submit')">
+                <i class="bi bi-send-check me-1"></i> Submit Timesheet
+              </button>
+            {% endif %}
           </div>
         </div>
 
@@ -1473,68 +1557,90 @@
 
   // Dynamic recalculation when any hours input changes
   function onHoursInputChange(inputEl) {
-    const rowId = inputEl.getAttribute("data-row-id");
-    const dayIndex = parseInt(inputEl.getAttribute("data-day-index"), 10);
-
     const valMins = parseTimeToMinutes(inputEl.value);
+    if (valMins > 1440) {
+      inputEl.classList.add("is-invalid-input");
+      inputEl.title = "Hours cannot exceed 24:00 in a single day.";
+    } else {
+      inputEl.classList.remove("is-invalid-input");
+      inputEl.title = "";
+    }
+
     if (valMins > 0) {
       inputEl.classList.add("has-hours");
     } else {
       inputEl.classList.remove("has-hours");
     }
 
-    // 1. Recalculate row total
-    const rowInputs = document.querySelectorAll(`input[data-row-id="${rowId}"]`);
-    let rowMins = 0;
-    rowInputs.forEach(inp => {
-      rowMins += parseTimeToMinutes(inp.value);
-    });
-    const rowTotalEl = document.getElementById(`rowTotal_${rowId}`);
-    if (rowTotalEl) {
-      rowTotalEl.textContent = formatMinutesToTime(rowMins);
-    }
+    recalculateAllTotals();
+  }
 
-    // 2. Recalculate column (day) totals across all rows
-    let colMins = 0;
-    const dayInputs = document.querySelectorAll(`input[data-day-index="${dayIndex}"]`);
-    dayInputs.forEach(inp => {
-      colMins += parseTimeToMinutes(inp.value);
-    });
-    const dayTotalEl = document.getElementById(`dayTotal_${dayIndex}`);
-    if (dayTotalEl) {
-      dayTotalEl.textContent = formatMinutesToTime(colMins);
-      if (colMins > 0) {
-        dayTotalEl.classList.add("has-hours");
-      } else {
-        dayTotalEl.classList.remove("has-hours");
+  // Normalization on blur
+  function onTimeEntryBlur(inputEl) {
+    const val = inputEl.value.trim();
+    if (val) {
+      const mins = Math.min(1440, Math.max(0, parseTimeToMinutes(val)));
+      inputEl.value = formatMinutesToTime(mins);
+      inputEl.classList.remove("is-invalid-input");
+    } else {
+      inputEl.value = "0:00";
+      inputEl.classList.remove("is-invalid-input");
+    }
+    onHoursInputChange(inputEl);
+    scheduleHideCellNotesPopover(inputEl);
+  }
+
+  // Focus with auto-select
+  function onTimeEntryFocus(inputEl) {
+    showCellNotesPopover(inputEl);
+    setTimeout(() => {
+      try { inputEl.select(); } catch(e){}
+    }, 50);
+  }
+
+  // Full spreadsheet-style keyboard navigation
+  function onTimeEntryKeydown(e, inputEl) {
+    const rowId = inputEl.getAttribute("data-row-id");
+    const dayIndex = parseInt(inputEl.getAttribute("data-day-index"), 10);
+    const allRows = Array.from(document.querySelectorAll(".task-row"));
+    const currentRowIndex = allRows.findIndex(r => r.getAttribute("data-row-id") === rowId);
+
+    if (e.key === "ArrowRight") {
+      if (inputEl.selectionEnd === inputEl.value.length || inputEl.selectionStart === 0) {
+        const nextInput = document.querySelector(`input[data-row-id="${rowId}"][data-day-index="${dayIndex + 1}"]`);
+        if (nextInput) {
+          e.preventDefault();
+          nextInput.focus();
+        }
       }
-    }
-
-    // Update 9-hour target badge
-    const badgeContainer = document.getElementById(`dayBadgeContainer_${dayIndex}`);
-    if (badgeContainer) {
-      if (colMins >= 540) {
-        badgeContainer.innerHTML = `<span class="day-9h-pill day-9h-met" title="Click to view 9-hour task allocation breakdown" onclick="openDayAllocationModal(${dayIndex})">9h Met <i class="bi bi-check"></i></span>`;
-      } else if (colMins > 0) {
-        badgeContainer.innerHTML = `<span class="day-9h-pill day-9h-sub" title="Click to view 9-hour task allocation breakdown" onclick="openDayAllocationModal(${dayIndex})">${formatMinutesToTime(colMins)} / 9h</span>`;
-      } else {
-        badgeContainer.innerHTML = ``;
+    } else if (e.key === "ArrowLeft") {
+      if (inputEl.selectionStart === 0 || inputEl.selectionEnd === inputEl.value.length) {
+        const prevInput = document.querySelector(`input[data-row-id="${rowId}"][data-day-index="${dayIndex - 1}"]`);
+        if (prevInput) {
+          e.preventDefault();
+          prevInput.focus();
+        }
       }
+    } else if (e.key === "ArrowDown" || e.key === "Enter") {
+      e.preventDefault();
+      if (currentRowIndex < allRows.length - 1) {
+        const nextRow = allRows[currentRowIndex + 1];
+        const nextRowId = nextRow.getAttribute("data-row-id");
+        const targetInput = document.querySelector(`input[data-row-id="${nextRowId}"][data-day-index="${dayIndex}"]`);
+        if (targetInput) targetInput.focus();
+      }
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (currentRowIndex > 0) {
+        const prevRow = allRows[currentRowIndex - 1];
+        const prevRowId = prevRow.getAttribute("data-row-id");
+        const targetInput = document.querySelector(`input[data-row-id="${prevRowId}"][data-day-index="${dayIndex}"]`);
+        if (targetInput) targetInput.focus();
+      }
+    } else if (e.key === "Escape") {
+      closeCellNotesPopover(inputEl.getAttribute("data-cell-id"));
+      inputEl.blur();
     }
-
-    // 3. Recalculate Grand Total & Top Summary Cards
-    let grandMins = 0;
-    document.querySelectorAll(".time-entry-input").forEach(inp => {
-      grandMins += parseTimeToMinutes(inp.value);
-    });
-    const grandFormatted = formatMinutesToTime(grandMins);
-    const grandTotalEl = document.getElementById("grandTotalDisplay");
-    if (grandTotalEl) grandTotalEl.textContent = grandFormatted;
-
-    const cardWorkingHours = document.getElementById("cardWorkingHours");
-    if (cardWorkingHours) cardWorkingHours.textContent = grandFormatted;
-    const cardBillable = document.getElementById("cardBillable");
-    if (cardBillable) cardBillable.textContent = grandFormatted;
   }
 
   // Show notes popover for cell
@@ -1737,9 +1843,13 @@
     }
   });
 
-  // Recalculate all totals across all 7 days
+  // Recalculate all totals across all 7 days & top summary cards
   function recalculateAllTotals() {
     let grandMins = 0;
+    let billableMins = 0;
+    let nonBillableMins = 0;
+
+    // 1. Column / day totals
     for (let d = 0; d < 7; d++) {
       let colMins = 0;
       document.querySelectorAll(`input[data-day-index="${d}"]`).forEach(inp => {
@@ -1766,13 +1876,36 @@
       }
       grandMins += colMins;
     }
+
+    // 2. Row totals & billable breakdown
+    document.querySelectorAll(".task-row").forEach(row => {
+      const rowId = row.getAttribute("data-row-id");
+      const entryType = row.getAttribute("data-entry-type") || "task";
+      let rowMins = 0;
+      row.querySelectorAll(".time-entry-input").forEach(inp => {
+        rowMins += parseTimeToMinutes(inp.value);
+      });
+      const rowTotalEl = document.getElementById(`rowTotal_${rowId}`);
+      if (rowTotalEl) {
+        rowTotalEl.textContent = formatMinutesToTime(rowMins);
+      }
+      if (entryType === "meeting") {
+        nonBillableMins += rowMins;
+      } else {
+        billableMins += rowMins;
+      }
+    });
+
     const grandFormatted = formatMinutesToTime(grandMins);
     const grandTotalEl = document.getElementById("grandTotalDisplay");
     if (grandTotalEl) grandTotalEl.textContent = grandFormatted;
+
     const cardWorkingHours = document.getElementById("cardWorkingHours");
     if (cardWorkingHours) cardWorkingHours.textContent = grandFormatted;
     const cardBillable = document.getElementById("cardBillable");
-    if (cardBillable) cardBillable.textContent = grandFormatted;
+    if (cardBillable) cardBillable.textContent = formatMinutesToTime(billableMins);
+    const cardNonBillable = document.getElementById("cardNonBillable");
+    if (cardNonBillable) cardNonBillable.textContent = formatMinutesToTime(nonBillableMins);
   }
 
   // Delete task row
@@ -1799,12 +1932,17 @@
     .catch(err => window.location.reload());
   }
 
-  // Save / Submit Timesheet
+  // Save / Submit / Approve / Reject Timesheet
   function submitTimesheetAction(action) {
-    const draftBtn = document.getElementById("btnSaveDraft");
-    const submitBtn = document.getElementById("btnSubmitTimesheet");
-    if (draftBtn) draftBtn.disabled = true;
-    if (submitBtn) submitBtn.disabled = true;
+    const actionButtons = [
+      document.getElementById("btnSaveDraft"),
+      document.getElementById("btnSubmitTimesheet"),
+      document.getElementById("btnApproveTimesheet"),
+      document.getElementById("btnRejectTimesheet"),
+      document.getElementById("btnReopenTimesheet")
+    ].filter(Boolean);
+
+    actionButtons.forEach(btn => btn.disabled = true);
 
     const entries = [];
     document.querySelectorAll(".time-entry-input").forEach(inp => {
@@ -1833,18 +1971,21 @@
     .then(res => res.json())
     .then(data => {
       if (data.status === "success") {
-        alert(action === "submit" ? "Timesheet submitted successfully for review!" : "Timesheet saved as draft successfully!");
+        let msg = "Timesheet saved successfully!";
+        if (action === "submit") msg = "Timesheet submitted successfully for review!";
+        else if (action === "approve") msg = "Timesheet approved successfully by PM!";
+        else if (action === "reject") msg = "Timesheet marked as rejected.";
+        else if (action === "draft") msg = "Timesheet saved as draft.";
+        alert(msg);
         window.location.reload();
       } else {
-        alert("Save failed: " + (data.message || "Unknown error"));
-        if (draftBtn) draftBtn.disabled = false;
-        if (submitBtn) submitBtn.disabled = false;
+        alert("Action failed: " + (data.message || "Unknown error"));
+        actionButtons.forEach(btn => btn.disabled = false);
       }
     })
     .catch(err => {
-      alert("Error saving timesheet. Please try again.");
-      if (draftBtn) draftBtn.disabled = false;
-      if (submitBtn) submitBtn.disabled = false;
+      alert("Error processing timesheet. Please try again.");
+      actionButtons.forEach(btn => btn.disabled = false);
     });
   }
 

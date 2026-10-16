@@ -87,6 +87,10 @@ def admin_timeline(request):
     day_totals_display = ["0:00"] * 7
     grand_total_minutes = 0
     grand_total_display = "0:00"
+    billable_minutes = 0
+    non_billable_minutes = 0
+    time_off_minutes = 0
+    leave_by_date = {}
 
     if selected_employee:
         weekly_timesheet, created = WeeklyTimesheet.objects.get_or_create(
@@ -116,6 +120,15 @@ def admin_timeline(request):
                 day_totals[i] += cell.hours_minutes
             row.ordered_cells = row_cells_list
 
+            row_mins = sum(c.hours_minutes for c in row.ordered_cells)
+            if weekly_timesheet.is_billable:
+                billable_minutes += row_mins
+            else:
+                if row.entry_type == "meeting" or "internal" in row.project_name.lower():
+                    non_billable_minutes += row_mins
+                else:
+                    billable_minutes += row_mins
+
         for i in range(7):
             mins = day_totals[i]
             hrs, m = divmod(mins, 60)
@@ -124,6 +137,28 @@ def admin_timeline(request):
         grand_total_minutes = sum(day_totals)
         gt_hrs, gt_m = divmod(grand_total_minutes, 60)
         grand_total_display = f"{gt_hrs:02d}:{gt_m:02d}" if grand_total_minutes > 0 else "0:00"
+
+        # Check attendance / time off for selected employee across this week
+        leave_records = Timesheet.objects.filter(
+            employee=selected_employee,
+            date__range=(start_of_week, end_of_week),
+            status__in=[Timesheet.Status.ON_LEAVE, Timesheet.Status.HALF_DAY]
+        )
+        leave_by_date = {rec.date: rec for rec in leave_records}
+        for rec in leave_records:
+            if rec.status == Timesheet.Status.ON_LEAVE:
+                time_off_minutes += 540  # 9 hours standard leave
+            elif rec.status == Timesheet.Status.HALF_DAY:
+                time_off_minutes += 270  # 4.5 hours half day
+
+    def format_total_time(mins):
+        h, m = divmod(mins, 60)
+        return f"{h:d}:{m:02d}" if mins > 0 else "0:00"
+
+    summary_working_hours = grand_total_display
+    summary_billable = format_total_time(billable_minutes)
+    summary_non_billable = format_total_time(non_billable_minutes)
+    summary_time_off = format_total_time(time_off_minutes)
 
     # Days list for the table header (MON..SUN)
     week_days = []
@@ -135,6 +170,10 @@ def admin_timeline(request):
         actual_minutes = day_totals[i]
         percentage = min(100, int((actual_minutes / target_minutes) * 100)) if target_minutes else 0
         is_target_met = actual_minutes >= target_minutes
+
+        leave_rec = leave_by_date.get(d)
+        has_leave = leave_rec is not None
+        leave_type = leave_rec.get_status_display() if leave_rec else ""
 
         tasks_on_day = []
         for r in task_rows:
@@ -159,7 +198,8 @@ def admin_timeline(request):
             "day_index": i,
             "is_selected": d == selected_date,
             "is_today": is_today,
-            "has_leave": False,
+            "has_leave": has_leave,
+            "leave_type": leave_type,
             "total_hours": day_totals_display[i],
             "total_minutes": actual_minutes,
             "target_minutes": target_minutes,
@@ -228,10 +268,10 @@ def admin_timeline(request):
         "day_totals_display": day_totals_display,
         "grand_total_display": grand_total_display,
         "grand_total_minutes": grand_total_minutes,
-        "summary_working_hours": grand_total_display,
-        "summary_billable": grand_total_display,
-        "summary_non_billable": "0:00",
-        "summary_time_off": "0:00",
+        "summary_working_hours": summary_working_hours,
+        "summary_billable": summary_billable,
+        "summary_non_billable": summary_non_billable,
+        "summary_time_off": summary_time_off,
         # Compatibility fields
         "timesheet_record": timesheet_record,
         "has_record": bool(timesheet_record) or bool(weekly_timesheet),
@@ -295,6 +335,8 @@ def save_timesheet(request):
         weekly_ts.status = "submitted"
     elif action == "approve":
         weekly_ts.status = "approved"
+    elif action == "reject":
+        weekly_ts.status = "rejected"
     elif action == "draft":
         weekly_ts.status = "draft"
 
@@ -311,12 +353,15 @@ def save_timesheet(request):
 
     for entry in entries:
         cell_id = entry.get("cell_id")
-        hours_str = entry.get("hours", "0:00")
+        hours_str = str(entry.get("hours", "0:00")).strip()
         notes = entry.get("notes")
         if cell_id:
-            cell = TimesheetDailyCell.objects.filter(pk=cell_id).first()
+            cell = TimesheetDailyCell.objects.filter(pk=cell_id, row__weekly_timesheet=weekly_ts).first()
             if cell:
                 cell.set_time(hours_str, notes)
+                if cell.hours_minutes > 1440:
+                    cell.hours_minutes = 1440
+                    cell.hours_str = "24:00"
                 cell.save()
 
     if not (request.headers.get("x-requested-with") == "XMLHttpRequest" or request.content_type == "application/json"):
@@ -519,7 +564,14 @@ def copy_last_week(request):
 
     copied_count = 0
     if prev_ts and prev_ts.rows.exists():
+        existing_keys = {
+            (r.project_name.lower().strip(), r.task_name.lower().strip())
+            for r in weekly_ts.rows.all()
+        }
         for r in prev_ts.rows.all():
+            key = (r.project_name.lower().strip(), r.task_name.lower().strip())
+            if key in existing_keys:
+                continue
             new_row = TimesheetTaskRow.objects.create(
                 weekly_timesheet=weekly_ts,
                 project=r.project,
@@ -539,5 +591,10 @@ def copy_last_week(request):
                     notes="",
                 )
             copied_count += 1
+            existing_keys.add(key)
 
-    return redirect(f"/timesheets/?date={weekly_ts.week_start_date}&employee={weekly_ts.employee_id}")
+    redirect_url = f"/timesheets/?date={weekly_ts.week_start_date}&employee={weekly_ts.employee_id}"
+    dept_id = request.GET.get("department") or request.POST.get("department")
+    if dept_id:
+        redirect_url += f"&department={dept_id}"
+    return redirect(redirect_url)
