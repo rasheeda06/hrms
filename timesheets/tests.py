@@ -537,3 +537,56 @@ class TimesheetTimelineDashboardTests(TestCase):
         )
         self.assertEqual(resp2.status_code, 302)
         self.assertEqual(curr_ts.rows.count(), 1)
+
+    def test_update_cell_hours_and_comments(self):
+        """Test quick time preset and hover comment AJAX updates on single cell."""
+        from timesheets.models import WeeklyTimesheet, TimesheetTaskRow, TimesheetDailyCell
+
+        week_start = date(2026, 10, 12)
+        ts = WeeklyTimesheet.objects.create(
+            employee=self.employee,
+            week_start_date=week_start,
+            status="draft",
+        )
+        row = TimesheetTaskRow.objects.create(
+            weekly_timesheet=ts,
+            project_name="Core HR",
+            task_name="Comments Feature",
+        )
+        cell = TimesheetDailyCell.objects.create(
+            row=row,
+            date=week_start,
+            day_index=0,
+            hours_minutes=0,
+            hours_str="0:00",
+            notes="",
+        )
+
+        # 1. Update hours to 3:30
+        resp = self.client.post(
+            reverse("timesheets:update_cell"),
+            data={"cell_id": cell.pk, "hours": "3:30"},
+            content_type="application/json",
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data["status"], "success")
+        self.assertEqual(data["hours_str"], "03:30")
+
+        # 2. Update comments on hover
+        resp_comment = self.client.post(
+            reverse("timesheets:update_cell"),
+            data={"cell_id": cell.pk, "notes": "Completed code review on hover"},
+            content_type="application/json",
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(resp_comment.status_code, 200)
+        data_comment = resp_comment.json()
+        self.assertEqual(data_comment["status"], "success")
+        self.assertEqual(data_comment["notes"], "Completed code review on hover")
+
+        cell.refresh_from_db()
+        self.assertEqual(cell.hours_str, "03:30")
+        self.assertEqual(cell.notes, "Completed code review on hover")
+

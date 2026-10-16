@@ -11,4 +11,5 @@ urlpatterns = [
     path("add-task/", views.add_task_entry, name="add_task_entry"),
     path("delete-row/<int:row_id>/", views.delete_task_row, name="delete_task_row"),
     path("copy-last-week/", views.copy_last_week, name="copy_last_week"),
+    path("update-cell/", views.update_cell, name="update_cell"),
 ]

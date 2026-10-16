@@ -598,3 +598,46 @@ def copy_last_week(request):
     if dept_id:
         redirect_url += f"&department={dept_id}"
     return redirect(redirect_url)
+
+
+@admin_required
+@require_POST
+def update_cell(request):
+    """AJAX endpoint to quickly update a single timesheet daily cell (hours and/or comments)."""
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        data = request.POST
+
+    cell_id = data.get("cell_id")
+    if not cell_id:
+        return JsonResponse({"status": "error", "message": "Missing cell_id"}, status=400)
+
+    cell = get_object_or_404(TimesheetDailyCell, pk=cell_id)
+    weekly_ts = cell.row.weekly_timesheet
+
+    hours = data.get("hours")
+    notes = data.get("notes")
+
+    if hours is not None:
+        cell.set_time(str(hours).strip(), notes if notes is not None else cell.notes)
+    elif notes is not None:
+        cell.notes = str(notes).strip()
+
+    if cell.hours_minutes > 1440:
+        cell.hours_minutes = 1440
+        cell.hours_str = "24:00"
+
+    cell.save()
+
+    return JsonResponse({
+        "status": "success",
+        "cell_id": cell.pk,
+        "hours_str": cell.hours_str,
+        "notes": cell.notes,
+        "day_index": cell.day_index,
+        "day_total": weekly_ts.get_day_display(cell.day_index),
+        "row_total": cell.row.total_hours_display,
+        "grand_total": weekly_ts.total_hours_display,
+    })
+
